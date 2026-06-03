@@ -16,14 +16,10 @@
   --breakpoint-desktop: 768px;
   --layout-max-width: none;
 
-  /* Typography */
+  /* Typography — single family and size site-wide */
   --font-family: var(--font-atkinson, 'Atkinson Hyperlegible Mono'), ui-monospace, monospace;
   --font-weight-regular: 400;
   --font-weight-extra-bold: 800;
-  --font-size-logo: 16px;
-  --line-height-logo: 24px;
-  --font-size-title-1: 24px;
-  --line-height-title-1: normal;
-  --font-size-body-small: 14px;
-  --line-height-body-small: 22px;
+  --font-size-body: 13px;
+  --line-height-body: 20px;
 }

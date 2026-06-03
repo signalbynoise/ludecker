@@ -4,7 +4,9 @@
 INSERT INTO public.tags (name, slug) VALUES
   ('architecture', 'architecture'),
   ('ai', 'ai'),
-  ('systems', 'systems')
+  ('systems', 'systems'),
+  ('design', 'design'),
+  ('nextjs', 'nextjs')
 ON CONFLICT (slug) DO NOTHING;
 
 INSERT INTO public.content (
@@ -21,45 +23,27 @@ INSERT INTO public.content (
 ) VALUES
   (
     'home',
-    'Personal systems for thinking in public',
-    'A minimal publishing surface for articles, guides, and notes.',
-    E'P1: This site is a static-first personal CMS backed by Supabase.\n\nPredicate form:\nType · page\nStatus · published',
+    'Intro',
+    'Erik Lüdecker.',
+    E'C: Artificial Intelligence Is Being Created to Wake Us Up\n\nP1: This site is a static-first personal CMS backed by Supabase.',
     'published',
-    'page',
+    'home',
     true,
     'lüdecker',
     'Personal website and publishing system',
     now()
-  ),
-  (
-    'general-swarms',
-    'General Swarms',
-    'Coordinating many agents without losing the plot.',
-    E'P1: Swarm architectures trade latency for breadth.\n\nPredicate form:\nType · article',
-    'published',
-    'article',
-    false,
-    'General Swarms',
-    'Coordinating many agents without losing the plot.',
-    now() - interval '1 day'
-  ),
-  (
-    'neural-networks',
-    'Neural Networks',
-    'Notes on representation, training, and inference.',
-    E'P1: Networks are functions with adjustable parameters.\n\nPredicate form:\nType · article',
-    'published',
-    'article',
-    false,
-    'Neural Networks',
-    'Notes on representation, training, and inference.',
-    now() - interval '2 days'
   )
-ON CONFLICT (slug) DO NOTHING;
+ON CONFLICT (article_type, slug) DO NOTHING;
 
-INSERT INTO public.content_tags (content_id, tag_id)
-SELECT c.id, t.id
-FROM public.content c
-CROSS JOIN public.tags t
-WHERE c.slug = 'general-swarms' AND t.slug = 'ai'
-ON CONFLICT DO NOTHING;
+INSERT INTO public.content (
+  slug, title, excerpt, content, status, article_type, featured, published_at
+) VALUES
+  ('index', 'articles', 'Writing on design, technology, and practice.', E'C: articles\n\nP1: Long-form notes and essays.', 'published', 'articles', false, now()),
+  ('index', 'guides', 'Step-by-step guides and workflows.', E'C: guides\n\nP1: Practical walkthroughs.', 'published', 'guides', false, now()),
+  ('index', 'skills', 'Reusable agent instruction sets.', E'C: skills\n\nP1: Cursor skills and playbooks.', 'published', 'skills', false, now()),
+  ('index', 'tools', 'MCP servers and integrations.', E'C: tools\n\nP1: External services wired into the stack.', 'published', 'tools', false, now()),
+  ('index', 'commands', 'Cursor command workflows.', E'C: commands\n\nP1: Repeatable slash commands.', 'published', 'commands', false, now()),
+  ('index', 'subagents', 'Parallel agent exploration.', E'C: subagents\n\nP1: Delegated research and tasks.', 'published', 'subagents', false, now()),
+  ('index', 'diagrams', 'Architecture and system maps.', E'C: diagrams\n\nP1: Visual models of flows and structure.', 'published', 'diagrams', false, now())
+ON CONFLICT (article_type, slug) DO NOTHING;
+

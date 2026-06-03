@@ -11,9 +11,6 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
-  font-family: var(--font-family);
-  font-size: var(--font-size-body-small);
-  line-height: var(--line-height-body-small);
   background: var(--color-bg);
   color: var(--color-text-primary);
 }

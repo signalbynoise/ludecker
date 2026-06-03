@@ -1,4 +1,5 @@
 import { NAV_ITEMS } from '@ludecker/types';
+import { TEXT_BODY_CLASS } from './constants';
 export interface SiteNavProps {
   activeId?: string;
 }
@@ -14,7 +15,9 @@ export function SiteNav({ activeId }: SiteNavProps) {
             <li key={item.id} className="site-nav__item">
               <a
                 className={
-                  isActive ? 'site-nav__link site-nav__link--active' : 'site-nav__link'
+                  isActive
+                    ? `${TEXT_BODY_CLASS} site-nav__link site-nav__link--active`
+                    : `${TEXT_BODY_CLASS} site-nav__link`
                 }
                 href={item.href}
                 aria-current={isActive ? 'page' : undefined}

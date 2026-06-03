@@ -1,17 +1,13 @@
-import { ArticleList } from "@ludecker/ui";
-import {
-  ARTICLE_TYPES,
-  NAV_ITEMS,
-  NAV_SECTION_IDS,
-} from "@ludecker/types";
+import { AnimatedArticleList } from "@/components/AnimatedArticleList";
+import { ARTICLE_TYPES, NAV_ITEMS } from "@ludecker/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
-  isListableArticleType,
-  LISTABLE_ARTICLE_TYPES,
+  listRouteSegments,
+  resolveArticleTypeFromRouteSegment,
 } from "@/lib/content/article-types";
 import { FALLBACK_ARTICLES } from "@/lib/content/fallback";
-import { fetchContentByTag, fetchContentByType } from "@/lib/content/queries";
+import { fetchSectionEntries } from "@/lib/content/queries";
 
 export const revalidate = 3600;
 
@@ -20,53 +16,47 @@ interface TypeListPageProps {
 }
 
 function resolveNavItem(type: string) {
-  return NAV_ITEMS.find((item) => item.id === type || item.href === `/${type}`);
+  return NAV_ITEMS.find(
+    (item) => item.id === type || item.href === `/${type}`,
+  );
 }
 
 export async function generateMetadata({
   params,
 }: TypeListPageProps): Promise<Metadata> {
   const { type } = await params;
-  const navItem = resolveNavItem(type);
+  const articleType = resolveArticleTypeFromRouteSegment(type);
 
-  if (navItem?.tagSlug) {
-    return { title: navItem.label, description: `All ${navItem.label}` };
+  if (!articleType || articleType === "home") {
+    return { title: "Not found" };
   }
 
-  if (!isListableArticleType(type)) return { title: "Not found" };
-
   const label =
-    ARTICLE_TYPES.find((option) => option.value === type)?.label ?? type;
-  return { title: label, description: `All ${type}` };
+    ARTICLE_TYPES.find((option) => option.value === articleType)?.label ??
+    articleType;
+  return { title: label, description: `All ${label}` };
 }
 
 export default async function TypeListPage({ params }: TypeListPageProps) {
   const { type } = await params;
-  const navItem = resolveNavItem(type);
+  const articleType = resolveArticleTypeFromRouteSegment(type);
 
-  if (navItem?.tagSlug) {
-    const items = await fetchContentByTag(navItem.tagSlug);
-    return (
-      <ArticleList
-        items={items.map((content, index) => ({
-          content,
-          index: index + 1,
-        }))}
-      />
-    );
+  if (!articleType || articleType === "home") {
+    notFound();
   }
 
-  if (!isListableArticleType(type)) notFound();
+  if (!resolveNavItem(type)) {
+    notFound();
+  }
 
-  const items = await fetchContentByType(type);
+  const items = await fetchSectionEntries(articleType);
   const rows =
     items.length > 0
       ? items
-      : FALLBACK_ARTICLES.filter((a) => a.article_type === type);
+      : FALLBACK_ARTICLES.filter((entry) => entry.article_type === articleType);
 
   return (
-    <ArticleList
-      baseHref={`/${type}`}
+    <AnimatedArticleList
       items={rows.map((content, index) => ({
         content,
         index: index + 1,
@@ -76,8 +66,5 @@ export default async function TypeListPage({ params }: TypeListPageProps) {
 }
 
 export function generateStaticParams() {
-  return [
-    ...LISTABLE_ARTICLE_TYPES.map((type) => ({ type })),
-    ...NAV_SECTION_IDS.map((type) => ({ type })),
-  ];
+  return listRouteSegments().map((type) => ({ type }));
 }

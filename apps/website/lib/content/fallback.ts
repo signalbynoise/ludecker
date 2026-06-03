@@ -12,11 +12,9 @@ export const FALLBACK_HOME: ContentWithTags = {
     "C: Lüdecker",
     "",
     "P1: Welcome. Connect Supabase to load published content from the CMS.",
-    "",
-    "Predicate form: Type · page · Tags · intro",
   ].join("\n"),
   status: "published",
-  article_type: "page",
+  article_type: "home",
   cover_image: null,
   seo_title: "Lüdecker",
   seo_description: "Writing on design, technology, and practice.",
@@ -35,7 +33,7 @@ export const FALLBACK_ARTICLES: ContentWithTags[] = [
     excerpt: "How labeled metadata rows support scan-friendly reading.",
     content: "P1: Sample article body with predicate-friendly structure.",
     status: "published",
-    article_type: "article",
+    article_type: "articles",
     tags: [
       {
         id: "t2",
@@ -59,7 +57,7 @@ export const FALLBACK_ARTICLES: ContentWithTags[] = [
     excerpt: "Static generation with a CMS-backed publish workflow.",
     content: "P1: Sample guide body.",
     status: "published",
-    article_type: "guide",
+    article_type: "guides",
     tags: [
       {
         id: "t3",

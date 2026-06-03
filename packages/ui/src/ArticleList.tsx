@@ -1,5 +1,7 @@
-import type { ArticleType, Content } from '@ludecker/types';
-import { getArticlePrefix } from '@ludecker/utils';
+import type { Content } from '@ludecker/types';
+import { getArticlePrefix, getContentPublicPath } from '@ludecker/utils';
+import { TEXT_BODY_CLASS } from './constants';
+
 export interface ArticleListItem {
   content: Pick<Content, 'slug' | 'title' | 'article_type'>;
   index: number;
@@ -7,29 +9,16 @@ export interface ArticleListItem {
 
 export interface ArticleListProps {
   items: ArticleListItem[];
-  baseHref?: string;
 }
 
-function buildHref(
-  articleType: ArticleType,
-  slug: string,
-  baseHref?: string,
-): string {
-  if (baseHref) {
-    return `${baseHref}/${slug}`;
-  }
-
-  return `/${articleType}/${slug}`;
-}
-
-export function ArticleList({ items, baseHref }: ArticleListProps) {
+export function ArticleList({ items }: ArticleListProps) {
   return (
     <ul className="article-list">
       {items.map(({ content, index }) => (
         <li key={content.slug} className="article-list__item">
           <a
-            className="article-list__link"
-            href={buildHref(content.article_type, content.slug, baseHref)}
+            className={`${TEXT_BODY_CLASS} article-list__link`}
+            href={getContentPublicPath(content.article_type, content.slug)}
           >
             <span className="article-list__prefix">
               {getArticlePrefix(content.article_type, index)}

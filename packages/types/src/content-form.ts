@@ -1,4 +1,4 @@
-import type { ArticleType, ContentStatus, Tag } from './index';
+import type { ArticleType, ContentStatus, Tag } from './article-type';
 
 export interface ContentFormState {
   title: string;
@@ -29,17 +29,21 @@ export interface ContentFormSource {
 }
 
 export function toContentFormState(content?: ContentFormSource): ContentFormState {
+  const articleType = content?.article_type ?? 'articles';
+  const slug = content?.slug ?? '';
+  const isHomeIntro = articleType === 'home' && slug === 'home';
+
   return {
     title: content?.title ?? '',
-    slug: content?.slug ?? '',
+    slug,
     excerpt: content?.excerpt ?? '',
     content: content?.content ?? '',
     status: content?.status ?? 'draft',
-    article_type: content?.article_type ?? 'article',
+    article_type: articleType,
     tagNames: content?.tags.map((tag) => tag.name) ?? [],
     cover_image: content?.cover_image ?? '',
     seo_title: content?.seo_title ?? '',
     seo_description: content?.seo_description ?? '',
-    featured: content?.featured ?? false,
+    featured: isHomeIntro ? true : (content?.featured ?? false),
   };
 }

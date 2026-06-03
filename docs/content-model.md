@@ -12,7 +12,7 @@ All CMS content is stored in Supabase PostgreSQL.
 | `slug` | TEXT | URL slug (unique) |
 | `title` | TEXT | Display title |
 | `excerpt` | TEXT | Short summary |
-| `content` | TEXT | Body (structured text with `C:`, `P1:`, predicate blocks) |
+| `content` | TEXT | Body (structured text with `C:`, `P1:`, optional `R: Sources`) |
 | `status` | ENUM | `draft`, `published`, `archived` |
 | `article_type` | ENUM | See content types below |
 | `cover_image` | TEXT | Public URL from Supabase Storage |
@@ -64,11 +64,26 @@ Body text uses lightweight conventions parsed by `ArticleBody`:
 
 ```
 C: Section heading
-P1: Paragraph label
-Predicate form:
-Type · article
-Tags · tag-one, tag-two
+P1: Paragraph with an inline [outbound link](https://example.com)
+R: Sources
+P2: [Author — Title](https://example.com) — one-line citation.
 ```
+
+`article_type`, `status`, and tags are stored on the content row and in the admin form — not in the body text.
+
+Outbound links use markdown syntax `[anchor](https://…)` inside paragraph blocks.
+`ArticleInlineText` renders them as external anchors (`target="_blank"`,
+`rel="noopener noreferrer"`). Parsing lives in `packages/utils/src/content-links.ts`.
+
+### Diagram articles (`article_type: diagrams`)
+
+**Editorial intent:** universal, topic-first pieces (e.g. how state machines work) with
+**one** Mermaid diagram as the main content — not Lüdecker architecture or repo maps.
+See `.cursor/skills/write-article/frameworks/diagrams.md`.
+
+Body includes a single fenced Mermaid block (typically in `P3`). `ArticleBody` with
+`articleType="diagrams"` renders it via `ArticleMermaidDiagram` and
+`packages/ui/src/mermaid-config.ts`.
 
 ## RLS policies
 

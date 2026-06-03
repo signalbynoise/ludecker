@@ -7,6 +7,7 @@
     ".": "./src/index.ts",
     "./globals.css": "./src/globals.css",
     "./tokens.css": "./src/tokens.css",
+    "./typography.css": "./src/typography.css",
     "./page-shell.css": "./src/PageShell.css",
     "./site-layout.css": "./src/SiteLayout.css",
     "./brand-logo.css": "./src/BrandLogo.css",
@@ -14,6 +15,7 @@
     "./footer.css": "./src/Footer.css",
     "./article-list.css": "./src/ArticleList.css",
     "./article-body.css": "./src/ArticleBody.css",
+    "./article-mermaid-diagram.css": "./src/ArticleMermaidDiagram.css",
     "./content-section.css": "./src/ContentSection.css",
     "./button.css": "./src/Button.css"
   },
@@ -22,7 +24,8 @@
   },
   "dependencies": {
     "@ludecker/types": "workspace:*",
-    "@ludecker/utils": "workspace:*"
+    "@ludecker/utils": "workspace:*",
+    "mermaid": "^11.6.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",

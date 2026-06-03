@@ -4,10 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --port 3000",
+    "dev:clean": "rm -rf .next && next dev --port 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "cms:persist": "node ../../.cursor/skills/write-article/scripts/persist-content.mjs"
   },
   "dependencies": {
     "@ludecker/types": "workspace:*",
@@ -15,6 +17,8 @@
     "@ludecker/utils": "workspace:*",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.8",
+    "gsap": "^3.13.0",
+    "mermaid": "^11.6.0",
     "next": "^15.3.3",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"

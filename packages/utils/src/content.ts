@@ -1,18 +1,13 @@
 import type { ArticleType, Content } from '@ludecker/types';
+import { NAV_ITEMS, SECTION_PAGE_SLUG } from '@ludecker/types';
 
-const ARTICLE_TYPE_PREFIX: Record<ArticleType, string> = {
-  article: 'A',
-  essay: 'E',
-  note: 'N',
-  tutorial: 'T',
-  guide: 'G',
-  project: 'P',
-  page: 'C',
-};
+/** Two-letter editorial code from section name, e.g. articles → AR, guides → GU. */
+export function getArticleTypeCode(articleType: ArticleType): string {
+  return articleType.slice(0, 2).toUpperCase();
+}
 
 export function getArticlePrefix(articleType: ArticleType, index: number): string {
-  const letter = ARTICLE_TYPE_PREFIX[articleType];
-  return `${letter}${index}:`;
+  return `${getArticleTypeCode(articleType)}${index}:`;
 }
 
 export function sortContentByPublishedAt<T extends Pick<Content, 'published_at'>>(
@@ -26,9 +21,26 @@ export function sortContentByPublishedAt<T extends Pick<Content, 'published_at'>
   });
 }
 
+export function getNavHref(articleType: ArticleType): string {
+  if (articleType === 'home') {
+    return '/';
+  }
+
+  const navItem = NAV_ITEMS.find((item) => item.articleType === articleType);
+  return navItem?.href ?? `/${articleType}`;
+}
+
 export function getContentPublicPath(
   articleType: ArticleType,
   slug: string,
 ): string {
-  return `/${articleType}/${slug}`;
+  if (articleType === 'home') {
+    return '/';
+  }
+
+  if (slug === SECTION_PAGE_SLUG) {
+    return getNavHref(articleType);
+  }
+
+  return `${getNavHref(articleType)}/${slug}`;
 }

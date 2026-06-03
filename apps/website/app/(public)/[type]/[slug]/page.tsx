@@ -1,12 +1,16 @@
-import { ArticleBody } from "@ludecker/ui";
+import { AnimatedArticleBody } from "@/components/AnimatedArticleBody";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { isListableArticleType } from "@/lib/content/article-types";
+import {
+  isListableArticleType,
+  resolveArticleTypeFromRouteSegment,
+} from "@/lib/content/article-types";
 import {
   fetchAllPublishedSlugs,
   fetchContentBySlug,
 } from "@/lib/content/queries";
 import { SITE_CONFIG } from "@/lib/constants";
+import { getNavHref } from "@ludecker/utils";
 
 export const revalidate = 3600;
 
@@ -16,16 +20,22 @@ interface ContentPageProps {
 
 export async function generateStaticParams() {
   const slugs = await fetchAllPublishedSlugs();
-  return slugs.map(({ type, slug }) => ({ type, slug }));
+  return slugs.map(({ type, slug }) => ({
+    type: getNavHref(type).slice(1),
+    slug,
+  }));
 }
 
 export async function generateMetadata({
   params,
 }: ContentPageProps): Promise<Metadata> {
   const { type, slug } = await params;
-  if (!isListableArticleType(type)) return { title: "Not found" };
+  const articleType = resolveArticleTypeFromRouteSegment(type);
+  if (!articleType || articleType === "home") {
+    return { title: "Not found" };
+  }
 
-  const content = await fetchContentBySlug(type, slug);
+  const content = await fetchContentBySlug(articleType, slug);
   if (!content) return { title: "Not found" };
 
   return {
@@ -44,8 +54,16 @@ export default async function ContentPage({ params }: ContentPageProps) {
   const { type, slug } = await params;
   if (!isListableArticleType(type)) notFound();
 
-  const item = await fetchContentBySlug(type, slug);
+  const articleType = resolveArticleTypeFromRouteSegment(type);
+  if (!articleType || articleType === "home") notFound();
+
+  const item = await fetchContentBySlug(articleType, slug);
   if (!item) notFound();
 
-  return <ArticleBody content={item.content} />;
+  return (
+    <AnimatedArticleBody
+      content={item.content}
+      articleType={item.article_type}
+    />
+  );
 }

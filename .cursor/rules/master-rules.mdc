@@ -1,0 +1,141 @@
+---
+description: Non-negotiable architectural and implementation rules for the Lüdecker monorepo
+alwaysApply: true
+---
+
+# Master Rules — Lüdecker
+
+Canonical doc: `docs/master_rules.md`. All decisions, implementations, and refactors must comply. If something conflicts, **the rules win**.
+
+## Project context
+
+| Area | Location | Responsibility |
+|------|----------|----------------|
+| Public site + CMS | `apps/website` | Next.js 15 App Router, routes, server actions, content queries |
+| Design system | `packages/ui` | Figma tokens, CSS, presentational components |
+| Shared types | `packages/types` | Content model, nav config, enums |
+| Shared utilities | `packages/utils` | Slugify, dates, structured logger |
+| Database | `supabase/migrations` | Schema, RLS, seeds |
+
+**SSOT anchors (do not duplicate):**
+
+- Site name, URL, contact email → `apps/website/lib/constants.ts` (`SITE_CONFIG`)
+- Brand label in UI → `packages/ui/src/constants.ts` (`BRAND_NAME`, `CONTACT_EMAIL`)
+- Design tokens → `packages/ui/src/tokens.css`
+- Global + component styles → CSS files in `packages/ui/src/`, imported from `apps/website/app/layout.tsx` (never nested `@import` through package exports)
+- Nav items, article types → `packages/types/src/index.ts`
+- Published content → Supabase `content` table (fallbacks in `fallback.ts` only when DB unavailable)
+
+## 1. Single Source of Truth (SSOT)
+
+One truth per fact. Derived data is derived, never stored. No duplicate constants, state, or tokens.
+
+## 2. Strong Separation of Concerns
+
+- **UI** (`packages/ui`, layouts): render + interaction only
+- **State**: transitions only, no UI
+- **Domain** (`lib/content`, `packages/utils`): business rules, testable
+- **Infrastructure** (Supabase, server actions, middleware): persistence + adapters
+
+> If a file does more than one thing, it is doing too much.
+
+## 3. Modular Design
+
+Self-contained, predictable, replaceable modules. Explicit interfaces only.
+
+- `packages/ui` must not import from `apps/website`
+- `packages/types` / `packages/utils` must not import React or Next.js
+
+## 4. No Hardcoding
+
+Values come from `SITE_CONFIG`, env, constants, schemas, or state — not literals in components.
+
+## 5. No Inline Styling
+
+Token-based, class-based, centralized CSS only. No inline styles or style objects.
+
+## 6. No Inline Components
+
+Every component in its own named file.
+
+## 7. Reusable by Default
+
+Props in, no hidden context assumptions. Document intentional exceptions.
+
+## 8. Logical Direction of Flow
+
+Unidirectional: Input → State → Logic → Output. CMS: Form → Server action → Supabase → `revalidatePath`.
+
+## 9. Explicit State Machines
+
+Complex state (auth, forms, uploads) must have named states and explicit transitions.
+
+## 10. Race Condition Avoidance
+
+Async logic: cancellable, idempotent where possible, lifecycle-scoped. No stale closures.
+
+## 11. Render Discipline
+
+No unnecessary re-renders, no side effects in render. Prefer Server Components for public data fetching.
+
+## 12. Predictable State Ownership
+
+One owner per state. No mirroring across layers.
+
+## 13. Validation at Boundaries
+
+Validate CMS input and Supabase responses. Centralize schemas in `packages/types` and mappers.
+
+## 14. No Hidden Side Effects
+
+Side effects explicit and isolated. Server actions stay in `app/admin/actions/`.
+
+## 15. Determinism Over Convenience
+
+Same input → same output. Public pages stay SSG/ISR-deterministic.
+
+## 16. Explicit Errors, Never Silent Failures
+
+Log and propagate. Fallbacks only when documented, with logging first.
+
+## 17. Naming Is Architecture
+
+Intent-revealing names. Lowercase nav labels; editorial prefixes (`C:`, `P1:`, `A1:`) stay consistent.
+
+## 18. Scalability Is a First-Class Concern
+
+Design for growth and replacement. Clarity over cleverness.
+
+## 19. Module Size Budgets
+
+| Unit | Max lines | Complexity |
+|------|-----------|------------|
+| React component / hook | 250 | 15 |
+| Next.js route file | 200 | — |
+| Server action module | 250 | 20 |
+| Domain / lib module | 300 | 20 |
+| UI component + CSS | 250 | 15 |
+
+Max **80 lines** per exported function; nested callbacks over **40 lines** must be extracted.
+
+**Layer caps:** pages don't query Supabase directly; `lib/content` doesn't import UI; `packages/ui` doesn't fetch; types/utils stay runtime-free.
+
+At **80% of budget**, extract before adding features. Run `fallow check_changed` when available.
+
+## 20. Debug Logging
+
+Use `@ludecker/utils` logger. Level + module + operation + context. Never log secrets. Every async op logs start/success/failure.
+
+## 21. Testing
+
+Unit, integration, and E2E coverage as appropriate. Behavior-focused tests; run in CI on every PR.
+
+## 22. No Exceptions Without Documentation
+
+Document why, alternatives, and safety before breaking any rule.
+
+## 23. The Prime Directive
+
+> Clarity beats cleverness. Predictability beats shortcuts. One truth beats convenience.
+
+If something feels confusing, it is wrong.

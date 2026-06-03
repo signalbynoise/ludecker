@@ -32,3 +32,6 @@ pnpm-debug.log*
 # Supabase
 supabase/.branches/
 supabase/.temp/
+
+# Agent article runs (draft artifacts)
+.cursor/write-article-runs/

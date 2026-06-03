@@ -9,17 +9,40 @@
 .content-section__heading {
   margin: 0;
   color: var(--color-text-primary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-logo);
   font-weight: var(--font-weight-extra-bold);
-  line-height: var(--line-height-logo);
+}
+
+.content-section__prefix {
+  color: var(--color-text-primary);
+}
+
+.content-section__heading-text {
+  font: inherit;
 }
 
 .content-section__body {
   margin: 0;
   color: var(--color-text-primary);
-  font-family: var(--font-family);
-  font-size: var(--font-size-body-small);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-body-small);
+}
+
+.content-section--paragraph .content-section__heading {
+  font-weight: var(--font-weight-regular);
+}
+
+.content-section--paragraph .content-section__prefix {
+  font-weight: var(--font-weight-extra-bold);
+}
+
+.content-section--sources .content-section__heading {
+  color: var(--color-text-frost-03);
+}
+
+.content-section--citation .content-section__heading {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-frost-03);
+}
+
+.content-section--citation .content-section__prefix {
+  font-weight: var(--font-weight-regular);
 }

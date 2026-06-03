@@ -1,4 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
+import { TEXT_BODY_CLASS } from './constants';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'danger';
 
@@ -11,6 +12,7 @@ export function buttonClassName(
   disabled?: boolean,
 ): string {
   return joinClasses(
+    TEXT_BODY_CLASS,
     'ui-button',
     variant === 'primary' && 'ui-button--primary',
     variant === 'danger' && 'ui-button--danger',

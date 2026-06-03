@@ -1,0 +1,45 @@
+.article-body[data-article-type='diagrams'] {
+  width: 100%;
+  gap: var(--space-xxl);
+}
+
+.article-mermaid-diagram {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  margin: 0;
+  padding: var(--space-xxl) var(--space-large);
+  gap: var(--space-large);
+  border: 1px solid var(--color-text-frost-03);
+  background-color: var(--color-bg);
+  box-sizing: border-box;
+}
+
+.article-mermaid-diagram__canvas {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+  min-height: 120px;
+  overflow-x: auto;
+}
+
+.article-mermaid-diagram__svg {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.article-mermaid-diagram__svg svg {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin-inline: auto;
+}
+
+.article-mermaid-diagram__error {
+  margin: 0;
+  color: var(--color-text-danger);
+}

@@ -1,0 +1,16 @@
+/**
+ * Typography SSOT — class name mirrored in constants.ts (TEXT_BODY_CLASS).
+ * Tokens: packages/ui/src/tokens.css
+ */
+.text-body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
+.text-body input,
+.text-body select,
+.text-body textarea,
+.text-body button {
+  font: inherit;
+}

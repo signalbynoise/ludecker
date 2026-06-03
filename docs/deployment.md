@@ -15,8 +15,10 @@ Set on Render (web service `ludecker-website`):
 | `NEXT_PUBLIC_SUPABASE_URL` | `https://anseivwusnyiwopihnqu.supabase.co` |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase publishable key |
 | `SUPABASE_SERVICE_ROLE_KEY` | Service role key (server-only, for SSG) |
+| `NEXT_PUBLIC_SITE_URL` | Production URL (e.g. `https://ludecker.com`) |
+| `REVALIDATE_SECRET` | Secret for `POST /api/revalidate` (on-demand ISR after CMS writes) |
 
-Local development: copy `apps/website/.env.example` to `.env.local`.
+Local development: copy `apps/website/.env.example` to `.env.local`. Use the **same** `REVALIDATE_SECRET` locally and on Render so `/write-article` persist can refresh production after `--publish`.
 
 ## Render (Erik workspace)
 

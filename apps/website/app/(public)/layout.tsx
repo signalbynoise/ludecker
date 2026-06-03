@@ -1,6 +1,6 @@
-import { BrandLogo, Footer, PageShell, SiteLayout } from "@ludecker/ui";
-import Link from "next/link";
-import { SiteNavActive } from "./SiteNavActive";
+import { PageShell, SiteLayout } from "@ludecker/ui";
+import { PublicSidebar } from "@/components/PublicSidebar";
+import { IntroAnimationProvider } from "@/lib/intro-animation/IntroAnimationContext";
 
 export default function PublicLayout({
   children,
@@ -8,20 +8,10 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <PageShell>
-      <SiteLayout
-        sidebar={
-          <>
-            <Link href="/">
-              <BrandLogo />
-            </Link>
-            <SiteNavActive />
-            <Footer />
-          </>
-        }
-      >
-        {children}
-      </SiteLayout>
-    </PageShell>
+    <IntroAnimationProvider>
+      <PageShell>
+        <SiteLayout sidebar={<PublicSidebar />}>{children}</SiteLayout>
+      </PageShell>
+    </IntroAnimationProvider>
   );
 }

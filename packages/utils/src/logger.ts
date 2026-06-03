@@ -74,8 +74,17 @@ export interface Logger {
   error: (operation: string, message: string, context?: LogContext) => void;
 }
 
-export function createLogger(moduleName: string, minLevel: LogLevel = 'debug'): Logger {
-  const minPriority = LOG_LEVEL_PRIORITY[minLevel];
+function resolveMinLevel(): LogLevel {
+  const configured = process.env.LOG_LEVEL;
+  if (configured && configured in LOG_LEVEL_PRIORITY) {
+    return configured as LogLevel;
+  }
+
+  return process.env.NODE_ENV === "production" ? "info" : "debug";
+}
+
+export function createLogger(moduleName: string, minLevel?: LogLevel): Logger {
+  const minPriority = LOG_LEVEL_PRIORITY[minLevel ?? resolveMinLevel()];
 
   const logAtLevel =
     (level: LogLevel) =>

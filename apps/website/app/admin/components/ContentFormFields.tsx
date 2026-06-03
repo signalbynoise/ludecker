@@ -3,7 +3,7 @@
 import {
   ARTICLE_TYPES,
   type ContentFormState,
-  type ContentStatus,
+  CONTENT_STATUS_VALUES,
 } from "@ludecker/types";
 import type { RefObject } from "react";
 import { TagInput } from "@/app/admin/components/TagInput";
@@ -74,17 +74,22 @@ export function ContentFormFields({
           id="status"
           value={form.status}
           onChange={(e) =>
-            onFieldChange("status", e.target.value as ContentStatus)
+            onFieldChange(
+              "status",
+              e.target.value as (typeof CONTENT_STATUS_VALUES)[number],
+            )
           }
         >
-          <option value="draft">draft</option>
-          <option value="published">published</option>
-          <option value="archived">archived</option>
+          {CONTENT_STATUS_VALUES.map((value) => (
+            <option key={value} value={value}>
+              {value}
+            </option>
+          ))}
         </select>
       </div>
 
       <div className="admin-field">
-        <label htmlFor="article_type">article type</label>
+        <label htmlFor="article_type">section</label>
         <select
           id="article_type"
           value={form.article_type}

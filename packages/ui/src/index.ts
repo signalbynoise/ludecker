@@ -1,4 +1,4 @@
-export { BRAND_NAME, CONTACT_EMAIL } from './constants';
+export { BRAND_NAME, CONTACT_EMAIL, TEXT_BODY_CLASS } from './constants';
 export { PageShell, type PageShellProps } from './PageShell';
 export { SiteLayout, type SiteLayoutProps } from './SiteLayout';
 export { BrandLogo } from './BrandLogo';

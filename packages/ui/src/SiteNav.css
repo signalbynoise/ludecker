@@ -19,10 +19,7 @@
 
 .site-nav__link {
   color: var(--color-text-frost-03);
-  font-family: var(--font-family);
-  font-size: var(--font-size-title-1);
   font-weight: var(--font-weight-regular);
-  line-height: var(--line-height-title-1);
 }
 
 .site-nav__link--active {

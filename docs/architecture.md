@@ -68,6 +68,7 @@ Tokens and components live in `@ludecker/ui`, derived from the [Figma design fil
 ```
 Supabase (content) → Server queries (SSG) → @ludecker/ui components → Static HTML
 CMS form → Server actions → Supabase (authenticated) → revalidatePath → ISR refresh
+Write-article persist → Supabase → POST /api/revalidate (published + `--publish`) → ISR refresh
 ```
 
 ## Principles

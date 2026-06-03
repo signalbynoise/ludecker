@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import type { ArticleType, ContentFormState, ContentStatus } from "@ludecker/types";
+import { revalidatePublicContent } from "@/lib/content/revalidate-public";
 import {
   CONTENT_STORAGE_BUCKET,
   CONTENT_TABLE,
+  HOME_INTRO,
 } from "@/lib/constants";
 import { syncContentTags } from "@/lib/content/tags";
 import {
@@ -34,11 +36,15 @@ async function requireUser() {
   return { supabase, user };
 }
 
-function revalidatePublicPaths(type: string, slug: string) {
-  revalidatePath("/");
-  revalidatePath("/articles");
-  revalidatePath(`/${type}`);
-  revalidatePath(`/${type}/${slug}`);
+function revalidatePublicPaths(articleType: ContentFormState["article_type"], slug: string) {
+  revalidatePublicContent(articleType, slug);
+}
+
+function isHomeIntro(
+  articleType: ContentFormState["article_type"],
+  slug: string,
+): boolean {
+  return articleType === HOME_INTRO.articleType && slug === HOME_INTRO.slug;
 }
 
 function toRowPayload(input: ContentFormState) {
@@ -52,7 +58,7 @@ function toRowPayload(input: ContentFormState) {
     cover_image: input.cover_image || null,
     seo_title: input.seo_title || null,
     seo_description: input.seo_description || null,
-    featured: input.featured,
+    featured: isHomeIntro(input.article_type, input.slug) ? true : input.featured,
     published_at:
       input.status === "published" ? new Date().toISOString() : null,
     updated_at: new Date().toISOString(),
@@ -91,7 +97,7 @@ export async function createContentAction(
     return { error: message };
   }
 
-  revalidatePublicPaths(String(data.article_type), String(data.slug));
+  revalidatePublicPaths(String(data.article_type) as ArticleType, String(data.slug));
   log.info("createContent", "success", { id: data.id });
   return { id: String(data.id) };
 }
@@ -130,7 +136,7 @@ export async function updateContentAction(
     return { error: message };
   }
 
-  revalidatePublicPaths(String(data.article_type), String(data.slug));
+  revalidatePublicPaths(String(data.article_type) as ArticleType, String(data.slug));
   revalidatePath("/admin");
   revalidatePath(`/admin/content/${id}/edit`);
   log.info("updateContent", "success", { id });
@@ -168,13 +174,54 @@ export async function unpublishContentAction(
   return setPublishState(id, "draft");
 }
 
+export async function bulkSetContentStatusAction(
+  ids: string[],
+  status: ContentStatus,
+): Promise<{ ok: true; updated: number } | { error: string }> {
+  log.info("bulkSetContentStatus", "start", { count: ids.length, status });
+  const result = await updateContentStatusBatch(ids, status);
+  if ("error" in result) {
+    return { error: result.error };
+  }
+
+  revalidateAfterStatusChange(result.rows, result.contentIds);
+  log.info("bulkSetContentStatus", "success", { updated: result.rows.length });
+  return { ok: true, updated: result.rows.length };
+}
+
 async function setPublishState(
   id: string,
   status: ContentStatus,
 ): Promise<{ ok: true } | { error: string }> {
   log.info("setPublishState", "start", { id, status });
-  const { supabase } = await requireUser();
+  const result = await updateContentStatusBatch([id], status);
+  if ("error" in result) {
+    return { error: result.error };
+  }
 
+  revalidateAfterStatusChange(result.rows, result.contentIds);
+  return { ok: true };
+}
+
+interface StatusChangeRow {
+  article_type: string;
+  slug: string;
+}
+
+async function updateContentStatusBatch(
+  ids: string[],
+  status: ContentStatus,
+): Promise<
+  | { rows: StatusChangeRow[]; contentIds: string[] }
+  | { error: string }
+> {
+  const contentIds = [...new Set(ids.filter((id) => id.length > 0))];
+  if (contentIds.length === 0) {
+    log.warn("updateContentStatusBatch", "no ids");
+    return { error: "No items selected" };
+  }
+
+  const { supabase } = await requireUser();
   const { data, error } = await supabase
     .from(CONTENT_TABLE)
     .update({
@@ -183,19 +230,28 @@ async function setPublishState(
         status === "published" ? new Date().toISOString() : null,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", id)
-    .select("article_type, slug")
-    .single();
+    .in("id", contentIds)
+    .select("article_type, slug");
 
   if (error) {
-    log.error("setPublishState", "failed", { message: error.message });
+    log.error("updateContentStatusBatch", "failed", { message: error.message });
     return { error: error.message };
   }
 
-  revalidatePublicPaths(String(data.article_type), String(data.slug));
+  return { rows: data ?? [], contentIds };
+}
+
+function revalidateAfterStatusChange(
+  rows: StatusChangeRow[],
+  contentIds: string[],
+) {
+  for (const row of rows) {
+    revalidatePublicPaths(String(row.article_type) as ArticleType, String(row.slug));
+  }
   revalidatePath("/admin");
-  revalidatePath(`/admin/content/${id}/edit`);
-  return { ok: true };
+  for (const id of contentIds) {
+    revalidatePath(`/admin/content/${id}/edit`);
+  }
 }
 
 export async function uploadCoverImageAction(

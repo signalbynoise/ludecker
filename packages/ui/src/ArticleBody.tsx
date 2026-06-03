@@ -1,91 +1,21 @@
+import type { ArticleType } from '@ludecker/types';
+import { parseArticleBodyBlocks } from '@ludecker/utils';
+import { TEXT_BODY_CLASS } from './constants';
+import { ArticleInlineText } from './ArticleInlineText';
+import { ArticleMermaidDiagram } from './ArticleMermaidDiagram';
 import { ContentSection } from './ContentSection';
 
 export interface ArticleBodyProps {
   content: string;
+  articleType?: ArticleType;
 }
 
-interface ParsedBlock {
-  type: 'heading' | 'paragraph' | 'predicate';
-  text: string;
-}
-
-const HEADING_PATTERN = /^([A-Z]+\d*:|FS:)\s*(.*)$/;
-const PREDICATE_LABEL = 'Predicate form:';
-
-function isHeadingLine(line: string): boolean {
-  return HEADING_PATTERN.test(line.trim());
-}
-
-function parseContent(content: string): ParsedBlock[] {
-  const lines = content.split('\n');
-  const blocks: ParsedBlock[] = [];
-  let index = 0;
-
-  while (index < lines.length) {
-    const trimmed = lines[index]?.trim() ?? '';
-
-    if (trimmed.length === 0) {
-      index += 1;
-      continue;
-    }
-
-    if (trimmed.startsWith(PREDICATE_LABEL)) {
-      const predicateLines = [trimmed];
-      index += 1;
-
-      while (index < lines.length) {
-        const nextLine = lines[index]?.trim() ?? '';
-        if (nextLine.length === 0 || isHeadingLine(nextLine)) {
-          break;
-        }
-        predicateLines.push(nextLine);
-        index += 1;
-      }
-
-      blocks.push({ type: 'predicate', text: predicateLines.join('\n') });
-      continue;
-    }
-
-    const headingMatch = trimmed.match(HEADING_PATTERN);
-    if (headingMatch) {
-      const headingText = headingMatch[2]
-        ? `${headingMatch[1]} ${headingMatch[2]}`.trim()
-        : headingMatch[1];
-      blocks.push({ type: 'heading', text: headingText });
-      index += 1;
-      continue;
-    }
-
-    const paragraphLines = [trimmed];
-    index += 1;
-
-    while (index < lines.length) {
-      const nextTrimmed = lines[index]?.trim() ?? '';
-      if (nextTrimmed.length === 0) {
-        index += 1;
-        break;
-      }
-      if (
-        nextTrimmed.startsWith(PREDICATE_LABEL) ||
-        isHeadingLine(nextTrimmed)
-      ) {
-        break;
-      }
-      paragraphLines.push(nextTrimmed);
-      index += 1;
-    }
-
-    blocks.push({ type: 'paragraph', text: paragraphLines.join('\n') });
-  }
-
-  return blocks;
-}
-
-export function ArticleBody({ content }: ArticleBodyProps) {
-  const blocks = parseContent(content);
+export function ArticleBody({ content, articleType }: ArticleBodyProps) {
+  const mermaid = articleType === 'diagrams';
+  const blocks = parseArticleBodyBlocks(content, { mermaid });
 
   return (
-    <article className="article-body">
+    <article className={`${TEXT_BODY_CLASS} article-body`} data-article-type={articleType}>
       {blocks.map((block, blockIndex) => {
         const key = `${block.type}-${blockIndex}`;
 
@@ -100,17 +30,15 @@ export function ArticleBody({ content }: ArticleBodyProps) {
           );
         }
 
-        if (block.type === 'predicate') {
+        if (block.type === 'mermaid') {
           return (
-            <p key={key} className="article-body__predicate">
-              {block.text}
-            </p>
+            <ArticleMermaidDiagram key={key} source={block.source} />
           );
         }
 
         return (
-          <p key={key} className="article-body__paragraph">
-            {block.text}
+          <p key={key} className={`${TEXT_BODY_CLASS} article-body__paragraph`}>
+            <ArticleInlineText text={block.text} />
           </p>
         );
       })}

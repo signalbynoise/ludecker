@@ -10,7 +10,7 @@ function resolveActiveNavId(pathname: string): string | undefined {
   const match = NAV_ITEMS.find((item) => {
     if (pathname === item.href) return true;
     if (item.href !== "/" && pathname.startsWith(`${item.href}/`)) return true;
-    if (item.articleType && pathname.startsWith(`/${item.articleType}`)) return true;
+    if (pathname.startsWith(`/${item.articleType}/`)) return true;
     return false;
   });
 

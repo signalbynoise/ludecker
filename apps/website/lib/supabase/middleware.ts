@@ -1,5 +1,8 @@
 import { createServerClient } from "@supabase/ssr";
+import { createLogger } from "@ludecker/utils";
 import { NextResponse, type NextRequest } from "next/server";
+
+const log = createLogger("middleware:session");
 
 type CookieToSet = {
   name: string;
@@ -8,48 +11,83 @@ type CookieToSet = {
 };
 
 export async function updateSession(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+
+  log.debug("updateSession", "start", { pathname });
+
   let supabaseResponse = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet: CookieToSet[]) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options),
-          );
-        },
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+
+  if (!supabaseUrl || !supabaseKey) {
+    log.error("updateSession", "Missing Supabase public credentials", {
+      pathname,
+      hasUrl: Boolean(supabaseUrl),
+      hasKey: Boolean(supabaseKey),
+    });
+    return supabaseResponse;
+  }
+
+  const supabase = createServerClient(supabaseUrl, supabaseKey, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet: CookieToSet[]) {
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
+        supabaseResponse = NextResponse.next({ request });
+        cookiesToSet.forEach(({ name, value, options }) =>
+          supabaseResponse.cookies.set(name, value, options),
+        );
       },
     },
-  );
+  });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  try {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
 
-  const isAdminRoute = request.nextUrl.pathname.startsWith("/admin");
-  const isLoginRoute = request.nextUrl.pathname === "/admin/login";
+    if (error) {
+      log.warn("updateSession", "getUser failed", {
+        pathname,
+        message: error.message,
+      });
+    }
 
-  if (isAdminRoute && !isLoginRoute && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin/login";
-    url.searchParams.set("redirect", request.nextUrl.pathname);
-    return NextResponse.redirect(url);
+    const isAdminRoute = pathname.startsWith("/admin");
+    const isLoginRoute = pathname === "/admin/login";
+
+    if (isAdminRoute && !isLoginRoute && !user) {
+      log.debug("updateSession", "redirect unauthenticated admin request", {
+        pathname,
+      });
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin/login";
+      url.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(url);
+    }
+
+    if (isLoginRoute && user) {
+      log.debug("updateSession", "redirect authenticated user to dashboard", {
+        pathname,
+      });
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin";
+      return NextResponse.redirect(url);
+    }
+
+    log.debug("updateSession", "success", { pathname, authenticated: Boolean(user) });
+    return supabaseResponse;
+  } catch (error) {
+    log.error("updateSession", "unexpected failure", {
+      pathname,
+      message: error instanceof Error ? error.message : "unknown",
+    });
+    return supabaseResponse;
   }
-
-  if (isLoginRoute && user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/admin";
-    return NextResponse.redirect(url);
-  }
-
-  return supabaseResponse;
 }

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { SITE_CONFIG } from "@/lib/constants";
+import { CMS_CONFIG } from "@/lib/constants";
 
 export interface AdminHeaderProps {
   backHref?: string;
@@ -14,7 +14,7 @@ export function AdminHeader({
   backHref,
   backLabel,
   brandHref = "/admin",
-  brandLabel = SITE_CONFIG.name,
+  brandLabel = CMS_CONFIG.title,
   actions,
 }: AdminHeaderProps) {
   return (
