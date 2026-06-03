@@ -1,0 +1,133 @@
+.admin-root {
+  min-height: 100dvh;
+  font-family: var(--font-mono);
+  background: var(--color-bg);
+}
+
+.admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.admin-table th,
+.admin-table td {
+  text-align: left;
+  padding: var(--space-sm) var(--space-md);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-form {
+  display: grid;
+  gap: var(--space-lg);
+}
+
+.admin-field {
+  display: grid;
+  gap: var(--space-xs);
+}
+
+.admin-field label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.admin-field input,
+.admin-field textarea,
+.admin-field select {
+  font: inherit;
+  font-family: var(--font-mono);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  border-radius: 2px;
+}
+
+.admin-field textarea {
+  min-height: 12rem;
+  resize: vertical;
+}
+
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.admin-button {
+  font: inherit;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+  cursor: pointer;
+}
+
+.admin-button--primary {
+  background: var(--color-accent);
+  color: var(--color-surface);
+  border-color: var(--color-accent);
+}
+
+.admin-button--danger {
+  color: #8b2e2e;
+}
+
+.admin-login {
+  max-width: 24rem;
+  margin: var(--space-2xl) auto;
+  padding: var(--space-lg);
+}
+
+.admin-tag-input {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.admin-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.125rem var(--space-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: 0.75rem;
+}
+
+.admin-error {
+  color: #8b2e2e;
+  font-size: 0.875rem;
+}
+
+.admin-status {
+  display: inline-block;
+  padding: 0.125rem var(--space-sm);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border: 1px solid var(--color-border);
+}
+
+.admin-status--published {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}

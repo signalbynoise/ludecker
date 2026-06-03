@@ -1,0 +1,26 @@
+# LUDECKER personal website — Render Blueprint
+# Deploy flow: GitHub → Render → Cloudflare (DNS/proxy)
+#
+# After first deploy, point your domain CNAME to the Render service URL
+# and enable Cloudflare proxy + SSL.
+
+services:
+  - type: web
+    name: ludecker-website
+    runtime: node
+    region: frankfurt
+    plan: starter
+    branch: main
+    rootDir: apps/website
+    buildCommand: cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @ludecker/website build
+    startCommand: pnpm start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false

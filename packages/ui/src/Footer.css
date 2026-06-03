@@ -1,0 +1,12 @@
+.site-footer {
+  width: 100%;
+}
+
+.site-footer__email {
+  color: var(--color-text-primary);
+  font-family: var(--font-family);
+  font-size: var(--font-size-logo);
+  font-weight: var(--font-weight-extra-bold);
+  line-height: var(--line-height-logo);
+  white-space: nowrap;
+}

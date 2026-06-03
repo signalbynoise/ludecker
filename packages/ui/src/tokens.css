@@ -1,0 +1,28 @@
+:root {
+  /* Colors */
+  --color-bg: #000000;
+  --color-text-primary: #ffffff;
+  --color-text-frost-01: #cccccc;
+  --color-text-frost-03: #7a7a7a;
+
+  /* Spacing */
+  --space-small: 4px;
+  --space-large: 16px;
+  --space-xxl: 40px;
+  --space-xxxl: 80px;
+
+  /* Layout */
+  --breakpoint-desktop: 768px;
+  --layout-max-width: none;
+
+  /* Typography */
+  --font-family: var(--font-atkinson, 'Atkinson Hyperlegible Mono'), ui-monospace, monospace;
+  --font-weight-regular: 400;
+  --font-weight-extra-bold: 800;
+  --font-size-logo: 16px;
+  --line-height-logo: 24px;
+  --font-size-title-1: 24px;
+  --line-height-title-1: normal;
+  --font-size-body-small: 14px;
+  --line-height-body-small: 22px;
+}
