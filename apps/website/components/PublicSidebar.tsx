@@ -10,7 +10,7 @@ import {
 import { NAV_ITEMS } from "@ludecker/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { Fragment, useEffect, useMemo } from "react";
 import TextType from "@/components/react-bits/TextType/TextType";
 import {
   INTRO_TEXT_TYPE_SPEED_MS,
@@ -74,7 +74,7 @@ export function PublicSidebar() {
   }
 
   return (
-    <div key="sidebar-intro">
+    <Fragment key="sidebar-intro">
       <Link href="/">
         <div className="brand-logo">
           <TextType
@@ -134,6 +134,6 @@ export function PublicSidebar() {
           />
         </a>
       </footer>
-    </div>
+    </Fragment>
   );
 }
