@@ -1,8 +1,8 @@
 export const SITE_CONFIG = {
-  name: "Arvid",
+  name: "Lüdecker",
   description: "Writing on design, technology, and practice.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
-  contactEmail: "erik@arvid.work",
+  contactEmail: "erik@ludecker.com",
 } as const;
 
 export const CONTENT_TABLE = "content" as const;

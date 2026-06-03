@@ -25,3 +25,10 @@ export function sortContentByPublishedAt<T extends Pick<Content, 'published_at'>
     return rightTime - leftTime;
   });
 }
+
+export function getContentPublicPath(
+  articleType: ArticleType,
+  slug: string,
+): string {
+  return `/${articleType}/${slug}`;
+}

@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react';
-import './SiteLayout.css';
-
 export interface SiteLayoutProps {
   sidebar: ReactNode;
   children: ReactNode;

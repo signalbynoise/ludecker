@@ -4,12 +4,12 @@ const now = new Date().toISOString();
 
 export const FALLBACK_HOME: ContentWithTags = {
   id: "fallback-home",
-  title: "Arvid",
+  title: "Lüdecker",
   slug: "home",
   excerpt:
     "Notes on design systems, editorial tools, and building with clarity.",
   content: [
-    "C: Arvid",
+    "C: Lüdecker",
     "",
     "P1: Welcome. Connect Supabase to load published content from the CMS.",
     "",
@@ -18,7 +18,7 @@ export const FALLBACK_HOME: ContentWithTags = {
   status: "published",
   article_type: "page",
   cover_image: null,
-  seo_title: "Arvid",
+  seo_title: "Lüdecker",
   seo_description: "Writing on design, technology, and practice.",
   featured: true,
   published_at: now,

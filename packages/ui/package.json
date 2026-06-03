@@ -6,7 +6,16 @@
   "exports": {
     ".": "./src/index.ts",
     "./globals.css": "./src/globals.css",
-    "./tokens.css": "./src/tokens.css"
+    "./tokens.css": "./src/tokens.css",
+    "./page-shell.css": "./src/PageShell.css",
+    "./site-layout.css": "./src/SiteLayout.css",
+    "./brand-logo.css": "./src/BrandLogo.css",
+    "./site-nav.css": "./src/SiteNav.css",
+    "./footer.css": "./src/Footer.css",
+    "./article-list.css": "./src/ArticleList.css",
+    "./article-body.css": "./src/ArticleBody.css",
+    "./content-section.css": "./src/ContentSection.css",
+    "./button.css": "./src/Button.css"
   },
   "scripts": {
     "typecheck": "tsc --noEmit"

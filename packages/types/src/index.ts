@@ -57,17 +57,23 @@ export interface NavItem {
   label: string;
   href: string;
   articleType: ArticleType | null;
+  /** When set, lists published content tagged with this slug instead of article_type. */
+  tagSlug?: string;
 }
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { id: 'articles', label: 'articles', href: '/articles', articleType: 'article' },
-  { id: 'guides', label: 'guides', href: '/guides', articleType: 'guide' },
-  { id: 'skills', label: 'skills', href: '/skills', articleType: null },
-  { id: 'tools', label: 'tools', href: '/tools', articleType: null },
-  { id: 'commands', label: 'commands', href: '/commands', articleType: null },
-  { id: 'subagents', label: 'subagents', href: '/subagents', articleType: null },
-  { id: 'diagrams', label: 'diagrams', href: '/diagrams', articleType: null },
+  { id: 'guides', label: 'guides', href: '/guide', articleType: 'guide' },
+  { id: 'skills', label: 'skills', href: '/skills', articleType: null, tagSlug: 'skills' },
+  { id: 'tools', label: 'tools', href: '/tools', articleType: null, tagSlug: 'tools' },
+  { id: 'commands', label: 'commands', href: '/commands', articleType: null, tagSlug: 'commands' },
+  { id: 'subagents', label: 'subagents', href: '/subagents', articleType: null, tagSlug: 'subagents' },
+  { id: 'diagrams', label: 'diagrams', href: '/diagrams', articleType: null, tagSlug: 'diagrams' },
 ] as const;
+
+export const NAV_SECTION_IDS = NAV_ITEMS.filter(
+  (item): item is NavItem & { tagSlug: string } => Boolean(item.tagSlug),
+).map((item) => item.id);
 
 export interface CreateContentInput {
   slug: string;
@@ -96,3 +102,6 @@ export interface UpdateContentInput {
   published_at?: string | null;
   tag_ids?: string[];
 }
+
+export type { ContentFormState } from './content-form';
+export { toContentFormState } from './content-form';

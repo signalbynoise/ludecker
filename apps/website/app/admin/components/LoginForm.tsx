@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { Button } from "@ludecker/ui";
 import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm() {
@@ -38,10 +39,10 @@ export function LoginForm() {
 
   return (
     <form className="admin-form admin-login" onSubmit={handleSubmit}>
-      <h1>Admin login</h1>
+      <h1 className="admin-login__title">admin login</h1>
       {error ? <p className="admin-error">{error}</p> : null}
       <div className="admin-field">
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email">email</label>
         <input
           id="email"
           type="email"
@@ -52,7 +53,7 @@ export function LoginForm() {
         />
       </div>
       <div className="admin-field">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password">password</label>
         <input
           id="password"
           type="password"
@@ -62,13 +63,9 @@ export function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button
-        type="submit"
-        className="admin-button admin-button--primary"
-        disabled={loading}
-      >
-        {loading ? "Signing in…" : "Sign in"}
-      </button>
+      <Button type="submit" variant="primary" disabled={loading}>
+        {loading ? "signing in…" : "sign in"}
+      </Button>
     </form>
   );
 }

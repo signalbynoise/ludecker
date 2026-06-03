@@ -1,5 +1,3 @@
-import './ContentSection.css';
-
 export interface ContentSectionProps {
   heading: string;
   body: string;

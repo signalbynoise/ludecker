@@ -104,6 +104,21 @@ export async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null
   return data ?? null;
 }
 
+export async function fetchContentByTag(tagSlug: string): Promise<ContentWithTags[]> {
+  const data = await queryAdmin("fetchContentByTag", async (client) => {
+    const { data: rows, error } = await client
+      .from(CONTENT_TABLE)
+      .select(`${CONTENT_SELECT}`)
+      .eq("status", "published")
+      .eq("content_tags.tags.slug", tagSlug);
+
+    if (error) throw error;
+    return sortContentByPublishedAt((rows ?? []).map(mapContentWithTagsRow));
+  });
+
+  return data ?? [];
+}
+
 export async function fetchAllPublishedSlugs(): Promise<
   { type: ArticleType; slug: string }[]
 > {

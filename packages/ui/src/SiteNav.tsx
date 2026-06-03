@@ -1,6 +1,4 @@
 import { NAV_ITEMS } from '@ludecker/types';
-import './SiteNav.css';
-
 export interface SiteNavProps {
   activeId?: string;
 }

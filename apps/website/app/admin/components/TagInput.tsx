@@ -40,7 +40,6 @@ export function TagInput({ initialTags, onChange }: TagInputProps) {
           {tag}
           <button
             type="button"
-            className="admin-button"
             onClick={() => removeTag(tag)}
             aria-label={`Remove ${tag}`}
           >
@@ -51,7 +50,7 @@ export function TagInput({ initialTags, onChange }: TagInputProps) {
       <input
         type="text"
         value={draft}
-        placeholder="Add tag, press Enter"
+        placeholder="add tag, press enter"
         onChange={(e) => setDraft(e.target.value)}
         onKeyDown={handleKeyDown}
         onBlur={() => addTag(draft)}

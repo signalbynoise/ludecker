@@ -1,4 +1,3 @@
-import './ArticleBody.css';
 import { ContentSection } from './ContentSection';
 
 export interface ArticleBodyProps {
@@ -6,7 +5,7 @@ export interface ArticleBodyProps {
 }
 
 interface ParsedBlock {
-  type: 'heading' | 'paragraph' | 'predicate' | 'spacer';
+  type: 'heading' | 'paragraph' | 'predicate';
   text: string;
 }
 
@@ -26,7 +25,6 @@ function parseContent(content: string): ParsedBlock[] {
     const trimmed = lines[index]?.trim() ?? '';
 
     if (trimmed.length === 0) {
-      blocks.push({ type: 'spacer', text: '' });
       index += 1;
       continue;
     }
@@ -58,8 +56,26 @@ function parseContent(content: string): ParsedBlock[] {
       continue;
     }
 
-    blocks.push({ type: 'paragraph', text: trimmed });
+    const paragraphLines = [trimmed];
     index += 1;
+
+    while (index < lines.length) {
+      const nextTrimmed = lines[index]?.trim() ?? '';
+      if (nextTrimmed.length === 0) {
+        index += 1;
+        break;
+      }
+      if (
+        nextTrimmed.startsWith(PREDICATE_LABEL) ||
+        isHeadingLine(nextTrimmed)
+      ) {
+        break;
+      }
+      paragraphLines.push(nextTrimmed);
+      index += 1;
+    }
+
+    blocks.push({ type: 'paragraph', text: paragraphLines.join('\n') });
   }
 
   return blocks;
@@ -72,10 +88,6 @@ export function ArticleBody({ content }: ArticleBodyProps) {
     <article className="article-body">
       {blocks.map((block, blockIndex) => {
         const key = `${block.type}-${blockIndex}`;
-
-        if (block.type === 'spacer') {
-          return <p key={key} className="article-body__spacer" aria-hidden="true" />;
-        }
 
         if (block.type === 'heading') {
           return (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { Button } from "@ludecker/ui";
 import { createClient } from "@/lib/supabase/client";
 
 export function LogoutButton() {
@@ -14,8 +15,8 @@ export function LogoutButton() {
   }
 
   return (
-    <button type="button" className="admin-button" onClick={handleLogout}>
-      Sign out
-    </button>
+    <Button type="button" onClick={handleLogout}>
+      sign out
+    </Button>
   );
 }

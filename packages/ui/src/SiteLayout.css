@@ -38,5 +38,8 @@
 
   .site-layout__sidebar {
     align-items: flex-start;
+    align-self: flex-start;
+    position: sticky;
+    top: var(--space-xxl);
   }
 }

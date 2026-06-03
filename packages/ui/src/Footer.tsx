@@ -1,6 +1,4 @@
 import { CONTACT_EMAIL } from './constants';
-import './Footer.css';
-
 export function Footer() {
   return (
     <footer className="site-footer">

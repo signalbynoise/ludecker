@@ -2,30 +2,22 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import type { ArticleType, ContentStatus } from "@ludecker/types";
+import type { ArticleType, ContentFormState, ContentStatus } from "@ludecker/types";
 import {
   CONTENT_STORAGE_BUCKET,
   CONTENT_TABLE,
 } from "@/lib/constants";
 import { syncContentTags } from "@/lib/content/tags";
+import {
+  normalizeContentFormState,
+  validateContentFormState,
+} from "@/lib/content/validate-form";
 import { createLogger } from "@ludecker/utils";
 import { createClient } from "@/lib/supabase/server";
 
 const log = createLogger("actions:content");
 
-export interface ContentFormState {
-  title: string;
-  slug: string;
-  excerpt: string;
-  content: string;
-  status: ContentStatus;
-  article_type: ArticleType;
-  tagNames: string[];
-  cover_image: string;
-  seo_title: string;
-  seo_description: string;
-  featured: boolean;
-}
+export type { ContentFormState } from "@ludecker/types";
 
 async function requireUser() {
   const supabase = await createClient();
@@ -71,11 +63,18 @@ export async function createContentAction(
   input: ContentFormState,
 ): Promise<{ id: string } | { error: string }> {
   log.info("createContent", "start");
+  const normalized = normalizeContentFormState(input);
+  const validationError = validateContentFormState(normalized);
+  if (validationError) {
+    log.warn("createContent", "validation failed", { message: validationError });
+    return { error: validationError };
+  }
+
   const { supabase } = await requireUser();
 
   const { data, error } = await supabase
     .from(CONTENT_TABLE)
-    .insert(toRowPayload(input))
+    .insert(toRowPayload(normalized))
     .select("id, article_type, slug")
     .single();
 
@@ -85,7 +84,7 @@ export async function createContentAction(
   }
 
   try {
-    await syncContentTags(supabase, String(data.id), input.tagNames);
+    await syncContentTags(supabase, String(data.id), normalized.tagNames);
   } catch (tagError) {
     const message =
       tagError instanceof Error ? tagError.message : "Tag sync failed";
@@ -102,11 +101,18 @@ export async function updateContentAction(
   input: ContentFormState,
 ): Promise<{ ok: true } | { error: string }> {
   log.info("updateContent", "start", { id });
+  const normalized = normalizeContentFormState(input);
+  const validationError = validateContentFormState(normalized);
+  if (validationError) {
+    log.warn("updateContent", "validation failed", { message: validationError });
+    return { error: validationError };
+  }
+
   const { supabase } = await requireUser();
 
   const { data, error } = await supabase
     .from(CONTENT_TABLE)
-    .update(toRowPayload(input))
+    .update(toRowPayload(normalized))
     .eq("id", id)
     .select("article_type, slug")
     .single();
@@ -117,7 +123,7 @@ export async function updateContentAction(
   }
 
   try {
-    await syncContentTags(supabase, id, input.tagNames);
+    await syncContentTags(supabase, id, normalized.tagNames);
   } catch (tagError) {
     const message =
       tagError instanceof Error ? tagError.message : "Tag sync failed";

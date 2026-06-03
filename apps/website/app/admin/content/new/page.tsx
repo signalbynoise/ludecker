@@ -1,14 +1,14 @@
-import Link from "next/link";
+import { AdminHeader } from "@/app/admin/components/AdminHeader";
+import { ContentFormatHint } from "@/app/admin/components/ContentFormatHint";
 import { ContentForm } from "@/app/admin/components/ContentForm";
 
 export default function NewContentPage() {
   return (
     <>
-      <header className="admin-header">
-        <Link href="/admin">← Dashboard</Link>
-      </header>
+      <AdminHeader backHref="/admin" backLabel="← dashboard" />
       <main className="admin-main">
-        <h1>New content</h1>
+        <h1 className="admin-title">new content</h1>
+        <ContentFormatHint />
         <ContentForm mode="create" />
       </main>
     </>

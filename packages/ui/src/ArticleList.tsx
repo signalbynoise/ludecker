@@ -1,7 +1,5 @@
 import type { ArticleType, Content } from '@ludecker/types';
 import { getArticlePrefix } from '@ludecker/utils';
-import './ArticleList.css';
-
 export interface ArticleListItem {
   content: Pick<Content, 'slug' | 'title' | 'article_type'>;
   index: number;

@@ -1,7 +1,6 @@
 import { ArticleBody } from "@ludecker/ui";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { formatDate } from "@ludecker/utils";
 import { isListableArticleType } from "@/lib/content/article-types";
 import {
   fetchAllPublishedSlugs,
@@ -48,28 +47,5 @@ export default async function ContentPage({ params }: ContentPageProps) {
   const item = await fetchContentBySlug(type, slug);
   if (!item) notFound();
 
-  const predicateLine = [
-    "Predicate form:",
-    `Type · ${item.article_type}`,
-    item.published_at ? formatDate(item.published_at) : null,
-    item.tags.length > 0
-      ? `Tags · ${item.tags.map((t) => t.name).join(", ")}`
-      : null,
-  ]
-    .filter(Boolean)
-    .join("\n");
-
-  const body = [
-    `C: ${item.title}`,
-    "",
-    item.excerpt ? `P1: ${item.excerpt}` : "",
-    "",
-    predicateLine,
-    "",
-    item.content,
-  ]
-    .filter((line) => line !== "")
-    .join("\n");
-
-  return <ArticleBody content={body} />;
+  return <ArticleBody content={item.content} />;
 }

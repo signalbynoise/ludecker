@@ -1,5 +1,5 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { AdminHeader } from "@/app/admin/components/AdminHeader";
 import { ContentForm } from "@/app/admin/components/ContentForm";
 import { fetchContentByIdForAdmin } from "@/lib/content/admin-queries";
 
@@ -14,11 +14,9 @@ export default async function EditContentPage({ params }: EditContentPageProps) 
 
   return (
     <>
-      <header className="admin-header">
-        <Link href="/admin">← Dashboard</Link>
-      </header>
+      <AdminHeader backHref="/admin" backLabel="← dashboard" />
       <main className="admin-main">
-        <h1>Edit: {content.title}</h1>
+        <h1 className="admin-title">edit · {content.title.toLowerCase()}</h1>
         <ContentForm mode="edit" initial={content} />
       </main>
     </>

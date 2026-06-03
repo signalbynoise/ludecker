@@ -1,3 +1,5 @@
+import "@ludecker/ui/tokens.css";
+import "@ludecker/ui/button.css";
 import "./admin.css";
 
 export const dynamic = "force-dynamic";
