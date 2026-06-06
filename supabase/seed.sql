@@ -24,8 +24,8 @@ INSERT INTO public.content (
   (
     'home',
     'Intro',
-    'Erik Lüdecker.',
-    E'C: Artificial Intelligence Is Being Created to Wake Us Up\n\nP1: This site is a static-first personal CMS backed by Supabase.',
+    'Agentic OS (AAAC) — design, technology, and practice for teams running Cursor agents with architecture in git.',
+    E'## Welcome to Lüdecker\n\nThis site is about **Agentic OS**—also called **Agentic Architecture as Code (AAAC)**. You run slash commands; the repo owns the workflow; every chat leaves a reviewable trail.\n\nIf you build with Cursor on a shared codebase, start here. For the full story, read [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).',
     'published',
     'home',
     true,
@@ -38,12 +38,12 @@ ON CONFLICT (article_type, slug) DO NOTHING;
 INSERT INTO public.content (
   slug, title, excerpt, content, status, article_type, featured, published_at
 ) VALUES
-  ('index', 'articles', 'Writing on design, technology, and practice.', E'C: articles\n\nP1: Long-form notes and essays.', 'published', 'articles', false, now()),
-  ('index', 'guides', 'Step-by-step guides and workflows.', E'C: guides\n\nP1: Practical walkthroughs.', 'published', 'guides', false, now()),
-  ('index', 'skills', 'Reusable agent instruction sets.', E'C: skills\n\nP1: Cursor skills and playbooks.', 'published', 'skills', false, now()),
-  ('index', 'tools', 'MCP servers and integrations.', E'C: tools\n\nP1: External services wired into the stack.', 'published', 'tools', false, now()),
-  ('index', 'commands', 'Cursor command workflows.', E'C: commands\n\nP1: Repeatable slash commands.', 'published', 'commands', false, now()),
-  ('index', 'subagents', 'Parallel agent exploration.', E'C: subagents\n\nP1: Delegated research and tasks.', 'published', 'subagents', false, now()),
-  ('index', 'diagrams', 'Architecture and system maps.', E'C: diagrams\n\nP1: Visual models of flows and structure.', 'published', 'diagrams', false, now())
+  ('index', 'articles', 'Long-form essays on design, systems, and practice.', E'## Essays and notes\n\nThoughtful pieces on how we design, build, and work with AI — written in plain language.', 'published', 'articles', false, now()),
+  ('index', 'guides', 'Step-by-step guides you can follow.', E'## How-to guides\n\nPractical walkthroughs with clear steps. Each guide tells you what you need first and what success looks like.', 'published', 'guides', false, now()),
+  ('index', 'skills', 'Reusable instructions for AI agents.', E'## Agent skills\n\nCopy-paste playbooks that teach Cursor agents how to work in your project.', 'published', 'skills', false, now()),
+  ('index', 'tools', 'Services and integrations for your stack.', E'## Tools and integrations\n\nMCP servers and external services wired into your development workflow.', 'published', 'tools', false, now()),
+  ('index', 'commands', 'Repeatable slash commands.', E'## Cursor commands\n\nSaved workflows you run with a slash command — same steps every time.', 'published', 'commands', false, now()),
+  ('index', 'subagents', 'When to delegate work to specialist agents.', E'## Subagents\n\nPatterns for splitting research and implementation across parallel agents.', 'published', 'subagents', false, now()),
+  ('index', 'diagrams', 'Visual explainers for complex ideas.', E'## Diagrams\n\nOne diagram per piece, with short prose that helps you read it top to bottom.', 'published', 'diagrams', false, now())
 ON CONFLICT (article_type, slug) DO NOTHING;
 

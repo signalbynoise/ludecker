@@ -9,6 +9,14 @@ inputs:
 outputs:
   commit_sha:
     type: string
+  aaac_publish_skipped:
+    type: boolean
+  aaac_version:
+    type: string
+  npm_tag:
+    type: string
+  npm_publish_status:
+    type: string
   deploy_status:
     type: string
   deploy_id:
@@ -20,12 +28,15 @@ outputs:
 success_criteria:
   - pnpm typecheck passed
   - git push to main succeeded (or HEAD already on remote)
+  - when AAAC changes detected, ship checks passed and npm version published
   - render deploy reached live for commit_sha
   - smoke check returned 200
 failure_conditions:
   - typecheck failed
   - git push failed
-  - wave 2 started before commit_sha known
+  - wave 1.5 or 2 started before commit_sha known
+  - aaac ship checks failed when triggered
+  - aaac npm publish monitor timeout when triggered
   - render build_failed or poll timeout
   - smoke check not 200
 dependencies:

@@ -4,6 +4,7 @@ export async function apiFetch<T>(
 ): Promise<T> {
   const response = await fetch(path, {
     credentials: "include",
+    cache: "no-store",
     ...init,
     headers: {
       ...(init?.body instanceof FormData

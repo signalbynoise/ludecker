@@ -6,6 +6,7 @@ import {
   CONTENT_STATUS_VALUES,
 } from "@ludecker/types";
 import type { RefObject } from "react";
+import { ContentPreview } from "@/src/admin/components/ContentPreview";
 import { TagInput } from "@/src/admin/components/TagInput";
 
 export interface ContentFormFieldsProps {
@@ -58,7 +59,7 @@ export function ContentFormFields({
       </div>
 
       <div className="admin-field">
-        <label htmlFor="content">content</label>
+        <label htmlFor="content">content (markdown)</label>
         <textarea
           id="content"
           required
@@ -66,6 +67,11 @@ export function ContentFormFields({
           value={form.content}
           onChange={(e) => onFieldChange("content", e.target.value)}
         />
+      </div>
+
+      <div className="admin-field">
+        <span className="admin-field__legend">reader preview</span>
+        <ContentPreview content={form.content} articleType={form.article_type} />
       </div>
 
       <div className="admin-field">

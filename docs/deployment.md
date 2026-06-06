@@ -77,4 +77,6 @@ cp apps/website/.env.example apps/website/.env.local
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) for the public site and `/admin` for the CMS.
+Open [http://localhost:3001](http://localhost:3001) for the public site and CMS (`/admin`). The Hono API listens on port 3000; Vite proxies `/api/*`.
+
+Set `NEXT_PUBLIC_SITE_URL=http://localhost:3001` in `.env.local` when testing publish/revalidate locally.

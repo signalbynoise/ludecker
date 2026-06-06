@@ -7,7 +7,7 @@ description: Improve editorial readability, publish feedback, fallback behavior,
 
 ## Instructions
 
-1. **Reader scan** — CMS bodies (non-skill types) use labeled blocks (`C:`, `P1:`…) and short paragraphs. Links use readable anchors, not raw URLs.
+1. **Reader scan** — CMS bodies (non-skill types) use markdown headings and short paragraphs. Keep paragraphs to 2–4 sentences. Links use readable anchors, not raw URLs.
 2. **Skill entries** — `skills` type is a `SKILL.md` file for agents, not an essay; excerpt mirrors frontmatter `description`.
 3. **Status visibility** — admin saves and publish should surface explicit success/failure; never silent CMS failures (master rules §16).
 4. **Degraded read** — when Supabase is unavailable, `apps/website/lib/content/fallback.ts` logs and serves documented fallback copy.
@@ -23,7 +23,7 @@ description: Improve editorial readability, publish feedback, fallback behavior,
 
 ## Never
 
-- Wall-of-text CMS entries without section labels (for editorial types)
+- Wall-of-text CMS entries without `##` section headings (for non-skill types)
 - Hide publish or revalidate failures
 - Break nav SSOT for a one-off link
 - Optimize animation before readable structure

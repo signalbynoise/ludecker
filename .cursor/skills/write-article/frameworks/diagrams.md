@@ -2,6 +2,8 @@
 
 **Global, topic-first articles.** The diagram is the product; prose only orients the reader. These are **not** Lüdecker architecture docs, **not** repo walkthroughs, and **not** CMS meta-articles unless the title explicitly asks for that.
 
+**Voice:** follow [\_voice.md](_voice.md) — opening max three sentences; legend in everyday words.
+
 ## Scope rules (non-negotiable)
 
 | Do | Do not |
@@ -15,10 +17,16 @@ Exception: user title explicitly says "Lüdecker …" or "CMS …" — then a sc
 
 ## Mermaid format
 
-**Exactly one** fenced block in the whole article, inside **P3**:
+**Exactly one** fenced block in the whole article:
 
-````
-P3: How a finite state machine moves through named states.
+```markdown
+## <topic title — same as article title>
+
+<what the concept is, one short paragraph — external links only>
+
+<how to read the diagram top-to-bottom; states, events, one active state>
+
+How a finite state machine moves through named states.
 
 ```mermaid
 stateDiagram-v2
@@ -29,7 +37,15 @@ stateDiagram-v2
     Active --> Idle: cancel
     Done --> [*]
 ```
-````
+
+<legend: node and edge meanings in plain language>
+
+<optional: limits, alternatives, or when to use — 2–4 sentences, external link>
+
+## Sources
+
+[External source](https://…) — …
+```
 
 Rules:
 
@@ -43,32 +59,10 @@ Rules:
 
 | Rule | Minimum |
 |------|---------|
-| P1–P2 (concept + how to read) | **2** external links (spec, encyclopedia, or official docs) |
-| P4 legend | Explain diagram symbols; **no** GitHub links to this repo |
-| R: Sources | **3** external entries only |
+| Opening sections (concept + how to read) | **2** external links (spec, encyclopedia, or official docs) |
+| Legend | Explain diagram symbols; **no** GitHub links to this repo |
+| `## Sources` | **3** external entries only |
 | Unique URLs | **5** — all off-site |
-
-## Body structure
-
-```
-C: <topic title — same as article title>
-
-P1: <what the concept is, one short paragraph — external links only>
-
-P2: <how to read the diagram top-to-bottom; states, events, one active state>
-
-P3: <one line intro, then the only ```mermaid``` block>
-
-P4: <legend: node and edge meanings in plain language>
-
-P5: <optional: limits, alternatives, or when to use — 2–4 sentences, external link>
-
-R: Sources
-P6: [External source](https://…) — …
-(continue through P8 if needed)
-```
-
-No P6 “drift” about repo files. No second or third diagram sections.
 
 ## Research swarm note
 

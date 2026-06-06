@@ -12,6 +12,7 @@ import { AdminLayout } from "@/src/layouts/AdminLayout";
 import { HomePage } from "@/src/pages/HomePage";
 import { TypeListPage } from "@/src/pages/TypeListPage";
 import { ContentPage } from "@/src/pages/ContentPage";
+import { RawMarkdownPage } from "@/src/pages/RawMarkdownPage";
 import { NotFoundPage } from "@/src/pages/NotFoundPage";
 import { AdminDashboardPage } from "@/src/pages/admin/AdminDashboardPage";
 import { AdminLoginPage } from "@/src/pages/admin/AdminLoginPage";
@@ -26,6 +27,7 @@ import {
   loadArticleRoute,
   loadGettingStartedNav,
   loadHomeRoute,
+  loadRawMarkdownRoute,
   loadSectionRoute,
 } from "@/src/lib/routing/loaders";
 import { assertListableSection } from "@/src/lib/routing/section";
@@ -70,6 +72,26 @@ const sectionRoute = createRoute({
   loader: ({ context: { queryClient: client }, params }) =>
     loadSectionRoute(client, params.type),
   component: TypeListPage,
+});
+
+const rawMarkdownRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: "$type/$slug/raw",
+  beforeLoad: ({ params }) => {
+    try {
+      assertListableSection(params.type);
+    } catch {
+      throw notFound();
+    }
+  },
+  loader: async ({ context: { queryClient: client }, params }) => {
+    try {
+      return await loadRawMarkdownRoute(client, params.type, params.slug);
+    } catch {
+      throw notFound();
+    }
+  },
+  component: RawMarkdownPage,
 });
 
 const articleRoute = createRoute({
@@ -152,6 +174,7 @@ const adminEditContentRoute = createRoute({
 });
 
 const routeTree = rootRoute.addChildren([
+  rawMarkdownRoute,
   publicLayoutRoute.addChildren([homeRoute, articleRoute, sectionRoute]),
   adminLayoutRoute.addChildren([
     adminIndexRoute,

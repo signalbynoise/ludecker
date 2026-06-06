@@ -8,6 +8,7 @@ import {
   CONTENT_SELECT,
   mapContentWithTagsRow,
 } from "@/lib/content/map-content";
+import { withPublicContentCache } from "@/lib/content/public-content-cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 
 const log = createLogger("content:queries");
@@ -35,7 +36,7 @@ async function queryAdmin<T>(
   }
 }
 
-async function fetchPublishedContent(): Promise<ContentWithTags[]> {
+async function fetchPublishedContentUncached(): Promise<ContentWithTags[]> {
   const data = await queryAdmin("fetchPublishedContent", async (client) => {
     const { data: rows, error } = await client
       .from(CONTENT_TABLE)
@@ -49,7 +50,11 @@ async function fetchPublishedContent(): Promise<ContentWithTags[]> {
   return data ?? [];
 }
 
-export async function fetchContentBySlug(
+async function fetchPublishedContent(): Promise<ContentWithTags[]> {
+  return withPublicContentCache("published:all", fetchPublishedContentUncached);
+}
+
+async function fetchContentBySlugUncached(
   type: ArticleType,
   slug: string,
 ): Promise<ContentWithTags | null> {
@@ -77,7 +82,17 @@ export async function fetchContentBySlug(
   return data ?? null;
 }
 
-async function fetchContentByType(
+export async function fetchContentBySlug(
+  type: ArticleType,
+  slug: string,
+): Promise<ContentWithTags | null> {
+  return withPublicContentCache(
+    `slug:${type}:${slug}`,
+    () => fetchContentBySlugUncached(type, slug),
+  );
+}
+
+async function fetchContentByTypeUncached(
   type: ArticleType,
 ): Promise<ContentWithTags[]> {
   const data = await queryAdmin("fetchContentByType", async (client) => {
@@ -92,6 +107,12 @@ async function fetchContentByType(
   });
 
   return data ?? [];
+}
+
+async function fetchContentByType(type: ArticleType): Promise<ContentWithTags[]> {
+  return withPublicContentCache(`type:${type}`, () =>
+    fetchContentByTypeUncached(type),
+  );
 }
 
 export async function fetchSectionPage(
@@ -112,15 +133,17 @@ export async function fetchSectionEntries(
 }
 
 export async function fetchGettingStartedEntries(): Promise<ContentWithTags[]> {
-  const items = await fetchPublishedContent();
-  return items.filter(
-    (item) =>
-      item.slug !== SECTION_PAGE_SLUG &&
-      item.tags.some((tag) => tag.slug === GETTING_STARTED_TAG_SLUG),
-  );
+  return withPublicContentCache("getting-started", async () => {
+    const items = await fetchPublishedContent();
+    return items.filter(
+      (item) =>
+        item.slug !== SECTION_PAGE_SLUG &&
+        item.tags.some((tag) => tag.slug === GETTING_STARTED_TAG_SLUG),
+    );
+  });
 }
 
-async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null> {
+async function fetchFeaturedHomeContentUncached(): Promise<ContentWithTags | null> {
   const data = await queryAdmin("fetchFeaturedHomeContent", async (client) => {
     const { data: row, error } = await client
       .from(CONTENT_TABLE)
@@ -143,36 +166,40 @@ async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null> {
  * Homepage intro: published `home` / `home` slug first, then any featured home entry.
  */
 export async function fetchHomePageContent(): Promise<ContentWithTags | null> {
-  const intro = await fetchContentBySlug(
-    HOME_INTRO.articleType,
-    HOME_INTRO.slug,
-  );
-  if (intro) {
-    return intro;
-  }
+  return withPublicContentCache("home", async () => {
+    const intro = await fetchContentBySlugUncached(
+      HOME_INTRO.articleType,
+      HOME_INTRO.slug,
+    );
+    if (intro) {
+      return intro;
+    }
 
-  return fetchFeaturedHomeContent();
+    return fetchFeaturedHomeContentUncached();
+  });
 }
 
 export async function fetchAllPublishedSlugs(): Promise<
   { type: ArticleType; slug: string }[]
 > {
-  const data = await queryAdmin("fetchAllPublishedSlugs", async (client) => {
-    const { data: rows, error } = await client
-      .from(CONTENT_TABLE)
-      .select("article_type, slug")
-      .eq("status", "published")
-      .neq("article_type", "home")
-      .neq("slug", SECTION_PAGE_SLUG);
+  return withPublicContentCache("slugs:all", async () => {
+    const data = await queryAdmin("fetchAllPublishedSlugs", async (client) => {
+      const { data: rows, error } = await client
+        .from(CONTENT_TABLE)
+        .select("article_type, slug")
+        .eq("status", "published")
+        .neq("article_type", "home")
+        .neq("slug", SECTION_PAGE_SLUG);
 
-    if (error) throw error;
+      if (error) throw error;
 
-    const slugs = (rows ?? []) as { article_type: ArticleType; slug: string }[];
-    return slugs.map((row) => ({
-      type: row.article_type,
-      slug: row.slug,
-    }));
+      const slugs = (rows ?? []) as { article_type: ArticleType; slug: string }[];
+      return slugs.map((row) => ({
+        type: row.article_type,
+        slug: row.slug,
+      }));
+    });
+
+    return data ?? [];
   });
-
-  return data ?? [];
 }

@@ -19,4 +19,5 @@ export const HOME_INTRO = {
   slug: "home",
 } as const;
 
+/** Reserved for future CDN tuning; public JSON API uses no-store / must-revalidate. */
 export const REVALIDATE_SECONDS = 3600;

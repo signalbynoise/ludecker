@@ -41,6 +41,48 @@ pnpm -r test   # when test scripts exist
 
 **Rules:** No force-push main. On pre-commit hook failure: fix and new commit — never amend unless user asked.
 
+## AAAC (Wave 1.5 — conditional after push)
+
+Runs when `detect-aaac-changes.mjs` reports `needs_publish: true` for the pushed `commit_sha`.
+
+**Detect:**
+
+```bash
+node .cursor/skills/shared/platform-release/scripts/detect-aaac-changes.mjs \
+  --commit-sha <commit_sha>
+```
+
+**When triggered (blocking):**
+
+1. Confirm `packages/aaac/package.json` version is bumped (ahead of latest `aaac-v*` tag)
+2. Sync `packages/aaac/templates/` from dogfood if `.cursor/skills/shared/` or generic aaac kernel changed
+3. Run checks:
+
+```bash
+node .cursor/skills/shared/platform-release/scripts/run-aaac-ship-checks.mjs \
+  --smoke-dir /tmp/aaac-smoke-<run_id>
+```
+
+4. Tag and push (CI publishes — no local `npm publish`):
+
+```bash
+git tag aaac-v<version> <commit_sha>
+git push origin aaac-v<version>
+```
+
+5. Monitor until npm shows the version:
+
+```bash
+node .cursor/skills/shared/platform-release/scripts/watch-aaac-publish.mjs \
+  --version <version>
+```
+
+**Skip:** When `needs_publish: false`, record `aaac_publish_skipped: true` and continue to Render.
+
+**Failure:** Check or monitor failure → **STOP**. Do not start Render poll.
+
+Agent: [agents/release-aaac.md](../../../agents/release-aaac.md)
+
 ## Render (Wave 2 — mandatory after push)
 
 **Do not** report ship complete until deploy is `live` or `build_failed` with evidence.
@@ -68,7 +110,8 @@ Exit 0 = live + smoke 200. Exit 1 = failed/timeout. Exit 2 = no API key → use 
 
 - Confirm deploy commit matches pushed `commit_sha`
 - Record deploy id, status, smoke HTTP code
-- [reporting/SKILL.md](../reporting/SKILL.md): layman summary + technical table (preflight, git, render, smoke)
+- When AAAC wave ran: include version, tag, npm publish status
+- [reporting/SKILL.md](../reporting/SKILL.md): layman summary + technical table (preflight, git, aaac, render, smoke)
 
 ## Anti-patterns
 

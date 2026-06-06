@@ -1,5 +1,5 @@
 /** Fenced mermaid blocks in CMS body: ```mermaid … ``` */
-export const MERMAID_FENCE_PATTERN = /```mermaid\s*\n([\s\S]*?)```/g;
+const MERMAID_FENCE_BODY = /```mermaid\s*\n([\s\S]*?)```/;
 
 export type MermaidSegment =
   | { type: 'text'; value: string }
@@ -48,12 +48,17 @@ export function normalizeMermaidVertical(source: string): string {
   return `flowchart TB\n${trimmed}`;
 }
 
+function createMermaidFencePattern(): RegExp {
+  return /```mermaid\s*\n([\s\S]*?)```/g;
+}
+
 /** Split paragraph text into prose and mermaid segments. */
 export function splitMermaidSegments(text: string): MermaidSegment[] {
   const segments: MermaidSegment[] = [];
+  const pattern = createMermaidFencePattern();
   let lastIndex = 0;
 
-  for (const match of text.matchAll(MERMAID_FENCE_PATTERN)) {
+  for (const match of text.matchAll(pattern)) {
     const matchIndex = match.index ?? 0;
     const before = text.slice(lastIndex, matchIndex).trim();
 
@@ -85,6 +90,5 @@ export function splitMermaidSegments(text: string): MermaidSegment[] {
 }
 
 export function contentHasMermaidFences(text: string): boolean {
-  MERMAID_FENCE_PATTERN.lastIndex = 0;
-  return MERMAID_FENCE_PATTERN.test(text);
+  return MERMAID_FENCE_BODY.test(text);
 }

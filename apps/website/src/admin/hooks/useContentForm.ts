@@ -6,7 +6,7 @@ import { slugify } from "@ludecker/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate, useRouter } from "@tanstack/react-router";
 import { invalidateContentQueries } from "@/src/lib/routing/loaders";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   createContent,
   deleteContent,
@@ -30,6 +30,12 @@ export function useContentForm({ mode, initial }: UseContentFormOptions) {
     toContentFormState(initial),
   );
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initial) {
+      setForm(toContentFormState(initial));
+    }
+  }, [initial?.id, initial?.updated_at]);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
 

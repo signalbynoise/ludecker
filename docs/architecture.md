@@ -86,8 +86,8 @@ Tokens and components live in `@ludecker/ui`, derived from the [Figma design fil
 
 ```
 Supabase (content) → Hono public API → React pages → @ludecker/ui components
-CMS form → fetch /api/content → Supabase (authenticated) → invalidate public cache
-Write-article persist → Supabase → POST /api/revalidate (published + `--publish`)
+CMS form → fetch /api/content → Supabase (authenticated) → invalidate server memo + React Query
+Write-article persist → Supabase → POST /api/revalidate (published + `--publish`) on production and local :3001
 ```
 
 ## Development

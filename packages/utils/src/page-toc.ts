@@ -1,5 +1,4 @@
 import type { ArticleType, Content } from '@ludecker/types';
-import { splitEditorialLine } from './content-editorial';
 import { parseArticleBodyBlocks } from './content-body';
 import { getContentPublicPath } from './content';
 import { parseSkillBodyBlocks } from './skill-body';
@@ -13,16 +12,7 @@ export interface PageTocItem {
 }
 
 export function headingDisplayLabel(text: string): string {
-  const parts = splitEditorialLine(text);
-  if (!parts) {
-    return text.trim();
-  }
-
-  if (parts.body.length > 0) {
-    return parts.body.trim();
-  }
-
-  return parts.prefix.replace(/:$/, '');
+  return text.trim();
 }
 
 export function assignHeadingAnchorId(label: string, usedIds: Set<string>): string {
@@ -37,11 +27,6 @@ export function assignHeadingAnchorId(label: string, usedIds: Set<string>): stri
 
   usedIds.add(id);
   return id;
-}
-
-function isChapterHeading(text: string): boolean {
-  const parts = splitEditorialLine(text);
-  return parts?.prefix === 'C:';
 }
 
 export function extractArticleTocItems(
@@ -72,7 +57,7 @@ export function extractArticleTocItems(
   return parseArticleBodyBlocks(content, { mermaid })
     .filter(
       (block): block is Extract<typeof block, { type: 'heading' }> =>
-        block.type === 'heading' && isChapterHeading(block.text),
+        block.type === 'heading' && block.level === 2,
     )
     .map((block) => {
       const label = headingDisplayLabel(block.text);

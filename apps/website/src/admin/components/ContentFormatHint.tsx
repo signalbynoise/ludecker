@@ -1,12 +1,13 @@
 export function ContentFormatHint() {
   return (
     <p className="admin-hint">
-      Body uses <code>C:</code> headings, <code>P1:</code> paragraphs, and
-      outbound links as <code>[anchor](https://…)</code>. For{" "}
-      <strong>diagrams</strong>: one global topic, <strong>one</strong>{" "}
-      <code>```mermaid</code> block (prefer <code>stateDiagram-v2</code>,{" "}
-      <code>direction TB</code>) — not Lüdecker/repo documentation. Save as
-      draft first, then publish when ready.
+      Body uses markdown: <code>##</code> section headings, <code>###</code> subsections,
+      blank lines between paragraphs, <code>[anchor](https://…)</code> links, and fenced code
+      blocks (<code>```bash</code>, <code>```text</code>, etc.) for commands and file trees.
+      Write in plain, everyday language (see{" "}
+      <code>.cursor/skills/write-article/frameworks/_voice.md</code>). For{" "}
+      <strong>diagrams</strong>, include one <code>```mermaid</code> fence. The reader
+      preview below matches the public site.
     </p>
   );
 }

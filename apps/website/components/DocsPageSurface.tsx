@@ -6,6 +6,7 @@ export interface DocsPageSurfaceProps {
   hero: PageHero;
   toc: PageTocItem[];
   toolbar?: ReactNode;
+  pageActions?: ReactNode;
   children: ReactNode;
 }
 
@@ -13,7 +14,15 @@ export interface DocsPageSurfaceProps {
  * Server-rendered page chrome (hero + TOC) mounted per route via DocsPageShell.
  * Sidebar stays in layout; this surface updates with the active page.
  */
-export function DocsPageSurface({ hero, toc, toolbar, children }: DocsPageSurfaceProps) {
+export function DocsPageSurface({
+  hero,
+  toc,
+  toolbar,
+  pageActions,
+  children,
+}: DocsPageSurfaceProps) {
+  const showAside = toc.length > 0 || Boolean(pageActions);
+
   return (
     <>
       <main className="docs-shell__main">
@@ -27,9 +36,10 @@ export function DocsPageSurface({ hero, toc, toolbar, children }: DocsPageSurfac
           </div>
         </div>
       </main>
-      {toc.length > 0 ? (
+      {showAside ? (
         <aside className="docs-shell__toc" aria-label="On this page">
-          <DocsTableOfContents items={toc} />
+          {toc.length > 0 ? <DocsTableOfContents items={toc} /> : null}
+          {pageActions}
         </aside>
       ) : null}
     </>

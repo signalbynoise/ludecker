@@ -17,6 +17,41 @@
   white-space: pre-line;
 }
 
+.article-body__code {
+  margin: 0;
+  padding: var(--space-lg);
+  overflow-x: auto;
+  max-width: 42rem;
+  width: 100%;
+  color: var(--color-on-primary);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  white-space: pre-wrap;
+  background: var(--color-ink);
+  border: none;
+  border-radius: var(--radius-md);
+}
+
+.dark .article-body__code {
+  background: var(--color-canvas-soft-2);
+  color: var(--color-text-primary);
+}
+
+.article-body__citation {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+}
+
+.article-body__sources-heading {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+
 .article-inline-text__link {
   color: var(--color-link);
   text-decoration: underline;

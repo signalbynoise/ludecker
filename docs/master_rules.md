@@ -325,7 +325,7 @@ Query helpers may return fallbacks only when documented (e.g. missing Supabase e
 Bad names hide bugs.  
 Good names prevent them.
 
-Use lowercase nav labels and editorial prefixes (`C:`, `P1:`, `A1:`) consistently with existing content patterns.
+Use lowercase nav labels consistently with existing content patterns.
 
 ---
 

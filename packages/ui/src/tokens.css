@@ -54,7 +54,7 @@
   --breakpoint-tablet: 960px;
   --breakpoint-desktop: 1024px;
   --breakpoint-toc: 1280px;
-  --layout-page-max-width: 1400px;
+  --layout-page-max-width: 1600px;
   --layout-content-max-width: 720px;
   --layout-toc-width: 200px;
   --layout-max-width: var(--layout-content-max-width);
@@ -64,6 +64,12 @@
   --docs-column-inset-top: var(--space-lg);
   --docs-nav-padding-x: var(--space-md);
   --docs-nav-link-indent: var(--space-xs);
+  --docs-nav-section-title-inset: calc(
+    var(--docs-nav-padding-x) + var(--docs-nav-chevron-size) + var(--space-xs)
+  );
+  --docs-nav-child-inset: calc(
+    var(--docs-nav-section-title-inset) + var(--docs-nav-link-indent)
+  );
   --docs-nav-link-inset: calc(
     var(--docs-nav-padding-x) + var(--docs-nav-link-indent) + var(--docs-nav-link-indent)
   );

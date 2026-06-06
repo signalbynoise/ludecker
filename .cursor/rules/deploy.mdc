@@ -23,7 +23,8 @@ globs:
 
 ## Ship commands
 
-- `/release-app` or `/ship-ludecker` — AAAC release swarm (git → Render)
+- `/release-app` or `/ship-ludecker` — AAAC release swarm (git → conditional AAAC npm tag → Render)
+- AAAC wave runs when `detect-aaac-changes.mjs` reports changes; pushes `aaac-v*` tag for CI publish
 - Never force-push `main` unless user explicitly requests
 - Never commit `.env`, `.env.local`, or service role keys
 

@@ -9,6 +9,7 @@ import {
   gettingStartedNavQueryOptions,
   publicArticleQueryOptions,
   publicHomeQueryOptions,
+  publicMarkdownQueryOptions,
   publicPageContextQueryOptions,
   publicSectionQueryOptions,
 } from "@/src/lib/query/queries";
@@ -70,8 +71,20 @@ export async function loadArticleRoute(
   return { articleType, typeSegment, slug, item, pageContext, pathname };
 }
 
+export async function loadRawMarkdownRoute(
+  queryClient: QueryClient,
+  typeSegment: string,
+  slug: string,
+) {
+  assertListableSection(typeSegment);
+  const data = await queryClient.ensureQueryData(
+    publicMarkdownQueryOptions(typeSegment, slug),
+  );
+  return data;
+}
+
 export async function loadAdminDashboard(queryClient: QueryClient) {
-  const items = await queryClient.ensureQueryData(
+  const items = await queryClient.fetchQuery(
     adminContentListQueryOptions(),
   );
   return { items };
@@ -82,7 +95,7 @@ export async function loadAdminContentEdit(
   id: string,
 ) {
   try {
-    const content = await queryClient.ensureQueryData(
+    const content = await queryClient.fetchQuery(
       adminContentQueryOptions(id),
     );
     return { content };

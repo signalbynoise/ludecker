@@ -9,10 +9,8 @@
   align-items: stretch;
   width: 100%;
   margin: 0;
-  padding: var(--space-xxl) var(--space-large);
-  gap: var(--space-large);
-  border: 1px solid var(--color-text-frost-03);
-  background-color: var(--color-bg);
+  padding: var(--space-lg) 0;
+  gap: var(--space-md);
   box-sizing: border-box;
 }
 
@@ -33,10 +31,25 @@
 
 .article-mermaid-diagram__svg svg {
   display: block;
-  width: 100%;
-  max-width: 520px;
+  width: auto;
+  max-width: min(100%, 520px);
   height: auto;
   margin-inline: auto;
+}
+
+.article-mermaid-diagram__svg g.node.statediagram-state foreignObject div {
+  font-family: var(--font-family);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.article-mermaid-diagram__svg .edgeLabel p {
+  margin: 0;
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  color: var(--color-text-body);
 }
 
 .article-mermaid-diagram__error {

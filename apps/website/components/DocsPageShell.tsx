@@ -7,12 +7,23 @@ import { DocsPageSurface } from '@/components/DocsPageSurface';
 export interface DocsPageShellProps {
   pageContext: PageContext;
   toolbar?: ReactNode;
+  pageActions?: ReactNode;
   children: ReactNode;
 }
 
-export function DocsPageShell({ pageContext, toolbar, children }: DocsPageShellProps) {
+export function DocsPageShell({
+  pageContext,
+  toolbar,
+  pageActions,
+  children,
+}: DocsPageShellProps) {
   return (
-    <DocsPageSurface hero={pageContext.hero} toc={pageContext.toc} toolbar={toolbar}>
+    <DocsPageSurface
+      hero={pageContext.hero}
+      toc={pageContext.toc}
+      toolbar={toolbar}
+      pageActions={pageActions}
+    >
       {children}
     </DocsPageSurface>
   );

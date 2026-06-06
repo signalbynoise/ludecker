@@ -1,6 +1,12 @@
 'use client';
 
-import { DocsNavProvider, ThemeProvider, type DocsNavSectionOverrides } from '@ludecker/ui';
+import {
+  DocsNavProvider,
+  ThemeProvider,
+  Toaster,
+  TooltipProvider,
+  type DocsNavSectionOverrides,
+} from '@ludecker/ui';
 import type { ReactNode } from 'react';
 
 export interface AppProvidersProps {
@@ -11,7 +17,12 @@ export interface AppProvidersProps {
 export function AppProviders({ children, initialNavOverrides }: AppProvidersProps) {
   return (
     <ThemeProvider defaultTheme="dark">
-      <DocsNavProvider initialOverrides={initialNavOverrides}>{children}</DocsNavProvider>
+      <TooltipProvider>
+        <DocsNavProvider initialOverrides={initialNavOverrides}>
+          {children}
+        </DocsNavProvider>
+        <Toaster position="bottom-right" />
+      </TooltipProvider>
     </ThemeProvider>
   );
 }

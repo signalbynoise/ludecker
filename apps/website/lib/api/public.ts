@@ -19,6 +19,18 @@ export function fetchPublicContent(
   return apiFetch(`/api/public/${typeSegment}/${slug}`);
 }
 
+export interface PublicMarkdownExport {
+  title: string;
+  markdown: string;
+}
+
+export function fetchPublicMarkdown(
+  typeSegment: string,
+  slug: string,
+): Promise<PublicMarkdownExport> {
+  return apiFetch(`/api/public/${typeSegment}/${slug}/markdown`);
+}
+
 export function fetchPublicPageContext(pathname: string): Promise<PageContext> {
   return apiFetch(`/api/public/page-context?pathname=${encodeURIComponent(pathname)}`);
 }

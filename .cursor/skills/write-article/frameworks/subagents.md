@@ -2,37 +2,41 @@
 
 When and how to use Cursor Task subagents. **Not** a tool setup guide (that is `tools`).
 
+**Voice:** follow [\_voice.md](_voice.md).
+
 ## Outbound links
 
 | Rule | Minimum |
 |------|---------|
-| `P2` selection table | Link Cursor docs on agents/tasks |
-| `P6` examples | **2** links to doc or changelog |
-| `R: Sources` | **3** |
+| Selection section | Link Cursor docs on agents/tasks |
+| Examples | **2** links to doc or changelog |
+| `## Sources` | **3** |
 | Unique URLs | **5** |
 
 ## Body structure
 
-```
-C: <pattern name>
+```markdown
+## <pattern name — plain benefit headline>
 
-P1: <problem — latency/breadth tradeoff>
+<problem in everyday words — speed vs quality tradeoff>
 
-P2: <subagent_type mapping — link [Task tool](https://…) docs>
+<which subagent_type to pick — link [Task tool](https://…) docs>
 
-P3: <launch rules — parallel vs sequential>
+<when to run in parallel vs one at a time>
 
-P4: <handoff contract>
+<what the subagent must return to the parent>
 
-P5: <merge strategy for parent>
+<how the parent merges results>
 
-P6: <examples with prompts — link doc anchors>
+<short examples with prompts — link doc anchors>
 
-R: Sources
-P7: [Cursor — Subagents](https://…) — …
+## Sources
+
+[Cursor — Subagents](https://…) — …
 ```
 
 ## Review checklist
 
+- [ ] [_voice.md](_voice.md) voice checks pass
 - [ ] Only allowed `subagent_type` values from Cursor
 - [ ] Warns against citing subagent transcript IDs to users

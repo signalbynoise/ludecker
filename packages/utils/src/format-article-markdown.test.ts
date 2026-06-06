@@ -2,11 +2,12 @@ import { describe, expect, it } from 'vitest';
 import { formatArticleMarkdown } from './format-article-markdown';
 
 describe('formatArticleMarkdown', () => {
-  it('serializes editorial content to markdown', () => {
+  it('serializes markdown body content', () => {
     const markdown = formatArticleMarkdown({
       title: 'Infrastructure As Code',
       excerpt: 'A short intro.',
-      content: 'C: Overview\n\nP1: First paragraph with [link](https://example.com).',
+      content:
+        '## Overview\n\nFirst paragraph with [link](https://example.com).',
       article_type: 'articles',
       canonicalUrl: 'https://ludecker.com/articles/infrastructure-as-code',
     });
@@ -35,5 +36,25 @@ name: test-skill
     expect(markdown).toContain('<!-- Source: https://ludecker.com/skills/test-skill -->');
     expect(markdown).toContain('name: test-skill');
     expect(markdown).toContain('# Skill body');
+  });
+
+  it('serializes fenced code blocks', () => {
+    const markdown = formatArticleMarkdown({
+      title: 'Quick Start',
+      excerpt: 'Install in under two minutes.',
+      content: [
+        '## Install',
+        '',
+        'Run:',
+        '',
+        '```bash',
+        'npx @ludecker/aaac@latest init',
+        '```',
+      ].join('\n'),
+      article_type: 'guides',
+    });
+
+    expect(markdown).toContain('```bash');
+    expect(markdown).toContain('npx @ludecker/aaac@latest init');
   });
 });

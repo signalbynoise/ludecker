@@ -1,0 +1,101 @@
+.raw-markdown-view {
+  min-height: 100vh;
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text-primary);
+}
+
+.raw-markdown-view__inner {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--layout-content-max-width);
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+.raw-markdown-view__label {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.raw-markdown-view__title {
+  margin: 0 0 var(--space-lg);
+  font-family: var(--font-family);
+  font-size: var(--font-size-display-sm);
+  line-height: var(--line-height-display-sm);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.6px;
+  color: var(--color-text-primary);
+}
+
+.raw-markdown-view__panel {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  background: var(--color-canvas-soft-2);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.raw-markdown-view .raw-markdown-view__copy {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--color-text-primary) 70%, transparent);
+  cursor: pointer;
+}
+
+.raw-markdown-view .raw-markdown-view__copy:hover,
+.raw-markdown-view .raw-markdown-view__copy:focus-visible {
+  color: var(--color-text-primary);
+  background: color-mix(in srgb, var(--color-bg-accent) 50%, transparent);
+  outline: none;
+}
+
+.raw-markdown-view .raw-markdown-view__copy svg {
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+}
+
+.raw-markdown-view__source {
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-lg);
+  padding-top: calc(var(--space-lg) + var(--space-md));
+  padding-right: calc(var(--space-lg) + 36px);
+  overflow-x: auto;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  color: var(--color-text-primary);
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+}

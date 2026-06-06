@@ -100,7 +100,7 @@ Log and propagate. Fallbacks only when documented, with logging first.
 
 ## 17. Naming Is Architecture
 
-Intent-revealing names. Lowercase nav labels; editorial prefixes (`C:`, `P1:`, `A1:`) stay consistent.
+Intent-revealing names. Lowercase nav labels stay consistent.
 
 ## 18. Scalability Is a First-Class Concern
 

@@ -7,11 +7,13 @@ export const FALLBACK_HOME: ContentWithTags = {
   title: "Lüdecker",
   slug: "home",
   excerpt:
-    "Home of AAAC — the agentic architecture framework for Cursor, design systems, and editorial tools.",
+    "Agentic OS (AAAC) — design, technology, and practice for teams running Cursor agents with architecture in git.",
   content: [
-    "C: Lüdecker",
+    "## Welcome to Lüdecker",
     "",
-    "P1: Welcome. Connect Supabase to load published content from the CMS.",
+    "This site is about **Agentic OS**—also called **Agentic Architecture as Code (AAAC)**. You run slash commands; the repo owns the workflow; every chat leaves a reviewable trail.",
+    "",
+    "If you build with Cursor on a shared codebase, start here. For the full story, read [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
   ].join("\n"),
   status: "published",
   article_type: "home",
@@ -28,10 +30,15 @@ export const FALLBACK_HOME: ContentWithTags = {
 export const FALLBACK_ARTICLES: ContentWithTags[] = [
   {
     id: "fallback-1",
-    title: "Predicate blocks in editorial UI",
+    title: "How labeled sections help readers scan",
     slug: "predicate-blocks",
-    excerpt: "How labeled metadata rows support scan-friendly reading.",
-    content: "P1: Sample article body with predicate-friendly structure.",
+    excerpt:
+      "Short labeled sections make long pages easier to skim without changing what you write.",
+    content: [
+      "## Labeled sections make scanning easier",
+      "",
+      "Each section starts with a clear headline. Readers jump to what they need instead of reading top to bottom.",
+    ].join("\n"),
     status: "published",
     article_type: "articles",
     tags: [
@@ -52,10 +59,15 @@ export const FALLBACK_ARTICLES: ContentWithTags[] = [
   },
   {
     id: "fallback-2",
-    title: "SSG with on-demand revalidation",
+    title: "Static pages with fresh CMS content",
     slug: "ssg-revalidation",
-    excerpt: "Static generation with a CMS-backed publish workflow.",
-    content: "P1: Sample guide body.",
+    excerpt:
+      "Pages are built ahead of time and refresh when you publish something new.",
+    content: [
+      "## Fast pages that update when you publish",
+      "",
+      "The site serves static HTML for speed. When you publish in the CMS, the site rebuilds just the pages that changed.",
+    ].join("\n"),
     status: "published",
     article_type: "guides",
     tags: [

@@ -346,6 +346,23 @@
   min-height: 20rem;
 }
 
+.admin-field__legend {
+  color: var(--color-text-frost-03);
+  text-transform: lowercase;
+}
+
+.admin-preview {
+  padding: var(--space-large);
+  border: 1px solid var(--color-text-frost-03);
+  border-radius: var(--radius-sm);
+  max-height: 32rem;
+  overflow: auto;
+}
+
+.admin-preview__empty {
+  margin: 0;
+}
+
 .admin-field select option {
   color: var(--color-text-primary);
   background: var(--color-bg);

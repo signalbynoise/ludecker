@@ -33,6 +33,7 @@ const ARTICLE_TYPE_ALIASES = {
   subagents: "subagents",
   diagram: "diagrams",
   diagrams: "diagrams",
+  intro: "home",
   home: "home",
 };
 
@@ -84,17 +85,24 @@ function parseArgs(argv) {
 function normalizeDraft(raw, publishFlag) {
   const articleType =
     ARTICLE_TYPE_ALIASES[raw.article_type] ?? raw.article_type;
-  if (!articleType || articleType === "home") {
+  if (!articleType) {
     throw new Error(`Invalid article_type: ${raw.article_type}`);
   }
 
+  const isHomeIntro = articleType === "home";
   const title = String(raw.title ?? "").trim();
-  const slug = slugify(String(raw.slug ?? title));
+  const slug = isHomeIntro ? "home" : slugify(String(raw.slug ?? title));
   const content = String(raw.content ?? "").trim();
 
   if (!title) throw new Error("title is required");
   if (!slug) throw new Error("slug is required");
   if (!content) throw new Error("content is required");
+
+  if (isHomeIntro && raw.slug && slugify(String(raw.slug)) !== "home") {
+    console.warn(
+      "[warn] home intro must use slug 'home'; ignoring slug in draft",
+    );
+  }
 
   const status = publishFlag ? "published" : (raw.status ?? "draft");
 
@@ -108,7 +116,7 @@ function normalizeDraft(raw, publishFlag) {
     cover_image: (raw.cover_image ?? "").trim() || null,
     seo_title: (raw.seo_title ?? "").trim() || null,
     seo_description: (raw.seo_description ?? "").trim() || null,
-    featured: Boolean(raw.featured),
+    featured: isHomeIntro ? true : Boolean(raw.featured),
     published_at:
       status === "published" ? new Date().toISOString() : null,
     updated_at: new Date().toISOString(),
@@ -155,25 +163,9 @@ async function syncTags(supabase, contentId, tagNames) {
   }
 }
 
-async function triggerProductionRevalidation(env, row) {
-  if (row.status !== "published") {
-    console.log(
-      "[info] Live site unchanged (draft). Pass --publish to show on production.",
-    );
-    return;
-  }
-
-  const siteUrl = env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
-  const secret = env.REVALIDATE_SECRET;
-  if (!siteUrl || !secret) {
-    console.warn(
-      "[warn] Set NEXT_PUBLIC_SITE_URL and REVALIDATE_SECRET in apps/website/.env.local to refresh production after publish.",
-    );
-    return;
-  }
-
+async function postRevalidate(siteUrl, secret, row) {
   const endpoint = `${siteUrl}/api/revalidate`;
-  console.log(`[info] Revalidating production cache: ${endpoint}`);
+  console.log(`[info] Revalidating public cache: ${endpoint}`);
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -190,13 +182,53 @@ async function triggerProductionRevalidation(env, row) {
   if (!response.ok) {
     const text = await response.text();
     console.warn(
-      `[warn] Revalidation failed (${response.status}): ${text.slice(0, 200)}`,
+      `[warn] Revalidation failed for ${siteUrl} (${response.status}): ${text.slice(0, 200)}`,
+    );
+    return false;
+  }
+
+  const payload = await response.json();
+  console.log(`[info] Cache refreshed`, JSON.stringify({ siteUrl, ...payload }));
+  return true;
+}
+
+async function triggerProductionRevalidation(env, row) {
+  if (row.status !== "published") {
+    console.log(
+      "[info] Live site unchanged (draft). Pass --publish to show on production.",
     );
     return;
   }
 
-  const payload = await response.json();
-  console.log(`[info] Production cache refreshed`, JSON.stringify(payload));
+  const siteUrl = env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "");
+  const secret = env.REVALIDATE_SECRET;
+  if (!secret) {
+    console.warn(
+      "[warn] Set REVALIDATE_SECRET in apps/website/.env.local to refresh caches after publish.",
+    );
+    return;
+  }
+
+  const targets = new Set();
+  if (siteUrl) {
+    targets.add(siteUrl);
+  }
+  if (env.REVALIDATE_LOCAL_URL) {
+    targets.add(env.REVALIDATE_LOCAL_URL.replace(/\/$/, ""));
+  } else if (!siteUrl?.includes("localhost")) {
+    targets.add("http://localhost:3001");
+  }
+
+  if (targets.size === 0) {
+    console.warn(
+      "[warn] Set NEXT_PUBLIC_SITE_URL (production) or REVALIDATE_LOCAL_URL (local dev, default http://localhost:3001).",
+    );
+    return;
+  }
+
+  for (const target of targets) {
+    await postRevalidate(target, secret, row);
+  }
 }
 
 async function main() {
@@ -276,6 +308,13 @@ async function main() {
     slug: contentRow.slug,
     status: contentRow.status,
   };
+  console.log(
+    `[info] Public path: ${
+      contentRow.article_type === "home"
+        ? "/ (Introduction)"
+        : `/${contentRow.article_type}/${contentRow.slug}`
+    }`,
+  );
   await triggerProductionRevalidation(env, persisted);
 }
 

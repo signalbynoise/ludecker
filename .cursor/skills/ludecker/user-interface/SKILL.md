@@ -9,8 +9,8 @@ description: Keep presentation-only UI in packages/ui with accessible markup, NA
 
 1. **Presentation only** — components accept props; no Supabase, server actions, or business rules in `packages/ui`.
 2. **Navigation** — `SiteNav` consumes `NAV_ITEMS` from `@ludecker/types`. Never hardcode section hrefs in UI.
-3. **Article body** — public content uses predicate blocks for non-skill types (`C:`, `P1:`). Outbound links: `[label](https://…)` parsed by `packages/utils/src/content-links.ts`, rendered in `ArticleInlineText`.
-4. **Skills pages** — `article_type: skills` stores full `SKILL.md`; rendered via `SkillArticleBody`, not editorial `C:`/`P1:` blocks.
+3. **Article body** — non-skill CMS content is markdown (`##` headings, paragraphs). Outbound links: `[label](https://…)` parsed by `packages/utils/src/content-links.ts`, rendered in `ArticleInlineText`.
+4. **Skills pages** — `article_type: skills` stores full `SKILL.md`; rendered via `SkillArticleBody`.
 5. **Accessibility** — interactive widgets follow [WAI-ARIA APG](https://www.w3.org/WAI/ARIA/apg/patterns/) patterns; every focusable control has an accessible name.
 6. **Reuse** — extend `Button`, `ContentSection`, `PageShell`, `SiteLayout` before adding one-off layout primitives.
 

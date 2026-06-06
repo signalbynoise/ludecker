@@ -1,6 +1,5 @@
 import type { ArticleType } from '@ludecker/types';
 import { parseArticleBodyBlocks } from './content-body';
-import { splitEditorialLine } from './content-editorial';
 import { headingDisplayLabel } from './page-toc';
 import { isSkillFileContent } from './skill-markdown';
 
@@ -40,7 +39,8 @@ export function formatArticleMarkdown(input: FormatArticleMarkdownInput): string
 
   for (const block of blocks) {
     if (block.type === 'heading') {
-      lines.push(`## ${headingDisplayLabel(block.text)}`, '');
+      const marker = block.level === 3 ? '###' : '##';
+      lines.push(`${marker} ${headingDisplayLabel(block.text)}`, '');
       continue;
     }
 
@@ -49,8 +49,13 @@ export function formatArticleMarkdown(input: FormatArticleMarkdownInput): string
       continue;
     }
 
-    const parts = splitEditorialLine(block.text);
-    lines.push(parts ? parts.body : block.text, '');
+    if (block.type === 'code') {
+      const fence = block.language.length > 0 ? block.language : 'text';
+      lines.push(`\`\`\`${fence}`, block.source, '```', '');
+      continue;
+    }
+
+    lines.push(block.text, '');
   }
 
   return `${lines.join('\n').trimEnd()}\n`;

@@ -27,6 +27,7 @@ export {
 } from './content-mermaid';
 export {
   parseArticleBodyBlocks,
+  parseMarkdownHeadingLine,
   type ArticleBodyBlock,
   type ParseArticleBodyBlocksOptions,
 } from './content-body';
@@ -40,11 +41,3 @@ export {
   formatArticleMarkdown,
   type FormatArticleMarkdownInput,
 } from './format-article-markdown';
-export {
-  EDITORIAL_LINE_PATTERN,
-  isEditorialHeadingLine,
-  resolveContentSectionVariant,
-  splitEditorialLine,
-  type ContentSectionVariant,
-  type EditorialLineParts,
-} from './content-editorial';

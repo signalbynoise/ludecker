@@ -2,6 +2,7 @@ import { ARTICLE_TYPES, type ArticleType } from "@ludecker/types";
 import { createLogger } from "@ludecker/utils";
 import { Hono } from "hono";
 import { invalidatePublicContent } from "@/lib/content/invalidate-public";
+import { getPublicContentGeneration } from "@/lib/content/public-content-cache";
 
 const log = createLogger("api:revalidate");
 const revalidate = new Hono();
@@ -59,6 +60,7 @@ revalidate.post("/", async (c) => {
     revalidated: true,
     article_type: articleType,
     slug,
+    generation: getPublicContentGeneration(),
   });
 });
 

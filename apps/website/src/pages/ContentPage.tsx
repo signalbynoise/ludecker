@@ -1,7 +1,7 @@
 'use client';
 
 import { getSectionLabel } from '@ludecker/types';
-import { ArticlePageToolbar } from '@ludecker/ui';
+import { ArticlePageCopyActions, ArticlePageToolbar } from '@ludecker/ui';
 import { formatArticleMarkdown, getNavHref } from '@ludecker/utils';
 import { getRouteApi } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -35,7 +35,10 @@ export function ContentPage() {
         <ArticlePageToolbar
           backHref={getNavHref(articleType)}
           backLabel={getSectionLabel(articleType)}
-          pageTitle={item.title}
+        />
+      }
+      pageActions={
+        <ArticlePageCopyActions
           markdown={markdown}
           pageUrl={pageUrl}
           markdownViewHref={`${pathname}/raw`}

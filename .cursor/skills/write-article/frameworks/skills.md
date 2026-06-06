@@ -2,7 +2,7 @@
 
 CMS `skills` entries are **published Agent Skill files** — the same artifact Cursor loads from `.cursor/skills/<name>/SKILL.md`. Format: [Agent Skills specification](https://agentskills.io/specification.md). Overview: [agentskills.io](https://agentskills.io/home).
 
-**Not** a guide, essay, or `C:` / `P1:` editorial article. **Not** meta-documentation about skills.
+**Not** a guide, essay, or legacy prefix-line article. **Not** meta-documentation about skills.
 
 ## What gets stored
 
@@ -53,7 +53,7 @@ Optional: `license`, `compatibility`, `metadata`, `disable-model-invocation`, `p
 
 ### Body
 
-- Use `##` sections — no `C:` / `P1:` / `R:` editorial prefixes
+- Use `##` sections — standard markdown only
 - Project-specific steps only ([best practices](https://agentskills.io/skill-creation/best-practices.md))
 - Keep `SKILL.md` under ~500 lines; move deep reference to `references/` if needed
 - Code fences for commands, YAML, SQL — not fake examples
@@ -80,11 +80,11 @@ Duplicate frontmatter `description` exactly (or trim only for length).
 - [ ] Body is executable instructions, not a how-to essay about the topic
 - [ ] Matching `.cursor/skills/<name>/SKILL.md` updated in same change when repo skills are used
 - [ ] Does not duplicate another skill `name` in `.cursor/skills/`
-- [ ] No `C:` / `P1:` / `R:` editorial blocks unless migrating legacy content
+- [ ] No legacy `C:` / `P1:` prefix lines in body
 
 ## Anti-patterns
 
-- Essay structure (`P1` triggers, `P3` workflow phases) for `skills` type
+- Essay structure with numbered pseudo-labels for `skills` type
 - Publishing only a YAML snippet inside `P5`
 - Generic LLM filler ("follow best practices") without Lüdecker paths
 - Skill name `PDF-Processing` (uppercase) or slug mismatch

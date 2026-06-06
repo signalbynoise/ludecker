@@ -889,10 +889,15 @@ agents:
     path: agents/release-git.md
     wave: 1
     blocking: true
+  release-aaac:
+    path: agents/release-aaac.md
+    wave: 1.5
+    requires: [release-git]
+    conditional: true
   release-render:
     path: agents/release-render.md
     wave: 2
-    requires: [release-git]
+    requires: [release-git, release-aaac]
 
 policies:
   - policies/master-rules.md

@@ -40,7 +40,18 @@ Execute [agents/release-git.md](../../../../agents/release-git.md) procedure (or
 
 If nothing to commit: still record current `HEAD` as `commit_sha` and verify it matches `origin/main`.
 
-**Do not** start Wave 2 until `commit_sha` is known and pushed (or already on remote).
+**Do not** start Wave 1.5 or Wave 2 until `commit_sha` is known and pushed (or already on remote).
+
+### 1.5. Wave 1.5 — AAAC (conditional, blocking when triggered)
+
+Execute [agents/release-aaac.md](../../../../agents/release-aaac.md):
+
+1. `detect-aaac-changes.mjs --commit-sha <sha>`
+2. When `needs_publish`: run ship checks, push `aaac-v{version}` tag, `watch-aaac-publish.mjs`
+
+**Ship fails** if AAAC wave is triggered and checks or npm monitoring fail.
+
+When skipped, record `aaac_publish_skipped: true`.
 
 ### 2. Wave 2 — Render (blocking)
 

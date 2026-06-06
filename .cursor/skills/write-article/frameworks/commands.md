@@ -1,38 +1,43 @@
 # Framework: `commands` only
 
-Cursor slash command spec. Mirror [.cursor/commands/ship-ludecker.md](../../../commands/ship-ludecker.md) density.
+Cursor slash command spec. Mirror [.cursor/commands/ship-ludecker.md](../../../commands/ship-ludecker.md) density for agents; add a plain-language layer for human skimmers.
+
+**Voice:** follow [\_voice.md](_voice.md).
 
 ## Outbound links
 
 | Rule | Minimum |
 |------|---------|
-| `P4` phases | **1** link to related Cursor docs per major phase |
-| Examples in `P6` | Link command docs if public |
-| `R: Sources` | **3** |
+| Phase sections | **1** link to related Cursor docs per major phase |
+| Examples section | Link command docs if public |
+| `## Sources` | **3** |
 | Unique URLs | **5** |
 
 ## Body structure
 
-```
-C: <command title>
+```markdown
+## <command title — what it does in plain words>
 
-P1: <purpose + hard rules>
+<one plain sentence for humans, then purpose + hard rules>
 
-P2: <parse input table as prose>
+<parse input as short prose — who passes what>
 
-P3: <preconditions>
+<preconditions in plain language>
 
-P4: <phases — link [Cursor commands](https://…) where relevant>
+<phases — verb-led bullets; link [Cursor commands](https://…) where relevant>
 
-P5: <anti-patterns>
+<anti-patterns — “don’t do X because…” in plain words>
 
-P6: <examples — fenced `/command` lines>
+<examples — one-line context before each fenced `/command` line>
 
-R: Sources
-P7: [Cursor — Commands](https://…) — …
+## Sources
+
+[Cursor — Commands](https://…) — …
 ```
 
 ## Review checklist
 
+- [ ] [_voice.md](_voice.md) voice checks pass
 - [ ] Runnable by an agent without ambiguous steps
+- [ ] Human can skim the opening and understand the command
 - [ ] Examples match real command name

@@ -9,9 +9,9 @@ disable-model-invocation: true
 
 # Write Article (CMS swarm)
 
-Produce CMS entries with **verified outbound links** and persist to Supabase. Body format: section labels (`C:`, `P1:`, …) + markdown links `[label](https://…)` rendered on the public site.
+Produce CMS entries with **verified outbound links** and persist to Supabase. Body format: markdown — `##` headings, blank-line paragraphs, `[label](https://…)` links, optional `###` subsections, and fenced code blocks (`` ```bash ``, `` ```text ``, etc.) for commands and file trees. Use `` ```mermaid `` only for diagram articles.
 
-**Per-type frameworks only:** [frameworks/{article_type}.md](frameworks/) — never mix guide structure into an `articles` piece.
+**Per-type frameworks only:** [frameworks/{article_type}.md](frameworks/) — never mix guide structure into an `articles` piece. **Plain language:** every CMS body type must follow [frameworks/_voice.md](frameworks/_voice.md).
 
 ## Parse input
 
@@ -29,7 +29,9 @@ From `$ARGUMENTS` and the user message:
 | `--update` | Upsert when `(article_type, slug)` exists |
 | `--tags "a, b"` | Comma-separated tag names |
 
-**Type aliases → `article_type`:** `article`→`articles`, `guide`→`guides`, `skill`→`skills`, `tool`→`tools`, `command`→`commands`, `subagent`→`subagents`, `diagram`→`diagrams`.
+**Type aliases → `article_type`:** `article`→`articles`, `guide`→`guides`, `skill`→`skills`, `tool`→`tools`, `command`→`commands`, `subagent`→`subagents`, `diagram`→`diagrams`, **`intro`/`home`→`home`** (Introduction page at `/`, slug must be `home`).
+
+**Important:** `article` writes to `/articles/<slug>`. It does **not** update the Introduction page. Use `intro` or `home` for that.
 
 **Slug:** `slugify(title)`. Never commit secrets.
 
@@ -45,11 +47,11 @@ From `$ARGUMENTS` and the user message:
 
 ## Outbound links (CMS)
 
-- Syntax: `[visible anchor](https://full-url)` inside any `P{n}:` or `R:` block.
+- Syntax: `[visible anchor](https://full-url)` inside paragraphs or under `## Sources`.
 - Links open in a new tab (`rel="noopener noreferrer"`).
 - **No bare URLs** in prose — always use markdown link form with human-readable anchor text.
 - Cite only URLs returned by research experts or codebase paths (for repo files, still use full `https://github.com/…` links when possible).
-- End with **`R: Sources`** when the framework requires citations — see frameworks for minimum counts. Do not add a `Predicate form:` metadata block; `article_type`, tags, and status are CMS fields.
+- End with **`## Sources`** when the framework requires citations — see frameworks for minimum counts. Do not add a `Predicate form:` metadata block; `article_type`, tags, and status are CMS fields.
 
 ## Swarm pipeline
 
@@ -81,7 +83,7 @@ flowchart TB
 | 4 | Current | `generalPurpose` | [researchers/current-events-expert.md](researchers/current-events-expert.md) | `research-current.md` |
 | 5 | Critique | `generalPurpose` | [researchers/critique-expert.md](researchers/critique-expert.md) | `research-critique.md` |
 | 6 | Codebase | `explore` | Repo patterns — **skip when `article_type` is `diagrams`** | `research-codebase.md` |
-| 7 | Editorial | `explore` | `supabase/seed.sql` + DB samples for same type; link density tone | `research-editorial.md` |
+| 7 | Editorial | `explore` | `supabase/seed.sql` + DB samples for same type; tone vs [frameworks/_voice.md](frameworks/_voice.md) | `research-editorial.md` |
 
 **`diagrams` research:** launch **5 web experts + editorial only** (6 agents). Do **not** run codebase — diagram articles are global, not repo documentation.
 
@@ -108,7 +110,7 @@ Deduplicate URLs across experts. URL minimum before writing: **12** for most typ
 
 ### Phase 2 — Write (Task `generalPurpose`)
 
-Inputs: `research.md`, `sources.json`, **`frameworks/{article_type}.md` only**.
+Inputs: `research.md`, `sources.json`, **`frameworks/{article_type}.md`**, and **`frameworks/_voice.md`**.
 
 Output: `.cursor/write-article-runs/<slug>/draft.json`
 
@@ -127,19 +129,20 @@ Output: `.cursor/write-article-runs/<slug>/draft.json`
 }
 ```
 
-Weave links naturally in argument sections; consolidate extras under `R: Sources`. Human tone: varied sentence length, named sources, no "In conclusion" filler.
+Weave links naturally in argument sections; consolidate extras under `## Sources`. **Plain language first:** ~15–20 word sentences, active voice, reader-first opening, one idea per paragraph. No “In conclusion” filler.
 
 ### Phase 3 — Review (Task `generalPurpose`)
 
 Checklist:
 
 1. **Type-specific** [frameworks/{type}.md](frameworks/) (structure + link minimums)
-2. Form validation (title, slug, body)
+2. **[frameworks/_voice.md](frameworks/_voice.md)** (plain language, sentence length, critique in body)
+3. Form validation (title, slug, body)
 3. `countOutboundLinks(content)` ≥ framework minimum
 4. Every link matches `sources.json` or repo fact (**`diagrams`:** external URLs only — fail if any `github.com/signalbynoise/ludecker` or "Lüdecker" in body)
 5. No placeholder `example.com` / `TODO` links
 6. **`diagrams`:** exactly **one** mermaid fence; fail if body references this codebase or CMS
-7. **`skills`:** full `SKILL.md` in `content`; `slug` === frontmatter `name`; fail on `C:` / `P1:` editorial blocks; update `.cursor/skills/<name>/SKILL.md` when applicable
+7. **`skills`:** full `SKILL.md` in `content`; `slug` === frontmatter `name`; fail if body uses legacy `C:` / `P1:` prefix lines; update `.cursor/skills/<name>/SKILL.md` when applicable
 
 Max **2** revision rounds. Output: `review.md` with PASS/FAIL.
 
@@ -165,7 +168,7 @@ Include **Research:** 5 web experts + codebase + editorial · **Outbound links:*
 - Fewer than 5 web research subagents
 - **`diagrams`:** multiple mermaid fences, repo/CMS content, or running codebase researcher
 - **`skills`:** essay `P1`/`P2` structure, or CMS entry that is not a copyable `SKILL.md`
-- Skipping `R: Sources` (when the framework requires it — not required for `skills`)
+- Skipping `## Sources` (when the framework requires it — not required for `skills`)
 - Bare URLs or footnotes without markdown link syntax
 - Same framework for every `article_type`
 - Publishing on FAIL review

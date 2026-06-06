@@ -12,7 +12,7 @@ All CMS content is stored in Supabase PostgreSQL.
 | `slug` | TEXT | URL slug (unique) |
 | `title` | TEXT | Display title |
 | `excerpt` | TEXT | Short summary |
-| `content` | TEXT | Body (structured text with `C:`, `P1:`, optional `R: Sources`) |
+| `content` | TEXT | Body (markdown: `##` headings, paragraphs, links) |
 | `status` | ENUM | `draft`, `published`, `archived` |
 | `article_type` | ENUM | See content types below |
 | `cover_image` | TEXT | Public URL from Supabase Storage |
@@ -46,7 +46,7 @@ Many-to-many junction between `content` and `tags`.
 | `tutorial` | `/tutorial/[slug]` | T{n}: |
 | `guide` | `/guides`, `/guide/[slug]` | G{n}: |
 | `project` | `/project/[slug]` | P{n}: |
-| `page` | `/page/[slug]` | C: (home hero) |
+| `page` | `/page/[slug]` | Home hero uses `##` heading |
 
 ## CMS capabilities
 
@@ -60,13 +60,16 @@ Many-to-many junction between `content` and `tags`.
 
 ## Content format
 
-Body text uses lightweight conventions parsed by `ArticleBody`:
+Body text is markdown parsed by `ArticleBody`. Use `##` for section headings (table of contents), `###` for subsections, blank lines between paragraphs, and `[anchor](https://…)` for outbound links. Write in plain, everyday language; see `.cursor/skills/write-article/frameworks/_voice.md`.
 
-```
-C: Section heading
-P1: Paragraph with an inline [outbound link](https://example.com)
-R: Sources
-P2: [Author — Title](https://example.com) — one-line citation.
+```markdown
+## Section heading (plain-language headline)
+
+Short paragraph with an inline [outbound link](https://example.com).
+
+## Sources
+
+[Author — Title](https://example.com) — one-line citation.
 ```
 
 `article_type`, `status`, and tags are stored on the content row and in the admin form — not in the body text.
@@ -81,7 +84,7 @@ Outbound links use markdown syntax `[anchor](https://…)` inside paragraph bloc
 **one** Mermaid diagram as the main content — not Lüdecker architecture or repo maps.
 See `.cursor/skills/write-article/frameworks/diagrams.md`.
 
-Body includes a single fenced Mermaid block (typically in `P3`). `ArticleBody` with
+Body includes a single fenced Mermaid block. `ArticleBody` with
 `articleType="diagrams"` renders it via `ArticleMermaidDiagram` and
 `packages/ui/src/mermaid-config.ts`.
 

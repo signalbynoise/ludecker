@@ -6,6 +6,8 @@ export const queryKeys = {
       ["public", "section", typeSegment] as const,
     article: (typeSegment: string, slug: string) =>
       ["public", "article", typeSegment, slug] as const,
+    markdown: (typeSegment: string, slug: string) =>
+      ["public", "markdown", typeSegment, slug] as const,
     pageContext: (pathname: string) =>
       ["public", "page-context", pathname] as const,
     gettingStarted: ["public", "getting-started"] as const,

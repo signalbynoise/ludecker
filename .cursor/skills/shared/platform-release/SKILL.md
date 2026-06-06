@@ -14,6 +14,8 @@ Wave 0: pnpm typecheck (mandatory)
   ↓
 Wave 1: release-git  ← BLOCKING
   ↓
+Wave 1.5: release-aaac ← CONDITIONAL (blocking when AAAC changes detected)
+  ↓
 Wave 2: release-render ← BLOCKING (poll until live or fail)
   ↓
 Wave 3: verification + reporting
@@ -30,6 +32,12 @@ Always. Optional extra tests when intent requests them.
 ## Wave 1 — git
 
 Execute [agents/release-git.md](../../../agents/release-git.md) or spawn shell subagent.
+
+## Wave 1.5 — AAAC (conditional)
+
+Execute [agents/release-aaac.md](../../../agents/release-aaac.md) when `detect-aaac-changes.mjs` reports `needs_publish: true`.
+
+Scripts: [scripts/detect-aaac-changes.mjs](scripts/detect-aaac-changes.mjs), [scripts/run-aaac-ship-checks.mjs](scripts/run-aaac-ship-checks.mjs), [scripts/watch-aaac-publish.mjs](scripts/watch-aaac-publish.mjs).
 
 ## Wave 2 — Render (mandatory)
 

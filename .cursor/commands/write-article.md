@@ -20,15 +20,18 @@ CMS writer — research swarm + agents, any `article_type`, persist to Supabase.
 
 | You type | CMS type | Framework |
 |----------|----------|-----------|
-| `article` | `articles` | editorial essays |
+| `article` | `articles` | editorial essays (plain language — see `_voice.md`) |
 | `guide` | `guides` | how-to |
 | `skill` | `skills` | copyable `SKILL.md` body |
 | `tool` | `tools` | tool write-ups |
 | `command` | `commands` | slash-command docs |
 | `subagent` | `subagents` | subagent specs |
 | `diagram` | `diagrams` | single mermaid diagram piece |
+| **`intro` / `home`** | **`home`** | **Introduction page at `/` (slug `home`)** |
 
 SSOT: `packages/types/src/article-type.ts`
+
+**Do not use `article` for the Introduction page** — that creates `/articles/<slug>` instead. Use `/write-article intro, …` or `home, …`.
 
 ## Aliases
 

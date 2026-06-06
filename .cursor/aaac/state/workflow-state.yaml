@@ -12,6 +12,6 @@ workflow_state:
 
 examples:
   release-app:
-    steps: [preflight, release-git, release-render, verify, report]
+    steps: [preflight, release-git, release-aaac, release-render, verify, report]
   write-article:
     steps: [parse, research_swarm, write, review, persist, report]

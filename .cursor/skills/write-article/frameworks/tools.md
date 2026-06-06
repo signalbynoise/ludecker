@@ -2,39 +2,43 @@
 
 MCP and integration reference. **Not** a philosophical essay; lead with capability and setup.
 
+**Voice:** follow [\_voice.md](_voice.md).
+
 ## Outbound links
 
 | Rule | Minimum |
 |------|---------|
-| `P3` setup | **2** vendor/MCP doc links |
-| `P4` tool list | Link each provider's tool index or README |
-| `R: Sources` | **4** (provider docs + one comparison/post) |
+| Setup section | **2** vendor/MCP doc links |
+| Tool list | Link each provider's tool index or README |
+| `## Sources` | **4** (provider docs + one comparison/post) |
 | Unique URLs | **7** |
 
 Include link to MCP spec or registry when describing protocol behavior.
 
 ## Body structure
 
-```
-C: <tool name>
+```markdown
+## <tool name — what it helps you do>
 
-P1: <what it does — [MCP overview](https://…) if first mention>
+<plain summary — [MCP overview](https://…) if first mention>
 
-P2: <when to use vs alternatives — link one critique source>
+<when to use vs alternatives — one limitation; link one critique source>
 
-P3: <setup — env var names only; link dashboard/docs>
+<setup in plain steps — env var names only; link dashboard/docs>
 
-P4: <high-value tools — each bullet may end with [doc](https://…)>
+<high-value tools — short bullets with [doc](https://…) links>
 
-P5: <workflow sequence>
+<typical workflow in plain sequence>
 
-P6: <pitfalls — link status/limit docs>
+<common mistakes — link status/limit docs>
 
-R: Sources
-P7: [Provider docs](https://…) — …
+## Sources
+
+[Provider docs](https://…) — …
 ```
 
 ## Review checklist
 
+- [ ] [_voice.md](_voice.md) voice checks pass
 - [ ] Tool names match MCP descriptors in repo or official catalog
 - [ ] No API keys in URLs or prose

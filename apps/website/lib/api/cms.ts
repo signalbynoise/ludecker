@@ -68,6 +68,7 @@ export async function uploadCoverImage(
   const response = await fetch("/api/content/upload-cover", {
     method: "POST",
     credentials: "include",
+    cache: "no-store",
     body,
   });
   return response.json();

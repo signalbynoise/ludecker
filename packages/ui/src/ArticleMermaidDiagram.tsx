@@ -8,6 +8,23 @@ export interface ArticleMermaidDiagramProps {
   source: string;
 }
 
+function normalizeMermaidSvg(svg: string): string {
+  return svg
+    .replace(/\swidth="100%"/g, '')
+    .replace(
+      /<svg([^>]*)\sstyle="([^"]*)"/,
+      (_match, attrs: string, style: string) => {
+        const cleanedStyle = style
+          .replace(/max-width:\s*[^;]+;?/g, '')
+          .replace(/width:\s*100%;?/g, '')
+          .trim();
+        return cleanedStyle
+          ? `<svg${attrs} style="${cleanedStyle}"`
+          : `<svg${attrs}`;
+      },
+    );
+}
+
 export function ArticleMermaidDiagram({ source }: ArticleMermaidDiagramProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const reactId = useId();
@@ -34,7 +51,7 @@ export function ArticleMermaidDiagram({ source }: ArticleMermaidDiagramProps) {
 
         const wrapper = document.createElement('div');
         wrapper.className = 'article-mermaid-diagram__svg';
-        wrapper.innerHTML = svg;
+        wrapper.innerHTML = normalizeMermaidSvg(svg);
         container.appendChild(wrapper);
       } catch (error) {
         if (cancelled) {

@@ -1,13 +1,15 @@
 # Framework: `articles` only
 
-Essays and long-form argument. **Do not** use guide phases (`G{n}:`) or command flag tables.
+Essays and long-form argument. **Do not** use guide-style `###` phase headings or command flag tables.
+
+**Voice:** follow [\_voice.md](_voice.md) — plain language, reader-first, short paragraphs.
 
 ## Outbound links
 
 | Rule | Minimum |
 |------|---------|
-| Inline citations in `P2`–`P4` | **4** `[anchor](https://…)` |
-| `R: Sources` block | **5** linked entries (one line each) |
+| Inline citations in body paragraphs | **4** `[anchor](https://…)` |
+| `## Sources` section | **5** linked entries (one line each) |
 | Unique URLs total | **8** |
 | Expert mix | ≥1 theory, ≥1 practice, ≥1 critique |
 
@@ -15,32 +17,36 @@ Anchor style: `[Dijkstra (1974)](https://…)` or `[Stripe engineering blog](htt
 
 ## Body structure
 
-```
-C: <thesis as a readable headline>
+```markdown
+## <plain-language headline — the main takeaway>
 
-P1: <claim + stakes — link to one canon source [like this](https://…)>
+<who this is for + why it matters — one link if helpful>
 
-P2: <context & definitions — 2+ outbound links to primary sources>
+<simple context — 2+ outbound links; define terms in plain words>
 
-P3: <evidence & tradeoffs — 2+ links: practice + critique>
+<evidence and tradeoffs — include one limitation; 2+ links>
 
-P4: <implications for builders — 1+ link>
+<what to do differently — 1+ link; concrete for builders>
 
-P5: <short closing — no links required>
+<one-sentence takeaway — no “In conclusion”>
 
-R: Sources
-P6: [Author — Title](https://…) — one line why it mattered.
-P7: [Next source](https://…) — …
-(continue P8+ until all major sources listed)
+## Sources
+
+[Author — Title](https://…) — one line why it helped.
+
+[Next source](https://…) — …
+
+(continue until all major sources listed)
 ```
 
 ## Excerpt
 
-Thesis in one sentence (&lt; 160 chars).
+Thesis in one plain sentence (&lt; 160 chars) a non-expert understands.
 
 ## Review checklist
 
-- [ ] Reads as essay, not tutorial
+- [ ] [_voice.md](_voice.md) voice checks pass
+- [ ] Reads as a conversation, not a thesis template
 - [ ] Link minimums met; anchors are human-written
-- [ ] Critique expert represented in P3 or R:
+- [ ] Critique expert represented in body or Sources
 - [ ] Unique URL count meets framework minimum

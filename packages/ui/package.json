@@ -23,6 +23,11 @@
     "./footer.css": "./src/Footer.css",
     "./article-list.css": "./src/ArticleList.css",
     "./article-body.css": "./src/ArticleBody.css",
+    "./article-page-toolbar.css": "./src/ArticlePageToolbar.css",
+    "./article-page-copy-actions.css": "./src/ArticlePageCopyActions.css",
+    "./raw-markdown-view.css": "./src/RawMarkdownView.css",
+    "./tooltip.css": "./src/Tooltip.css",
+    "./sonner.css": "./src/Sonner.css",
     "./skill-article-body.css": "./src/SkillArticleBody.css",
     "./article-mermaid-diagram.css": "./src/ArticleMermaidDiagram.css",
     "./content-section.css": "./src/ContentSection.css",
@@ -42,6 +47,7 @@
     "lucide-react": "^1.17.0",
     "mermaid": "^11.6.0",
     "radix-ui": "^1.5.0",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0"
   },
   "peerDependencies": {
