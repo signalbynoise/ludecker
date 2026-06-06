@@ -93,5 +93,5 @@ Example: `component` → `[component-model, layer-boundaries, ui-design]` → `[
 
 | Command | Purpose |
 |---------|---------|
-| `/launch-ludecker` | Local dev: kill stale processes, clean `.next`, start `pnpm dev` |
+| `/launch-ludecker` | Local dev: kill Hono (3000) + Vite (3001), clean Vite cache, start `pnpm dev` |
 | `/kill-ludecker` | Kill local dev port listeners |

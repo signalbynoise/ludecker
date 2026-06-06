@@ -8,8 +8,8 @@ import {
   DocsSidebarPanel,
   ThemeToggle,
 } from '@ludecker/ui';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useRouterState } from '@tanstack/react-router';
+import { RouterLink } from '@/components/RouterLink';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { resolveDocsNavActiveState } from '@/lib/nav/resolve-docs-nav-active-state';
 import { normalizePathname } from '@/lib/routing/pathname';
@@ -23,7 +23,10 @@ export function DocsChrome({
   children,
   gettingStartedEntries = [],
 }: DocsChromeProps) {
-  const pathname = normalizePathname(usePathname() || '/');
+  const locationPathname = useRouterState({
+    select: (state) => state.location.pathname,
+  });
+  const pathname = normalizePathname(locationPathname || '/');
   const gettingStartedHrefs = gettingStartedEntries.map((entry) => entry.href);
   const { homeActive, activeGettingStartedHref, activeNavId, activeSection } =
     resolveDocsNavActiveState(pathname, gettingStartedHrefs);
@@ -58,7 +61,7 @@ export function DocsChrome({
         homeActive={homeActive}
         pathname={pathname}
         gettingStartedEntries={gettingStartedEntries}
-        linkComponent={Link}
+        linkComponent={RouterLink}
       />
     </DocsSidebarPanel>
   );

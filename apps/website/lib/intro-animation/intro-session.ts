@@ -55,7 +55,7 @@ function isIntroInProgressInTab(): boolean {
 }
 
 /** Clear played flag on reload so hard refresh can replay the intro. */
-export function resetIntroSessionOnReload(): void {
+function resetIntroSessionOnReload(): void {
   if (!hasSessionStorage()) return;
 
   const entry = performance.getEntriesByType("navigation")[0] as

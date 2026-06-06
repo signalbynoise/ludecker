@@ -86,6 +86,14 @@
   max-width: var(--layout-content-max-width);
 }
 
+.docs-shell__toolbar {
+  padding: var(--docs-column-inset-top) 0 var(--space-sm);
+}
+
+.docs-shell__page:has(.docs-shell__toolbar) .docs-shell__hero {
+  padding-top: 0;
+}
+
 .docs-shell__page:not(:has(.docs-shell__hero)) .docs-shell__content {
   padding-top: var(--docs-column-inset-top);
 }

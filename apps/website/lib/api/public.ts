@@ -1,0 +1,28 @@
+import type { ContentWithTags } from "@ludecker/types";
+import type { PageContext } from "@/lib/content/fetch-page-context";
+import { apiFetch } from "./client";
+
+export function fetchPublicHome(): Promise<ContentWithTags | null> {
+  return apiFetch("/api/public/home");
+}
+
+export function fetchPublicSection(
+  typeSegment: string,
+): Promise<ContentWithTags[]> {
+  return apiFetch(`/api/public/${typeSegment}`);
+}
+
+export function fetchPublicContent(
+  typeSegment: string,
+  slug: string,
+): Promise<ContentWithTags> {
+  return apiFetch(`/api/public/${typeSegment}/${slug}`);
+}
+
+export function fetchPublicPageContext(pathname: string): Promise<PageContext> {
+  return apiFetch(`/api/public/page-context?pathname=${encodeURIComponent(pathname)}`);
+}
+
+export function fetchGettingStarted(): Promise<ContentWithTags[]> {
+  return apiFetch("/api/public/getting-started");
+}

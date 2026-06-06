@@ -6,7 +6,8 @@ Personal website and lightweight CMS for lüdecker.
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | Next.js 15 (App Router, React Server Components) |
+| Frontend | Vite 6 + React 19 + TanStack Router + TanStack Query |
+| API | Hono on Node (`@hono/node-server`) |
 | CMS | Custom admin UI at `/admin` |
 | Database | Supabase PostgreSQL |
 | Auth | Supabase Auth (CMS only) |
@@ -22,13 +23,17 @@ GitHub → Render → Cloudflare → Production
 ```
 
 1. Push to `main` triggers Render build.
-2. Render runs `pnpm install` and `next build` from the monorepo root.
-3. Cloudflare proxies traffic to Render with DNS, SSL, caching, and WAF.
+2. Render runs `pnpm install` and `vite build` from the monorepo root.
+3. Production starts `tsx server/index.ts`, which serves `/api/*` and static assets from `dist/`.
+4. Cloudflare proxies traffic to Render with DNS, SSL, caching, and WAF.
 
 ## Monorepo layout
 
 ```
-apps/website          Next.js public site + CMS admin
+apps/website          Vite SPA + Hono API + CMS admin
+  src/                TanStack Router routes, pages, layouts, admin UI
+  server/             Hono routes (`/api/*`, raw markdown)
+  lib/                API clients, content domain, Supabase client
 packages/types        Shared TypeScript types
 packages/utils        Slug, date, logging, content helpers
 packages/ui           Design system (Figma tokens + components)
@@ -37,21 +42,35 @@ supabase/seed         Sample content
 docs/                 Architecture and runbooks
 ```
 
-## Rendering strategy
+## Runtime architecture
+
+```
+Browser (Vite SPA)
+  → fetch /api/public/*     public content, page context, nav
+  → fetch /api/content/*    CMS CRUD (authenticated)
+  → fetch /api/auth/*       session check
+  → /:type/:slug/raw        markdown export (Hono)
+
+Hono server
+  → lib/content/queries     Supabase service role (server-only)
+  → lib/cms/content-mutations
+  → Supabase Auth cookies   session for CMS
+```
 
 | Route | Strategy |
 |-------|----------|
-| `/`, `/articles`, `/[type]`, `/[type]/[slug]` | SSG / ISR (`revalidate = 3600`) |
-| `/admin/*` | Dynamic (auth + CRUD) |
+| `/`, `/:type`, `/:type/:slug` | TanStack Router loaders + Query cache → `/api/public/*` |
+| `/admin/*` | Client-side auth guard + `/api/content` |
+| `/api/*` | Hono handlers (dynamic) |
 
-Public pages fetch published content at build/revalidation time via the Supabase service role client (server-only). The publishable key is used for CMS client operations and auth.
+Public pages load published content through the Hono public API. The publishable Supabase key is used for CMS client auth; the service role key stays server-only.
 
 ## Security
 
 - Row Level Security on all public tables.
 - Published content is readable anonymously; drafts require authentication.
 - Service role key is never exposed to the browser.
-- CMS routes protected by middleware session checks.
+- CMS routes protected by client auth guard (`fetchSession`) and API authorization.
 
 ## Design system
 
@@ -66,15 +85,23 @@ Tokens and components live in `@ludecker/ui`, derived from the [Figma design fil
 ## Data flow
 
 ```
-Supabase (content) → Server queries (SSG) → @ludecker/ui components → Static HTML
-CMS form → Server actions → Supabase (authenticated) → revalidatePath → ISR refresh
-Write-article persist → Supabase → POST /api/revalidate (published + `--publish`) → ISR refresh
+Supabase (content) → Hono public API → React pages → @ludecker/ui components
+CMS form → fetch /api/content → Supabase (authenticated) → invalidate public cache
+Write-article persist → Supabase → POST /api/revalidate (published + `--publish`)
 ```
+
+## Development
+
+```bash
+pnpm --filter @ludecker/website dev
+```
+
+Runs Hono API on port 3000 and Vite dev server on port 3001. Vite proxies `/api/*` and `/:type/:slug/raw` to the API server.
 
 ## Principles
 
 1. Simplicity over cleverness.
-2. Static generation by default.
+2. API-first content delivery.
 3. One source of truth (Supabase for content, tokens for design).
 4. Add complexity only when needed.
 

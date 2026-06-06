@@ -1,0 +1,33 @@
+---
+description: ShadCN + Radix UI is the only approved interactive UI primitive layer.
+globs:
+  - apps/website/**/*.tsx
+  - packages/ui/**/*.tsx
+alwaysApply: false
+---
+
+# ShadCN / Radix — UI SSOT
+
+**SSOT:** `packages/ui/src/components/ui/*` (ShadCN + Radix). Add primitives via:
+
+```bash
+cd packages/ui && npx shadcn@latest add <component> -y
+```
+
+## Required
+
+- Buttons → `Button` / `ButtonLink` / `buttonVariants` from `@ludecker/ui`
+- Menus, dialogs, popovers → ShadCN Radix components from `@ludecker/ui`
+- Styling utilities → `cn()` from `@ludecker/ui`
+- Tailwind entry → `apps/website/src/styles/shadcn.css`; theme tokens → `@ludecker/ui/shadcn-theme.css`
+
+## Forbidden
+
+- Custom `ui-button` / `buttonClassName` / hand-rolled dropdowns
+- Duplicate ShadCN copies under `apps/website/components/ui`
+- Raw `<button>` for UI chrome (admin, docs header, toolbars) — use `Button`
+- Base UI (`@base-ui/react`) — Radix only
+
+## Layout CSS
+
+Docs/public layout chrome may keep token CSS (`docs-*.css`) for structure; interactive controls inside it must still use ShadCN `Button` and Radix primitives.

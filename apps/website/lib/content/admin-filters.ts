@@ -40,7 +40,7 @@ export function filterContentForAdmin(
   });
 }
 
-export function getContentListStats(
+function getContentListStats(
   items: readonly ContentWithTags[],
 ): ContentListStats {
   const pageCount = items.filter((item) => getContentKind(item) === "page").length;

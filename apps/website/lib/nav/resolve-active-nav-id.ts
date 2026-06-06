@@ -22,7 +22,3 @@ export function resolveActiveNavId(pathname: string): string | undefined {
 
   return match?.id;
 }
-
-export function resolveHomeActive(pathname: string): boolean {
-  return pathname === '/';
-}

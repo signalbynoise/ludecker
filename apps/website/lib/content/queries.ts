@@ -35,7 +35,7 @@ async function queryAdmin<T>(
   }
 }
 
-export async function fetchPublishedContent(): Promise<ContentWithTags[]> {
+async function fetchPublishedContent(): Promise<ContentWithTags[]> {
   const data = await queryAdmin("fetchPublishedContent", async (client) => {
     const { data: rows, error } = await client
       .from(CONTENT_TABLE)
@@ -77,7 +77,7 @@ export async function fetchContentBySlug(
   return data ?? null;
 }
 
-export async function fetchContentByType(
+async function fetchContentByType(
   type: ArticleType,
 ): Promise<ContentWithTags[]> {
   const data = await queryAdmin("fetchContentByType", async (client) => {
@@ -120,7 +120,7 @@ export async function fetchGettingStartedEntries(): Promise<ContentWithTags[]> {
   );
 }
 
-export async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null> {
+async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null> {
   const data = await queryAdmin("fetchFeaturedHomeContent", async (client) => {
     const { data: row, error } = await client
       .from(CONTENT_TABLE)

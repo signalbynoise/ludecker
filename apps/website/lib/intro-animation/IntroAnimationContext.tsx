@@ -12,7 +12,7 @@ import {
 import { claimIntroSlot, markIntroPlayed } from "./intro-session";
 
 /** Sidebar + home intro orchestration (client-only). */
-export type IntroPhase = "static" | "sidebar-typing" | "sidebar-done";
+type IntroPhase = "static" | "sidebar-typing" | "sidebar-done";
 
 interface IntroAnimationContextValue {
   phase: IntroPhase;

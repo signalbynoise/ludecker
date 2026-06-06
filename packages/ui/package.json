@@ -26,7 +26,9 @@
     "./skill-article-body.css": "./src/SkillArticleBody.css",
     "./article-mermaid-diagram.css": "./src/ArticleMermaidDiagram.css",
     "./content-section.css": "./src/ContentSection.css",
-    "./button.css": "./src/Button.css"
+    "./shadcn-theme.css": "./src/shadcn-theme.css",
+    "./lib/utils": "./src/lib/utils.ts",
+    "./components/ui/*": "./src/components/ui/*"
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
@@ -35,7 +37,12 @@
   "dependencies": {
     "@ludecker/types": "workspace:*",
     "@ludecker/utils": "workspace:*",
-    "mermaid": "^11.6.0"
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.17.0",
+    "mermaid": "^11.6.0",
+    "radix-ui": "^1.5.0",
+    "tailwind-merge": "^3.6.0"
   },
   "peerDependencies": {
     "react": "^19.0.0",

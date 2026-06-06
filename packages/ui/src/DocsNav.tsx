@@ -3,6 +3,7 @@
 import { createLogger } from '@ludecker/utils';
 import { useLayoutEffect, useRef } from 'react';
 import { NAV_ITEMS } from '@ludecker/types';
+import { Button } from './components/ui/button';
 import { TEXT_BODY_SM_CLASS } from './constants';
 import type { DocsNavEntry } from '@ludecker/types';
 import { DOCS_NAV_GETTING_STARTED, DOCS_NAV_SECTIONS } from './docs-nav-config';
@@ -36,8 +37,9 @@ interface ExpandableSectionProps {
 function ExpandableSection({ title, isExpanded, onToggle, children }: ExpandableSectionProps) {
   return (
     <div className="docs-nav__section">
-      <button
+      <Button
         type="button"
+        variant="ghost"
         className={`${TEXT_BODY_SM_CLASS} docs-nav__section-toggle`}
         onClick={onToggle}
         aria-expanded={isExpanded}
@@ -54,7 +56,7 @@ function ExpandableSection({ title, isExpanded, onToggle, children }: Expandable
           <path d="M9 6l6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         <span className="docs-nav__section-title">{title}</span>
-      </button>
+      </Button>
       <div
         className="docs-nav__section-items"
         data-state={isExpanded ? 'open' : 'closed'}

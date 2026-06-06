@@ -13,7 +13,7 @@ services:
     branch: main
     rootDir: apps/website
     buildCommand: cd ../.. && pnpm install --frozen-lockfile && pnpm --filter @ludecker/website build
-    startCommand: pnpm start
+    startCommand: NODE_ENV=production pnpm start
     healthCheckPath: /
     envVars:
       - key: NODE_VERSION

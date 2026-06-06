@@ -8,7 +8,7 @@ interface ContentRow extends Record<string, unknown> {
   content_tags?: ContentTagRow[] | null;
 }
 
-export function mapContentRow(row: ContentRow): Content {
+function mapContentRow(row: ContentRow): Content {
   return {
     id: String(row.id),
     slug: String(row.slug),

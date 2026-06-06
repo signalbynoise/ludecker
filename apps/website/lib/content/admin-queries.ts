@@ -6,13 +6,14 @@ import {
   CONTENT_SELECT,
   mapContentWithTagsRow,
 } from "@/lib/content/map-content";
-import { createClient } from "@/lib/supabase/server";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
 const log = createLogger("content:admin-queries");
 
-export async function fetchAllContentForAdmin(): Promise<ContentWithTags[]> {
+export async function fetchAllContentForAdmin(
+  supabase: SupabaseClient,
+): Promise<ContentWithTags[]> {
   log.debug("fetchAllContentForAdmin", "start");
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from(CONTENT_TABLE)
     .select(CONTENT_SELECT);
@@ -26,10 +27,10 @@ export async function fetchAllContentForAdmin(): Promise<ContentWithTags[]> {
 }
 
 export async function fetchContentByIdForAdmin(
+  supabase: SupabaseClient,
   id: string,
 ): Promise<ContentWithTags | null> {
   log.debug("fetchContentByIdForAdmin", "start", { id });
-  const supabase = await createClient();
   const { data, error } = await supabase
     .from(CONTENT_TABLE)
     .select(CONTENT_SELECT)

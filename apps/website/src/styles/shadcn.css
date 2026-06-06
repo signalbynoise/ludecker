@@ -1,0 +1,8 @@
+@import 'tailwindcss';
+
+@source "../**/*.{ts,tsx}";
+@source "../../../packages/ui/src/**/*.{ts,tsx}";
+
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+@import '@ludecker/ui/shadcn-theme.css';

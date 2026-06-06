@@ -1,12 +1,11 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { slugify } from "@ludecker/utils";
 import { createLogger } from "@ludecker/utils";
 
 const log = createLogger("content:tags");
 
 export async function syncContentTags(
-  supabase: Awaited<
-    ReturnType<typeof import("@/lib/supabase/server").createClient>
-  >,
+  supabase: SupabaseClient,
   contentId: string,
   tagNames: string[],
 ): Promise<void> {

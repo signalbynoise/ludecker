@@ -1,4 +1,7 @@
+'use client';
+
 import type { ReactNode, Ref } from 'react';
+import { Button } from './components/ui/button';
 
 export interface DocsShellProps {
   header: ReactNode;
@@ -26,8 +29,9 @@ export function DocsShell({
       {header}
       <div className="docs-shell__body">
         {isMobileMenuOpen ? (
-          <button
+          <Button
             type="button"
+            variant="ghost"
             className="docs-shell__overlay"
             aria-label="Close menu"
             onClick={onMobileOverlayClick}
