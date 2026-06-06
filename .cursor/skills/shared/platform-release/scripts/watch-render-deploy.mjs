@@ -39,6 +39,20 @@ function parseArgs(argv) {
   return args;
 }
 
+function unwrapList(data) {
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.items)) return data.items;
+  return [];
+}
+
+function unwrapService(row) {
+  return row?.service ?? row;
+}
+
+function unwrapDeploy(row) {
+  return row?.deploy ?? row;
+}
+
 async function renderFetch(apiKey, path) {
   const res = await fetch(`${RENDER_API}${path}`, {
     headers: {
@@ -46,20 +60,24 @@ async function renderFetch(apiKey, path) {
       Accept: "application/json",
     },
   });
+  const body = await res.json().catch(() => ({}));
   if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Render API ${path} → ${res.status}: ${body.slice(0, 500)}`);
+    throw new Error(
+      `Render API ${path} → ${res.status}: ${JSON.stringify(body).slice(0, 500)}`,
+    );
   }
-  return res.json();
+  return body;
 }
 
 async function findServiceId(apiKey, serviceName) {
-  const data = await renderFetch(apiKey, "/services?limit=100");
-  const match = (data ?? []).find((s) => s.service?.name === serviceName);
-  if (!match) {
+  const data = unwrapList(await renderFetch(apiKey, "/services?limit=100"));
+  const match = data
+    .map(unwrapService)
+    .find((s) => s?.name === serviceName);
+  if (!match?.id) {
     throw new Error(`Service not found: ${serviceName}`);
   }
-  return match.service.id;
+  return match.id;
 }
 
 function commitMatches(deployCommitId, targetSha) {
@@ -102,14 +120,11 @@ async function main() {
   let deployId = null;
 
   while Date.now() < deadline) {
-    const data = await renderFetch(
-      apiKey,
-      `/services/${serviceId}/deploys?limit=10`,
+    const data = unwrapList(
+      await renderFetch(apiKey, `/services/${serviceId}/deploys?limit=10`),
     );
-    const deploys = data ?? [];
-    const match = deploys.find((d) =>
-      commitMatches(d.deploy?.commit?.id, commitSha),
-    );
+    const deploys = data.map(unwrapDeploy);
+    const match = deploys.find((d) => commitMatches(d?.commit?.id, commitSha));
 
     if (!match) {
       console.log("[info] waiting for deploy row matching commit…");
@@ -117,7 +132,7 @@ async function main() {
       continue;
     }
 
-    const deploy = match.deploy;
+    const deploy = match;
     deployId = deploy.id;
     lastStatus = deploy.status;
     console.log(
