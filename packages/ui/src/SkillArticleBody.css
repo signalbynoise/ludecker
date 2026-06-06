@@ -1,0 +1,106 @@
+.skill-article-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.skill-article-body__meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xxs);
+  width: 100%;
+  max-width: 42rem;
+}
+
+.skill-article-body__label {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  line-height: var(--line-height-caption);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.skill-article-body__name {
+  margin: 0;
+  color: var(--color-text-primary);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-display-sm);
+  line-height: var(--line-height-display-sm);
+  letter-spacing: -0.6px;
+}
+
+.skill-article-body__description {
+  margin: 0;
+  color: var(--color-text-body);
+}
+
+.skill-article-body__source-wrap {
+  width: 100%;
+  max-width: 42rem;
+}
+
+.skill-article-body__source-summary {
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-caption);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.skill-article-body__source {
+  margin: var(--space-sm) 0 0;
+  padding: var(--space-lg);
+  overflow-x: auto;
+  width: 100%;
+  color: var(--color-on-primary);
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  background: var(--color-ink);
+  border: none;
+  border-radius: var(--radius-md);
+}
+
+.skill-article-body__instructions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-md);
+  width: 100%;
+}
+
+.skill-article-body__paragraph {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--color-text-body);
+  white-space: pre-line;
+}
+
+.skill-article-body__code {
+  margin: 0;
+  padding: var(--space-lg);
+  overflow-x: auto;
+  max-width: 42rem;
+  width: 100%;
+  color: var(--color-on-primary);
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  background: var(--color-ink);
+  border: none;
+  border-radius: var(--radius-md);
+}
+
+.dark .skill-article-body__source,
+.dark .skill-article-body__code {
+  background: var(--color-canvas-soft-2);
+  color: var(--color-text-primary);
+}

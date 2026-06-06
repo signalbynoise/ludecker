@@ -1,0 +1,25 @@
+---
+description: Supabase MCP and migration rules for Lüdecker
+alwaysApply: false
+globs:
+  - supabase/migrations/**
+  - apps/website/lib/supabase/**
+  - packages/types/**
+---
+
+# Supabase — Lüdecker
+
+## Project
+
+- Remote project ref: `anseivwusnyiwopihnqu` (see `docs/deployment.md`)
+- Migrations: `supabase/migrations/` — apply via Supabase MCP after adding SQL
+
+## Auth and RLS
+
+- Published content readable anonymously; drafts require auth
+- Service role key server-only — never expose to browser
+- CMS routes protected by middleware session checks
+
+## Type mirrors
+
+After schema changes: update `packages/types` and `apps/website/lib/content/map-content.ts`.

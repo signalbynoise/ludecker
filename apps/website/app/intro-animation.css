@@ -2,7 +2,6 @@
   visibility: hidden;
 }
 
-/* Reserve one line per typing row so footer/email does not collapse before characters appear */
-.site-layout__sidebar .text-type {
-  min-height: var(--line-height-body);
+.home-intro-reveal {
+  width: 100%;
 }

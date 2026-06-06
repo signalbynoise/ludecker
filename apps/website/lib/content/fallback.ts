@@ -7,7 +7,7 @@ export const FALLBACK_HOME: ContentWithTags = {
   title: "Lüdecker",
   slug: "home",
   excerpt:
-    "Notes on design systems, editorial tools, and building with clarity.",
+    "Home of AAAC — the agentic architecture framework for Cursor, design systems, and editorial tools.",
   content: [
     "C: Lüdecker",
     "",

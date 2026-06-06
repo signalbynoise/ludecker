@@ -1,11 +1,45 @@
 /**
- * Typography SSOT — class name mirrored in constants.ts (TEXT_BODY_CLASS).
+ * Typography SSOT — class names mirrored in constants.ts (TEXT_BODY_CLASS).
  * Tokens: packages/ui/src/tokens.css
  */
 .text-body {
   font-family: var(--font-family);
   font-size: var(--font-size-body);
   line-height: var(--line-height-body);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: 0;
+}
+
+.text-body-sm {
+  font-family: var(--font-family);
+  font-size: var(--font-size-body-sm);
+  line-height: var(--line-height-body-sm);
+  font-weight: var(--font-weight-regular);
+  letter-spacing: -0.28px;
+}
+
+.text-display-xl {
+  font-family: var(--font-family);
+  font-size: var(--font-size-display-xl);
+  line-height: var(--line-height-display-xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -2.4px;
+}
+
+.text-display-lg {
+  font-family: var(--font-family);
+  font-size: var(--font-size-display-lg);
+  line-height: var(--line-height-display-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -1.28px;
+}
+
+.text-display-md {
+  font-family: var(--font-family);
+  font-size: var(--font-size-display-md);
+  line-height: var(--line-height-display-md);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.96px;
 }
 
 .text-body input,

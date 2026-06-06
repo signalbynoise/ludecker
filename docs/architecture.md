@@ -77,3 +77,7 @@ Write-article persist → Supabase → POST /api/revalidate (published + `--publ
 2. Static generation by default.
 3. One source of truth (Supabase for content, tokens for design).
 4. Add complexity only when needed.
+
+## Agent workflows
+
+Slash commands and agent orchestration follow **Agentic Architecture as Code (AAAC)**. See [agentic_architecture.md](./agentic_architecture.md) for command syntax, domains (`cms`, `ui`, `database`), and release flow.

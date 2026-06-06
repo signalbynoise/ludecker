@@ -1,0 +1,28 @@
+.docs-sidebar-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+@media (max-width: 1023px) {
+  .docs-sidebar-panel {
+    height: auto;
+    overflow: visible;
+    opacity: 0;
+    transition: opacity 150ms ease;
+  }
+
+  .docs-shell__sidebar--mobile-open .docs-sidebar-panel {
+    opacity: 1;
+    transition: opacity 300ms ease 100ms;
+  }
+}
+
+@media (min-width: 1024px) {
+  .docs-sidebar-panel {
+    opacity: 1;
+    transition: none;
+  }
+}

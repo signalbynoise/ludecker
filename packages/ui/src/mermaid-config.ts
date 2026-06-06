@@ -1,6 +1,6 @@
 import type { MermaidConfig } from 'mermaid';
 
-function readTypographyToken(name: string, fallback: string): string {
+function readToken(name: string, fallback: string): string {
   if (typeof document === 'undefined') {
     return fallback;
   }
@@ -13,33 +13,43 @@ function readTypographyToken(name: string, fallback: string): string {
 }
 
 /**
- * SSOT: Mermaid theme reads typography from tokens.css (dark editorial).
+ * SSOT: Mermaid theme reads colors and typography from tokens.css.
  */
 function buildMermaidConfig(): MermaidConfig {
+  const background = readToken('--color-bg', '#fafafa');
+  const surface = readToken('--color-bg-card', '#ffffff');
+  const ink = readToken('--color-ink', '#171717');
+  const body = readToken('--color-body', '#4d4d4d');
+  const hairline = readToken('--color-hairline', '#ebebeb');
+
+  const isDark =
+    typeof document !== 'undefined' &&
+    document.documentElement.classList.contains('dark');
+
   return {
     startOnLoad: false,
     securityLevel: 'strict',
     theme: 'base',
     themeVariables: {
-      darkMode: 'true',
-      background: '#000000',
-      mainBkg: '#0d0d0d',
-      primaryColor: '#141414',
-      primaryTextColor: '#ffffff',
-      primaryBorderColor: '#7a7a7a',
-      secondaryColor: '#1a1a1a',
-      secondaryTextColor: '#cccccc',
-      secondaryBorderColor: '#7a7a7a',
-      tertiaryColor: '#0a0a0a',
-      tertiaryTextColor: '#cccccc',
-      tertiaryBorderColor: '#4a4a4a',
-      lineColor: '#cccccc',
-      textColor: '#ffffff',
-      fontFamily: readTypographyToken(
+      darkMode: isDark ? 'true' : 'false',
+      background,
+      mainBkg: surface,
+      primaryColor: surface,
+      primaryTextColor: ink,
+      primaryBorderColor: hairline,
+      secondaryColor: readToken('--color-bg-muted', '#f5f5f5'),
+      secondaryTextColor: body,
+      secondaryBorderColor: hairline,
+      tertiaryColor: readToken('--color-bg-accent', '#e9ebef'),
+      tertiaryTextColor: body,
+      tertiaryBorderColor: hairline,
+      lineColor: body,
+      textColor: ink,
+      fontFamily: readToken(
         '--font-family',
-        "'Atkinson Hyperlegible Mono', ui-monospace, monospace",
+        "Inter, system-ui, -apple-system, sans-serif",
       ),
-      fontSize: readTypographyToken('--font-size-body', '13px'),
+      fontSize: readToken('--font-size-body-sm', '14px'),
     },
     flowchart: {
       useMaxWidth: true,

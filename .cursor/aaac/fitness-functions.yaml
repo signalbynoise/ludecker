@@ -1,0 +1,40 @@
+# Architecture fitness functions — scored before execute, re-checked in verify.
+# SSOT for fitness-functions skill.
+
+version: 1
+
+functions:
+  api_first:
+    description: Contracts and validation at boundaries; no ad-hoc API shapes
+    skill: ludecker-api-first
+    applies_to: [integration, feature, workflow, module, function]
+
+  design_system:
+    description: Token-based CSS, no inline styles, packages/ui boundaries
+    skill: ludecker-design-system
+    applies_to: [component, module]
+
+  accessibility:
+    description: Semantic markup, keyboard nav, contrast from tokens
+    skill: ludecker-user-interface
+    applies_to: [component, feature, workflow]
+
+  security:
+    description: RLS, no service role in browser, auth gates on CMS
+    skill: ludecker-security
+    applies_to: [schema, migration, integration, module, database]
+
+  layer_boundaries:
+    description: SSOT, import direction, no fetch in UI
+    skill: architecture
+    applies_to: [module, component, feature, domain, app]
+
+  performance:
+    description: SSG/ISR defaults, no unnecessary client fetch, module size budgets
+    skill: architecture
+    applies_to: [module, component, feature, app]
+
+scoring:
+  pass: meets criteria
+  warning: minor gap — document in report, may proceed if user intent clear
+  fail: blocking — STOP before execute unless user explicitly accepts risk

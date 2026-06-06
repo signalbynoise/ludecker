@@ -1,5 +1,7 @@
 # Launch Lüdecker
 
+**Manual local-dev command** — not routed through AAAC `graph.yaml` (same pattern as Arvid's platform-specific ship commands).
+
 Kill stale local dev processes, start a **clean** Next.js dev server, and verify the site loads with CSS and JS (no 404 chunks).
 
 **Hard rule:** This is a **local dev** workflow only. Do not commit, push, or deploy unless the user asks separately.

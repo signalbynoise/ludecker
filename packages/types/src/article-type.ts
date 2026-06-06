@@ -67,6 +67,15 @@ export interface NavItem {
   articleType: ArticleType;
 }
 
+/** CMS tag slug — published rows with this tag appear under Getting Started in docs nav. */
+export const GETTING_STARTED_TAG_SLUG = 'getting-started';
+
+export interface DocsNavEntry {
+  slug: string;
+  label: string;
+  href: string;
+}
+
 export const NAV_ITEMS: readonly NavItem[] = [
   { id: 'articles', label: 'articles', href: '/articles', articleType: 'articles' },
   { id: 'guides', label: 'guides', href: '/guide', articleType: 'guides' },

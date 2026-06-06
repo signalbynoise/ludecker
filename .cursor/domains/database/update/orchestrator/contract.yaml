@@ -1,0 +1,31 @@
+name: database-update-orchestrator
+purpose: Evolve Supabase schema, RLS, seeds, and type mirrors safely
+inputs:
+  domain:
+    required: true
+    enum: [database]
+  intent:
+    required: true
+outputs:
+  code_changes:
+    type: boolean
+  inventory_synced:
+    type: boolean
+  report:
+    type: markdown
+success_criteria:
+  - RLS on all public tables
+  - packages/types and map-content.ts updated when schema changes
+  - migrations applied via MCP
+failure_conditions:
+  - schema change without migration file
+  - service role exposed to client
+dependencies:
+  skills: [discovery, planning, execution, testing, verification, reporting, ludecker-database-schema, ludecker-security]
+  policies: [master-rules, implementation, mcp-and-deploy]
+  docs:
+    - docs/content-model.md
+    - docs/deployment.md
+verification:
+  - sync_inventory
+  - run_tests

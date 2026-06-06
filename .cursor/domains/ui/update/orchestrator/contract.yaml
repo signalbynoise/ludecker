@@ -1,0 +1,27 @@
+name: ui-update-orchestrator
+purpose: Evolve @ludecker/ui design system safely
+inputs:
+  domain:
+    required: true
+    enum: [ui]
+  intent:
+    required: true
+outputs:
+  code_changes:
+    type: boolean
+  inventory_synced:
+    type: boolean
+  report:
+    type: markdown
+success_criteria:
+  - token-based CSS only; no inline styles
+  - packages/ui does not import apps/website
+  - inventory Section 3 matches repo after execute
+failure_conditions:
+  - duplicate tokens or brand constants outside SSOT
+dependencies:
+  skills: [discovery, planning, execution, testing, verification, reporting, ludecker-design-system]
+  policies: [master-rules, implementation, mcp-and-deploy]
+verification:
+  - sync_inventory
+  - run_tests

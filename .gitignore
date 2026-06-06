@@ -35,3 +35,8 @@ supabase/.temp/
 
 # Agent article runs (draft artifacts)
 .cursor/write-article-runs/
+
+# AAAC runtime state (Run manifests and checkpoints)
+.cursor/aaac/state/runs/
+.cursor/aaac/state/execution-state.active.json
+.cursor/aaac/state/checkpoints/*.json

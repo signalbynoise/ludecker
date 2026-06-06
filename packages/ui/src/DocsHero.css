@@ -1,0 +1,27 @@
+.docs-hero {
+  padding: var(--docs-column-inset-top) 0 var(--space-xl);
+}
+
+@media (min-width: 1024px) {
+  .docs-hero {
+    padding-bottom: var(--space-3xl);
+  }
+}
+
+.docs-hero__inner {
+  width: 100%;
+}
+
+.docs-hero__title {
+  margin: 0 0 var(--space-sm);
+  color: var(--color-text-primary);
+  text-transform: capitalize;
+}
+
+.docs-hero__description {
+  margin: 0;
+  max-width: 42rem;
+  color: var(--color-text-body);
+  font-size: 18px;
+  line-height: 28px;
+}

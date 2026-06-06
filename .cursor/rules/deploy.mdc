@@ -1,0 +1,32 @@
+---
+description: Render deploy and ship rules for Lüdecker
+alwaysApply: false
+globs:
+  - render.yaml
+  - docs/deployment.md
+  - .cursor/agents/release-*.md
+  - .cursor/skills/shared/platform-release/**
+---
+
+# Deploy — Lüdecker
+
+## SSOT
+
+| Fact | Location |
+|------|----------|
+| Render service name | `ludecker-website` |
+| Blueprint | `render.yaml` at repo root |
+| Production smoke URL | `https://ludecker-website.onrender.com/` |
+| Deploy flow | Push to `main` → Render auto-build → Cloudflare → production |
+
+## Ship commands
+
+- `/release-app` or `/ship-ludecker` — AAAC release swarm (git → Render)
+- Never force-push `main` unless user explicitly requests
+- Never commit `.env`, `.env.local`, or service role keys
+
+## Render MCP
+
+Use **`user-render`** only. Service id from `list_services` where `name === "ludecker-website"`.
+
+Poll deploy until `status === "live"` or report failure with build logs.

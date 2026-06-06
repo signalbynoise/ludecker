@@ -1,0 +1,17 @@
+# Workflow state — multi-step or cross-command flows
+
+version: 1
+
+workflow_state:
+  workflow_id: string
+  name: string              # e.g. release-app, write-article
+  steps: []                 # ordered step ids
+  current_step: number
+  step_states: {}           # step id → execution_state.run_id
+  status: pending | running | completed | failed
+
+examples:
+  release-app:
+    steps: [preflight, release-git, release-render, verify, report]
+  write-article:
+    steps: [parse, research_swarm, write, review, persist, report]

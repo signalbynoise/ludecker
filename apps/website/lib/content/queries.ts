@@ -1,4 +1,5 @@
 import type { ArticleType, ContentWithTags } from "@ludecker/types";
+import { GETTING_STARTED_TAG_SLUG } from "@ludecker/types";
 import { SECTION_PAGE_SLUG } from "@ludecker/types";
 import { sortContentByPublishedAt } from "@ludecker/utils";
 import { CONTENT_TABLE, HOME_INTRO } from "@/lib/constants";
@@ -108,6 +109,15 @@ export async function fetchSectionEntries(
 ): Promise<ContentWithTags[]> {
   const items = await fetchContentByType(type);
   return items.filter((item) => item.slug !== SECTION_PAGE_SLUG);
+}
+
+export async function fetchGettingStartedEntries(): Promise<ContentWithTags[]> {
+  const items = await fetchPublishedContent();
+  return items.filter(
+    (item) =>
+      item.slug !== SECTION_PAGE_SLUG &&
+      item.tags.some((tag) => tag.slug === GETTING_STARTED_TAG_SLUG),
+  );
 }
 
 export async function fetchFeaturedHomeContent(): Promise<ContentWithTags | null> {

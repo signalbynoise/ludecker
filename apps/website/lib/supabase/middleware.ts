@@ -10,12 +10,31 @@ type CookieToSet = {
   options?: Parameters<NextResponse["cookies"]["set"]>[2];
 };
 
+function nextWithPathname(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-pathname", request.nextUrl.pathname);
+
+  return NextResponse.next({
+    request: { headers: requestHeaders },
+  });
+}
+
+function applyCookies(
+  response: NextResponse,
+  cookiesToSet: CookieToSet[],
+) {
+  cookiesToSet.forEach(({ name, value, options }) =>
+    response.cookies.set(name, value, options),
+  );
+  return response;
+}
+
 export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   log.debug("updateSession", "start", { pathname });
 
-  let supabaseResponse = NextResponse.next({ request });
+  let supabaseResponse = nextWithPathname(request);
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
@@ -38,10 +57,8 @@ export async function updateSession(request: NextRequest) {
         cookiesToSet.forEach(({ name, value }) =>
           request.cookies.set(name, value),
         );
-        supabaseResponse = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options),
-        );
+        supabaseResponse = nextWithPathname(request);
+        applyCookies(supabaseResponse, cookiesToSet);
       },
     },
   });

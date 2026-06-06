@@ -1,0 +1,35 @@
+name: cms-update-orchestrator
+purpose: Evolve Lüdecker public site and CMS admin safely
+inputs:
+  domain:
+    required: true
+    enum: [cms]
+  intent:
+    required: true
+outputs:
+  code_changes:
+    type: boolean
+  inventory_synced:
+    type: boolean
+  report:
+    type: markdown
+success_criteria:
+  - investigation completed before execute when fix_mode
+  - governance/implementation followed for all edits
+  - inventory Section 3 matches repo after execute
+  - fallow check_changed clean on touched files when available
+  - draft/published invariant preserved on public routes
+failure_conditions:
+  - work outside inventory out-of-scope without user confirm
+  - execute without approved plan
+  - Supabase queries from route components or packages/ui
+dependencies:
+  skills: [discovery, planning, execution, testing, verification, reporting]
+  policies: [master-rules, implementation, mcp-and-deploy]
+  docs:
+    - docs/architecture.md
+    - docs/content-model.md
+verification:
+  - sync_inventory
+  - run_tests
+  - fallow_check_changed

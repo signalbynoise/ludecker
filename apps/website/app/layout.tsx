@@ -1,26 +1,33 @@
 import type { Metadata } from "next";
-import { Atkinson_Hyperlegible_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
+import { cookies } from "next/headers";
+import { TEXT_BODY_CLASS } from "@ludecker/ui";
 import "@ludecker/ui/tokens.css";
 import "@ludecker/ui/typography.css";
-import "@ludecker/ui/page-shell.css";
-import "@ludecker/ui/site-layout.css";
-import "@ludecker/ui/brand-logo.css";
-import "@ludecker/ui/site-nav.css";
-import "@ludecker/ui/footer.css";
+import "@ludecker/ui/docs-shell.css";
+import "@ludecker/ui/docs-header.css";
+import "@ludecker/ui/docs-hero.css";
+import "@ludecker/ui/docs-nav.css";
+import "@ludecker/ui/docs-toc.css";
+import "@ludecker/ui/docs-sidebar-panel.css";
+import "@ludecker/ui/docs-content.css";
+import "@ludecker/ui/theme-toggle.css";
 import "@ludecker/ui/article-list.css";
 import "@ludecker/ui/article-body.css";
+import "@ludecker/ui/skill-article-body.css";
 import "@ludecker/ui/article-mermaid-diagram.css";
 import "@ludecker/ui/content-section.css";
 import "@ludecker/ui/globals.css";
 import "./intro-animation.css";
+import { AppProviders } from "@/components/AppProviders";
 import { SITE_CONFIG } from "@/lib/constants";
-import { TEXT_BODY_CLASS } from "@ludecker/ui";
+import { parseDocsNavOverridesCookie } from "@/lib/nav/parse-docs-nav-overrides-cookie";
+import { DOCS_NAV_OVERRIDES_COOKIE } from "@ludecker/ui";
 
-const atkinsonMono = Atkinson_Hyperlegible_Mono({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-atkinson",
+  variable: "--font-geist",
   display: "swap",
-  adjustFontFallback: false,
 });
 
 export const metadata: Metadata = {
@@ -31,14 +38,21 @@ export const metadata: Metadata = {
   description: SITE_CONFIG.description,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const initialNavOverrides = parseDocsNavOverridesCookie(
+    cookieStore.get(DOCS_NAV_OVERRIDES_COOKIE)?.value,
+  );
+
   return (
-    <html lang="en" className={atkinsonMono.variable}>
-      <body className={TEXT_BODY_CLASS}>{children}</body>
+    <html lang="en" className={`${inter.variable} dark`} suppressHydrationWarning>
+      <body className={TEXT_BODY_CLASS}>
+        <AppProviders initialNavOverrides={initialNavOverrides}>{children}</AppProviders>
+      </body>
     </html>
   );
 }

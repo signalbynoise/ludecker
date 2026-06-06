@@ -1,0 +1,96 @@
+.docs-header {
+  flex-shrink: 0;
+  z-index: 30;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--space-md);
+  background: var(--color-bg-card);
+}
+
+.docs-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: var(--layout-page-max-width);
+  height: var(--header-height);
+  padding: var(--space-sm) 0;
+}
+
+@media (min-width: 600px) {
+  .docs-header {
+    padding: 0 var(--space-lg);
+  }
+}
+
+.docs-header__start {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.docs-header__end {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.docs-header__brand {
+  margin: 0;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  text-transform: capitalize;
+  letter-spacing: -0.6px;
+  font-size: var(--font-size-display-sm);
+  line-height: var(--line-height-display-sm);
+}
+
+.docs-header__icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.docs-header__icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.docs-header__icon-btn:hover {
+  background: var(--color-bg-accent);
+}
+
+.docs-header__icon-btn--mobile {
+  display: inline-flex;
+}
+
+@media (min-width: 1024px) {
+  .docs-header__inner {
+    display: grid;
+    grid-template-columns: var(--sidebar-width) minmax(0, 1fr) var(--layout-toc-width);
+    column-gap: var(--space-3xl);
+    align-items: center;
+  }
+
+  .docs-header__start {
+    padding-left: var(--docs-nav-brand-inset);
+  }
+
+  .docs-header__end {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  .docs-header__icon-btn--mobile {
+    display: none;
+  }
+}

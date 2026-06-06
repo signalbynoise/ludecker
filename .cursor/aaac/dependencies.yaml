@@ -1,0 +1,48 @@
+# Lüdecker domain dependency graph
+# SSOT for dependency-graph skill — resolve before execute on create/update/fix.
+# Regenerated manually when domains change; validated against inventory Section 3.
+
+version: 1
+
+domains:
+  cms:
+    depends_on: [ui, database]
+    provides: [public_routes, cms_admin, content_queries, revalidation]
+  ui:
+    depends_on: []
+    provides: [design_tokens, components, docs_shell]
+  database:
+    depends_on: []
+    provides: [schema, rls, content_storage]
+
+objects:
+  module:
+    cms:
+      depends_on: [ui, database]
+    ui:
+      depends_on: []
+    database:
+      depends_on: []
+  feature:
+    default:
+      depends_on: [cms, database]
+  integration:
+    default:
+      depends_on: [cms, database]
+  migration:
+    default:
+      depends_on: [database]
+  schema:
+    default:
+      depends_on: [database]
+  component:
+    cms:
+      depends_on: [ui]
+    ui:
+      depends_on: []
+
+risk_tags:
+  migrations: [database, migration, schema]
+  breaking_contracts: [integration, model, schema, migration]
+  auth: [cms, database]
+  deployment: [app, integration]

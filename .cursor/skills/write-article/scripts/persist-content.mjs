@@ -220,7 +220,8 @@ async function main() {
 
   const draftPath = resolve(process.cwd(), args.file);
   const raw = JSON.parse(readFileSync(draftPath, "utf8"));
-  const row = normalizeDraft(raw, args.publish);
+  const normalized = normalizeDraft(raw, args.publish);
+  const { tagNames, ...contentRow } = normalized;
 
   const supabase = createClient(url, key, {
     auth: { autoRefreshToken: false, persistSession: false },
@@ -229,8 +230,8 @@ async function main() {
   const { data: existing } = await supabase
     .from(CONTENT_TABLE)
     .select("id")
-    .eq("article_type", row.article_type)
-    .eq("slug", row.slug)
+    .eq("article_type", contentRow.article_type)
+    .eq("slug", contentRow.slug)
     .maybeSingle();
 
   let contentId;
@@ -238,13 +239,13 @@ async function main() {
   if (existing?.id) {
     if (!args.update) {
       console.error(
-        `[error] Row exists (${row.article_type}/${row.slug}). Pass --update to overwrite.`,
+        `[error] Row exists (${contentRow.article_type}/${contentRow.slug}). Pass --update to overwrite.`,
       );
       process.exit(1);
     }
     const { data, error } = await supabase
       .from(CONTENT_TABLE)
-      .update(row)
+      .update(contentRow)
       .eq("id", existing.id)
       .select("id, article_type, slug, status")
       .single();
@@ -257,7 +258,7 @@ async function main() {
   } else {
     const { data, error } = await supabase
       .from(CONTENT_TABLE)
-      .insert(row)
+      .insert(contentRow)
       .select("id, article_type, slug, status")
       .single();
     if (error) {
@@ -268,12 +269,12 @@ async function main() {
     console.log(JSON.stringify({ action: "inserted", ...data }, null, 2));
   }
 
-  await syncTags(supabase, contentId, row.tagNames);
+  await syncTags(supabase, contentId, tagNames);
 
   const persisted = {
-    article_type: row.article_type,
-    slug: row.slug,
-    status: row.status,
+    article_type: contentRow.article_type,
+    slug: contentRow.slug,
+    status: contentRow.status,
   };
   await triggerProductionRevalidation(env, persisted);
 }

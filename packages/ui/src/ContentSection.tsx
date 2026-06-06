@@ -10,6 +10,7 @@ export interface ContentSectionProps {
   heading: string;
   body: string;
   headingOnly?: boolean;
+  anchorId?: string;
 }
 
 function sectionClassName(variant: ContentSectionVariant): string {
@@ -20,6 +21,7 @@ export function ContentSection({
   heading,
   body,
   headingOnly = false,
+  anchorId,
 }: ContentSectionProps) {
   const parts = splitEditorialLine(heading);
   const variant = parts
@@ -28,7 +30,10 @@ export function ContentSection({
 
   return (
     <section className={sectionClassName(variant)}>
-      <h2 className={`${TEXT_BODY_CLASS} content-section__heading`}>
+      <h2
+        id={anchorId}
+        className={`${TEXT_BODY_CLASS} content-section__heading`}
+      >
         {parts ? (
           <>
             <span className="content-section__prefix">{parts.prefix}</span>

@@ -1,6 +1,7 @@
 export const SITE_CONFIG = {
   name: "Lüdecker",
-  description: "Writing on design, technology, and practice.",
+  description:
+    "Agentic Architecture as Code (AAAC) — design, technology, and practice.",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
   contactEmail: "erik@ludecker.com",
 } as const;

@@ -1,0 +1,32 @@
+name: write-article
+purpose: Research, draft, review, and persist CMS content of any article_type via agent swarm
+inputs:
+  type:
+    required: true
+    description: article_type alias (article, guide, skill, tool, command, subagent, diagram)
+  title:
+    required: true
+    description: CMS title; slug derived via slugify
+  flags:
+    publish: { required: false }
+    dry_run: { required: false }
+    update: { required: false }
+    tags: { required: false }
+outputs:
+  draft:
+    type: json
+    path: .cursor/write-article-runs/{slug}/draft.json
+    required: true
+  report:
+    type: markdown
+    required: true
+workflow: write-article
+lifecycle_verb: null
+success_criteria:
+  - review PASS before persist (unless user approved blocked run)
+  - outbound links meet framework minimum
+  - draft validates against validate-form
+failure_conditions:
+  - review FAIL after max revision rounds without user approval
+  - fabricated or placeholder URLs
+  - publishing on FAIL review

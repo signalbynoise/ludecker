@@ -1,0 +1,18 @@
+# Execution state — superseded by Run
+
+**Deprecated.** Use [run/schema.json](../run/schema.json) as the SSOT for execution state.
+
+Runs persist at: `state/runs/{run_id}/run.json`
+
+Legacy field mapping:
+
+| execution-state.yaml | run/schema.json |
+|---------------------|-----------------|
+| current_phase | phase |
+| status | status |
+| blocked_reason | blocked_reason |
+| confidence | confidence |
+| (n/a) | awaiting_approval |
+| (n/a) | decisions, log, checkpoints, artifacts |
+
+See [run/RUN.md](../run/RUN.md) for create, update, resume, and gate protocol.

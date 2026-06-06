@@ -139,6 +139,7 @@ Checklist:
 4. Every link matches `sources.json` or repo fact (**`diagrams`:** external URLs only — fail if any `github.com/signalbynoise/ludecker` or "Lüdecker" in body)
 5. No placeholder `example.com` / `TODO` links
 6. **`diagrams`:** exactly **one** mermaid fence; fail if body references this codebase or CMS
+7. **`skills`:** full `SKILL.md` in `content`; `slug` === frontmatter `name`; fail on `C:` / `P1:` editorial blocks; update `.cursor/skills/<name>/SKILL.md` when applicable
 
 Max **2** revision rounds. Output: `review.md` with PASS/FAIL.
 
@@ -163,7 +164,8 @@ Include **Research:** 5 web experts + codebase + editorial · **Outbound links:*
 
 - Fewer than 5 web research subagents
 - **`diagrams`:** multiple mermaid fences, repo/CMS content, or running codebase researcher
-- Skipping `R: Sources`
+- **`skills`:** essay `P1`/`P2` structure, or CMS entry that is not a copyable `SKILL.md`
+- Skipping `R: Sources` (when the framework requires it — not required for `skills`)
 - Bare URLs or footnotes without markdown link syntax
 - Same framework for every `article_type`
 - Publishing on FAIL review
