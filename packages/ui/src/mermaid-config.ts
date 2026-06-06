@@ -84,10 +84,10 @@ function readToken(name: string, fallback: string): string {
  */
 function buildMermaidConfig(): MermaidConfig {
   const background = readColorToken('--color-bg', '#fafafa');
-  const surface = readColorToken('--color-bg-card', '#ffffff');
   const ink = readColorToken('--color-ink', '#171717');
   const body = readColorToken('--color-body', '#4d4d4d');
   const hairline = readColorToken('--color-hairline', '#ebebeb');
+  const outline = readColorToken('--color-hairline-strong', '#a1a1a1');
 
   const isDark =
     typeof document !== 'undefined' &&
@@ -100,16 +100,20 @@ function buildMermaidConfig(): MermaidConfig {
     themeVariables: {
       darkMode: isDark ? 'true' : 'false',
       background,
-      mainBkg: surface,
-      primaryColor: surface,
+      mainBkg: background,
+      primaryColor: background,
       primaryTextColor: ink,
-      primaryBorderColor: hairline,
-      secondaryColor: readColorToken('--color-bg-muted', '#f5f5f5'),
+      primaryBorderColor: outline,
+      secondaryColor: background,
       secondaryTextColor: body,
-      secondaryBorderColor: hairline,
-      tertiaryColor: readColorToken('--color-bg-accent', '#e9ebef'),
+      secondaryBorderColor: outline,
+      tertiaryColor: background,
       tertiaryTextColor: body,
       tertiaryBorderColor: hairline,
+      clusterBkg: background,
+      clusterBorder: hairline,
+      nodeBorder: outline,
+      edgeLabelBackground: background,
       lineColor: body,
       textColor: ink,
       fontFamily: readToken(

@@ -1,4 +1,5 @@
 import type { ContentWithTags } from "@ludecker/types";
+import { HOME_INTRO_CONTENT } from "./home-intro";
 
 const now = new Date().toISOString();
 
@@ -8,13 +9,7 @@ export const FALLBACK_HOME: ContentWithTags = {
   slug: "home",
   excerpt:
     "Agentic OS (AAAC) — design, technology, and practice for teams running Cursor agents with architecture in git.",
-  content: [
-    "## Welcome to Lüdecker",
-    "",
-    "This site is about **Agentic OS**—also called **Agentic Architecture as Code (AAAC)**. You run slash commands; the repo owns the workflow; every chat leaves a reviewable trail.",
-    "",
-    "If you build with Cursor on a shared codebase, start here. For the full story, read [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
-  ].join("\n"),
+  content: HOME_INTRO_CONTENT,
   status: "published",
   article_type: "home",
   cover_image: null,

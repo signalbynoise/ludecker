@@ -8,12 +8,12 @@ Read top to bottom.
 
 \`\`\`mermaid
 flowchart TB
-    You["You say what you want"]
-    Command["Slash command"]
-    You --> Command
+    Cmd["Slash command"]
+    Domain["Domain slug"]
+    Cmd --> Domain
 \`\`\`
 
-**You** only type the command.
+You type the command and domain.
 `;
 
 describe('splitMermaidSegments', () => {

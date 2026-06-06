@@ -31,18 +31,46 @@
 
 .article-mermaid-diagram__svg svg {
   display: block;
-  width: auto;
   max-width: min(100%, 520px);
   height: auto;
   margin-inline: auto;
+  background: transparent;
 }
 
-.article-mermaid-diagram__svg g.node.statediagram-state foreignObject div {
+/* Outline-only: no filled nodes, clusters, or edge-label boxes */
+.article-mermaid-diagram__svg g.node > :is(rect, polygon, circle),
+.article-mermaid-diagram__svg g.cluster > rect {
+  fill: none;
+  stroke: var(--color-hairline-strong);
+  stroke-width: 1px;
+}
+
+.article-mermaid-diagram__svg g.cluster > rect {
+  stroke: var(--color-hairline);
+}
+
+.article-mermaid-diagram__svg .edgeLabel rect,
+.article-mermaid-diagram__svg g.edgeLabel rect {
+  fill: none;
+  stroke: none;
+}
+
+.article-mermaid-diagram__svg foreignObject {
+  overflow: visible;
+}
+
+.article-mermaid-diagram__svg g.node foreignObject div {
   font-family: var(--font-family);
   font-size: var(--font-size-caption);
   line-height: var(--line-height-caption);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-regular);
   color: var(--color-text-primary);
+  max-width: none;
+  white-space: normal;
+}
+
+.article-mermaid-diagram__svg g.node.statediagram-state foreignObject div {
+  font-weight: var(--font-weight-medium);
 }
 
 .article-mermaid-diagram__svg .edgeLabel p {

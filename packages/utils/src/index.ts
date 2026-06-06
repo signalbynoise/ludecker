@@ -41,3 +41,8 @@ export {
   formatArticleMarkdown,
   type FormatArticleMarkdownInput,
 } from './format-article-markdown';
+export {
+  stripMarkdownEmphasisFromProse,
+  type StripMarkdownEmphasisOptions,
+} from './content-emphasis';
+export { filterSearchResults, isSearchShortcutEvent } from './search-index';

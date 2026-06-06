@@ -2,17 +2,11 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xxs);
-  padding: var(--docs-column-inset-top) var(--docs-nav-padding-x) var(--space-md);
-}
-
-@media (min-width: 1024px) {
-  .docs-nav__section:first-child .docs-nav__section-toggle {
-    padding-top: var(--space-xs);
-  }
+  padding: 0 0 var(--space-sm);
 }
 
 .docs-nav__section {
-  margin-bottom: var(--space-xxs);
+  margin-bottom: 0;
 }
 
 .docs-nav__section-toggle {
@@ -23,7 +17,7 @@
   width: 100%;
   height: auto;
   min-height: 0;
-  padding: var(--space-xs) var(--docs-nav-padding-x);
+  padding: var(--docs-nav-item-padding-y) var(--docs-nav-item-padding-x);
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
@@ -34,6 +28,13 @@
   transition:
     color 0.15s ease,
     background-color 0.15s ease;
+}
+
+.docs-nav [data-slot='button'].docs-nav__section-toggle {
+  height: auto;
+  min-height: 0;
+  justify-content: flex-start;
+  padding: var(--docs-nav-item-padding-y) var(--docs-nav-item-padding-x);
 }
 
 .docs-nav__section-toggle:hover {
@@ -82,14 +83,14 @@
   flex-direction: column;
   gap: var(--space-xxs);
   margin-top: var(--space-xxs);
+  padding-left: var(--docs-nav-child-indent);
   overflow: hidden;
   min-height: 0;
 }
 
 .docs-nav__link {
   display: block;
-  padding: var(--space-xs) var(--docs-nav-padding-x);
-  padding-left: var(--docs-nav-child-inset);
+  padding: var(--docs-nav-item-padding-y) var(--docs-nav-item-padding-x);
   border-radius: var(--radius-sm);
   color: var(--color-text-muted);
   text-decoration: none;
@@ -121,6 +122,5 @@
 @media (max-width: 1023px) {
   .docs-nav {
     flex-shrink: 0;
-    padding-top: 0;
   }
 }

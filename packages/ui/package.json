@@ -12,6 +12,7 @@
     "./site-layout.css": "./src/SiteLayout.css",
     "./docs-shell.css": "./src/DocsShell.css",
     "./docs-header.css": "./src/DocsHeader.css",
+    "./docs-search.css": "./src/DocsSearch.css",
     "./docs-hero.css": "./src/DocsHero.css",
     "./docs-nav.css": "./src/DocsNav.css",
     "./docs-toc.css": "./src/DocsTableOfContents.css",
@@ -44,6 +45,7 @@
     "@ludecker/utils": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "lucide-react": "^1.17.0",
     "mermaid": "^11.6.0",
     "radix-ui": "^1.5.0",
@@ -55,6 +57,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@types/jsdom": "^28.0.3",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "jsdom": "^29.1.1",

@@ -1,9 +1,13 @@
-import type { ContentWithTags } from "@ludecker/types";
+import type { ContentWithTags, PublicSearchItem } from "@ludecker/types";
 import type { PageContext } from "@/lib/content/fetch-page-context";
 import { apiFetch } from "./client";
 
 export function fetchPublicHome(): Promise<ContentWithTags | null> {
   return apiFetch("/api/public/home");
+}
+
+export function fetchPublicHomeMarkdown(): Promise<PublicMarkdownExport> {
+  return apiFetch("/api/public/home/markdown");
 }
 
 export function fetchPublicSection(
@@ -37,4 +41,8 @@ export function fetchPublicPageContext(pathname: string): Promise<PageContext> {
 
 export function fetchGettingStarted(): Promise<ContentWithTags[]> {
   return apiFetch("/api/public/getting-started");
+}
+
+export function fetchPublicSearchIndex(): Promise<PublicSearchItem[]> {
+  return apiFetch("/api/public/search-index");
 }

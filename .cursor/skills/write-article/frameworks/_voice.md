@@ -2,7 +2,14 @@
 
 Apply to every `article_type` except **`skills`** (which uses `SKILL.md` markdown).
 
-Reference this file from every per-type framework. Body text is **markdown**: `##` headings, blank-line paragraphs, optional `###` subsections, and `[anchor](https://…)` links.
+Reference this file from every per-type framework. Body text uses a small markdown subset: `##` headings, blank-line paragraphs, optional `###` subsections, and `[anchor](https://…)` links.
+
+## Formatting
+
+- Do not use `*` or `**` for emphasis in CMS body prose — the public site does not render bold or italic.
+- Use clear headings and plain sentences instead of wrapping words in asterisks.
+- Fenced code blocks may contain `*` (for example glob patterns like `lib/**/*.ts`).
+- `article_type: skills` is exempt — those rows store full `SKILL.md` files for agents.
 
 ## Audience and opening
 
@@ -49,6 +56,7 @@ One sentence, under 160 characters, stating outcome or thesis in language a non-
 
 ## Review (voice)
 
+- [ ] No `*` or `**` emphasis markers in body prose (outside code fences)
 - [ ] Non-expert understands the opening paragraph without prior context
 - [ ] Every `##` headline scans without reading the paragraph below
 - [ ] No paragraph longer than four sentences

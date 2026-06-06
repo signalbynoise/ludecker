@@ -56,24 +56,35 @@
   --breakpoint-toc: 1280px;
   --layout-page-max-width: 1600px;
   --layout-content-max-width: 720px;
-  --layout-toc-width: 200px;
+  --layout-rail-width: 280px;
+  --layout-toc-width: var(--layout-rail-width);
   --layout-max-width: var(--layout-content-max-width);
   --header-height: 64px;
-  --sidebar-width: 256px;
+  --brand-logo-height: 36px;
+  --sidebar-width: var(--layout-rail-width);
   --docs-nav-chevron-size: 16px;
-  --docs-column-inset-top: var(--space-lg);
-  --docs-nav-padding-x: var(--space-md);
+  --docs-panel-padding-x: var(--space-xl);
+  --docs-panel-padding-y: var(--space-2xl);
+  --docs-mobile-padding-x: var(--space-md);
+  --docs-column-inset-top: var(--docs-panel-padding-y);
+  --docs-nav-padding-x: 0;
+  --docs-nav-item-padding-y: var(--space-xs);
+  --docs-nav-item-padding-x: var(--space-sm);
   --docs-nav-link-indent: var(--space-xs);
+  --docs-nav-child-indent: calc(var(--docs-nav-chevron-size) + var(--space-xs));
   --docs-nav-section-title-inset: calc(
-    var(--docs-nav-padding-x) + var(--docs-nav-chevron-size) + var(--space-xs)
+    var(--docs-nav-item-padding-x) + var(--docs-nav-chevron-size) + var(--space-xs)
   );
   --docs-nav-child-inset: calc(
-    var(--docs-nav-section-title-inset) + var(--docs-nav-link-indent)
+    var(--docs-nav-child-indent) + var(--docs-nav-item-padding-x)
   );
   --docs-nav-link-inset: calc(
     var(--docs-nav-padding-x) + var(--docs-nav-link-indent) + var(--docs-nav-link-indent)
   );
   --docs-nav-brand-inset: var(--docs-nav-link-inset);
+  --docs-search-trigger-max-width: 560px;
+  --docs-panel-divider-width: 1px;
+  --docs-panel-divider-color: color-mix(in srgb, var(--color-hairline) 45%, var(--color-bg-card));
 
   /* Typography */
   --font-family: var(--font-geist, 'Inter'), system-ui, -apple-system, sans-serif;
@@ -145,4 +156,6 @@
   --shadow-inset-hairline: inset 0 0 0 1px oklch(0.269 0 0);
   --shadow-subtle: 0 1px 1px rgba(0, 0, 0, 0.2), 0 2px 2px rgba(0, 0, 0, 0.3);
   --shadow-card: var(--shadow-subtle), var(--shadow-inset-hairline);
+
+  --docs-panel-divider-color: color-mix(in oklch, var(--color-hairline) 28%, var(--color-bg-card));
 }

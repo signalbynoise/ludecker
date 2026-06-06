@@ -78,6 +78,11 @@ Outbound links use markdown syntax `[anchor](https://…)` inside paragraph bloc
 `ArticleInlineText` renders them as external anchors (`target="_blank"`,
 `rel="noopener noreferrer"`). Parsing lives in `packages/utils/src/content-links.ts`.
 
+Do not use `*` or `**` for emphasis in CMS body prose — bold and italic are not
+rendered. Use headings and plain sentences instead. Fenced code blocks may contain
+asterisks (for example glob patterns). `article_type: skills` stores full
+`SKILL.md` files and is exempt from this rule.
+
 ### Diagram articles (`article_type: diagrams`)
 
 **Editorial intent:** universal, topic-first pieces (e.g. how state machines work) with

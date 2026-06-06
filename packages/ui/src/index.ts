@@ -1,8 +1,9 @@
-export { BRAND_NAME, CONTACT_EMAIL, TEXT_BODY_CLASS, TEXT_BODY_SM_CLASS } from './constants';
+export { BRAND_NAME, CONTACT_EMAIL, DOCS_COMMAND_BAR_LABEL, TEXT_BODY_CLASS, TEXT_BODY_SM_CLASS } from './constants';
 export { PageShell, type PageShellProps } from './PageShell';
 export { SiteLayout, type SiteLayoutProps } from './SiteLayout';
 export { DocsShell, type DocsShellProps } from './DocsShell';
 export { DocsHeader, type DocsHeaderProps } from './DocsHeader';
+export { DocsSearch, type DocsSearchProps } from './DocsSearch';
 export { DocsHero, type DocsHeroProps } from './DocsHero';
 export { DocsNav, DOCS_NAV_GETTING_STARTED, DOCS_NAV_SECTIONS, type DocsNavProps, type DocsNavSection } from './DocsNav';
 export type { DocsNavLinkComponent, DocsNavLinkProps } from './DocsNavLink';
@@ -64,4 +65,27 @@ export {
   TooltipProvider,
 } from './components/ui/tooltip';
 export { Toaster } from './components/ui/sonner';
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from './components/ui/command';
+export {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogOverlay,
+  DialogPortal,
+  DialogTitle,
+  DialogTrigger,
+} from './components/ui/dialog';
 export { cn } from './lib/utils';

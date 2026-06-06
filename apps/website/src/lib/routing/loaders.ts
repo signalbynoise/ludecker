@@ -8,15 +8,21 @@ import {
   adminSessionQueryOptions,
   gettingStartedNavQueryOptions,
   publicArticleQueryOptions,
+  publicHomeMarkdownQueryOptions,
   publicHomeQueryOptions,
   publicMarkdownQueryOptions,
   publicPageContextQueryOptions,
+  publicSearchIndexQueryOptions,
   publicSectionQueryOptions,
 } from "@/src/lib/query/queries";
 import { assertListableSection } from "@/src/lib/routing/section";
 
 export async function loadGettingStartedNav(queryClient: QueryClient) {
   return queryClient.ensureQueryData(gettingStartedNavQueryOptions());
+}
+
+export async function loadPublicSearchIndex(queryClient: QueryClient) {
+  return queryClient.ensureQueryData(publicSearchIndexQueryOptions());
 }
 
 export async function loadHomeRoute(queryClient: QueryClient) {
@@ -81,6 +87,10 @@ export async function loadRawMarkdownRoute(
     publicMarkdownQueryOptions(typeSegment, slug),
   );
   return data;
+}
+
+export async function loadHomeRawMarkdownRoute(queryClient: QueryClient) {
+  return queryClient.ensureQueryData(publicHomeMarkdownQueryOptions());
 }
 
 export async function loadAdminDashboard(queryClient: QueryClient) {

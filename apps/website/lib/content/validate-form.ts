@@ -1,5 +1,5 @@
 import type { ContentFormState } from "@ludecker/types";
-import { slugify } from "@ludecker/utils";
+import { slugify, stripMarkdownEmphasisFromProse } from "@ludecker/utils";
 
 export function validateContentFormState(
   input: ContentFormState,
@@ -27,12 +27,16 @@ export function validateContentFormState(
 export function normalizeContentFormState(
   input: ContentFormState,
 ): ContentFormState {
+  const content = stripMarkdownEmphasisFromProse(input.content.trim(), {
+    articleType: input.article_type,
+  });
+
   return {
     ...input,
     title: input.title.trim(),
     slug: slugify(input.slug),
     excerpt: input.excerpt.trim(),
-    content: input.content.trim(),
+    content,
     tagNames: input.tagNames.map((tag) => tag.trim()).filter(Boolean),
     cover_image: input.cover_image.trim(),
     seo_title: input.seo_title.trim(),

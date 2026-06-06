@@ -6,9 +6,10 @@ export function RouterLink({
   className,
   children,
   'aria-current': ariaCurrent,
+  onClick,
 }: DocsNavLinkProps) {
   return (
-    <Link to={href} className={className} aria-current={ariaCurrent}>
+    <Link to={href} className={className} aria-current={ariaCurrent} onClick={onClick}>
       {children}
     </Link>
   );

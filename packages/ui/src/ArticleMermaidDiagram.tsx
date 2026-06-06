@@ -1,28 +1,16 @@
 'use client';
 
 import { useEffect, useId, useRef, useState } from 'react';
+import {
+  applyOutlineDiagramStyle,
+  normalizeMermaidSvg,
+  repairFlowchartNodeLabels,
+} from './article-mermaid-svg';
 import { TEXT_BODY_CLASS } from './constants';
 import { renderLudeckerMermaid } from './mermaid-config';
 
 export interface ArticleMermaidDiagramProps {
   source: string;
-}
-
-function normalizeMermaidSvg(svg: string): string {
-  return svg
-    .replace(/\swidth="100%"/g, '')
-    .replace(
-      /<svg([^>]*)\sstyle="([^"]*)"/,
-      (_match, attrs: string, style: string) => {
-        const cleanedStyle = style
-          .replace(/max-width:\s*[^;]+;?/g, '')
-          .replace(/width:\s*100%;?/g, '')
-          .trim();
-        return cleanedStyle
-          ? `<svg${attrs} style="${cleanedStyle}"`
-          : `<svg${attrs}`;
-      },
-    );
 }
 
 export function ArticleMermaidDiagram({ source }: ArticleMermaidDiagramProps) {
@@ -52,6 +40,8 @@ export function ArticleMermaidDiagram({ source }: ArticleMermaidDiagramProps) {
         const wrapper = document.createElement('div');
         wrapper.className = 'article-mermaid-diagram__svg';
         wrapper.innerHTML = normalizeMermaidSvg(svg);
+        applyOutlineDiagramStyle(wrapper);
+        repairFlowchartNodeLabels(wrapper);
         container.appendChild(wrapper);
       } catch (error) {
         if (cancelled) {

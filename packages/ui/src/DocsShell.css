@@ -30,7 +30,7 @@
   height: 100%;
   min-height: 0;
   overflow: hidden;
-  padding: 0 var(--space-md);
+  padding: 0 var(--docs-panel-padding-x);
 }
 
 .docs-shell__frame {
@@ -71,6 +71,8 @@
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: var(--docs-panel-padding-y) var(--docs-panel-padding-x);
+  box-sizing: border-box;
 }
 
 .docs-shell__main {
@@ -79,6 +81,8 @@
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  padding: var(--docs-panel-padding-y) var(--docs-panel-padding-x);
+  box-sizing: border-box;
 }
 
 .docs-shell__page {
@@ -89,15 +93,7 @@
 .docs-shell__toolbar {
   display: flex;
   width: 100%;
-  padding: var(--docs-column-inset-top) 0 var(--space-sm);
-}
-
-.docs-shell__page:has(.docs-shell__toolbar) .docs-shell__hero {
-  padding-top: 0;
-}
-
-.docs-shell__page:not(:has(.docs-shell__hero)) .docs-shell__content {
-  padding-top: var(--docs-column-inset-top);
+  padding: 0 0 var(--space-sm);
 }
 
 .docs-shell__content {
@@ -112,13 +108,8 @@
   height: 100%;
   overflow-x: hidden;
   overflow-y: auto;
-  padding: var(--docs-column-inset-top) 0 var(--space-4xl);
-}
-
-@media (min-width: 600px) {
-  .docs-shell__stage {
-    padding: 0 var(--space-lg);
-  }
+  padding: var(--docs-panel-padding-y) var(--docs-panel-padding-x);
+  box-sizing: border-box;
 }
 
 @media (max-width: 1023px) {
@@ -126,12 +117,24 @@
     display: none;
   }
 
+  .docs-shell__stage {
+    padding: 0;
+  }
+
+  .docs-shell__main {
+    padding: var(--docs-panel-padding-y) var(--docs-mobile-padding-x);
+  }
+
   .docs-shell__sidebar-scroll {
-    padding-top: var(--space-lg);
+    padding: var(--docs-panel-padding-y) var(--docs-mobile-padding-x);
   }
 }
 
 @media (min-width: 1024px) {
+  .docs-shell__frame {
+    gap: 0;
+  }
+
   .docs-shell__sidebar {
     position: static;
     inset: auto;
@@ -144,6 +147,11 @@
     clip-path: none;
     pointer-events: auto;
     transition: none;
+    border-right: var(--docs-panel-divider-width) solid var(--docs-panel-divider-color);
+  }
+
+  .docs-shell__main {
+    border-right: var(--docs-panel-divider-width) solid var(--docs-panel-divider-color);
   }
 
   .docs-shell__sidebar--mobile-open {
@@ -156,7 +164,10 @@
   .docs-shell__sidebar-scroll {
     height: 100%;
     overflow: hidden;
-    padding-top: 0;
+  }
+
+  .docs-shell__stage {
+    padding: 0;
   }
 
   .docs-shell__overlay {
@@ -179,10 +190,6 @@
 }
 
 @media (max-width: 599px) {
-  .docs-shell__stage {
-    padding: 0 var(--space-md);
-  }
-
   .docs-shell__content {
     padding-bottom: var(--space-3xl);
   }

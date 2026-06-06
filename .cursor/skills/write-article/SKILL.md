@@ -42,7 +42,8 @@ From `$ARGUMENTS` and the user message:
 | Types | `packages/types/src/article-type.ts` |
 | Link syntax | `packages/utils/src/content-links.ts` |
 | Link rendering | `packages/ui/src/ArticleInlineText.tsx` |
-| Body parser | `packages/ui/src/ArticleBody.tsx` |
+| Body parser | `packages/utils/src/content-body.ts` |
+| Emphasis strip | `packages/utils/src/content-emphasis.ts` |
 | Validation | `apps/website/lib/content/validate-form.ts` |
 
 ## Outbound links (CMS)
@@ -50,6 +51,7 @@ From `$ARGUMENTS` and the user message:
 - Syntax: `[visible anchor](https://full-url)` inside paragraphs or under `## Sources`.
 - Links open in a new tab (`rel="noopener noreferrer"`).
 - **No bare URLs** in prose — always use markdown link form with human-readable anchor text.
+- **No `*` or `**` emphasis** in CMS body prose (non-`skills`) — the site renders links only; asterisks appear literally.
 - Cite only URLs returned by research experts or codebase paths (for repo files, still use full `https://github.com/…` links when possible).
 - End with **`## Sources`** when the framework requires citations — see frameworks for minimum counts. Do not add a `Predicate form:` metadata block; `article_type`, tags, and status are CMS fields.
 
@@ -143,6 +145,7 @@ Checklist:
 5. No placeholder `example.com` / `TODO` links
 6. **`diagrams`:** exactly **one** mermaid fence; fail if body references this codebase or CMS
 7. **`skills`:** full `SKILL.md` in `content`; `slug` === frontmatter `name`; fail if body uses legacy `C:` / `P1:` prefix lines; update `.cursor/skills/<name>/SKILL.md` when applicable
+8. **No emphasis markers in prose:** FAIL if `content` contains `**` or single-asterisk emphasis outside fenced code blocks (`` ``` `` … `` ``` ``). `skills` rows are exempt.
 
 Max **2** revision rounds. Output: `review.md` with PASS/FAIL.
 
@@ -170,6 +173,7 @@ Include **Research:** 5 web experts + codebase + editorial · **Outbound links:*
 - **`skills`:** essay `P1`/`P2` structure, or CMS entry that is not a copyable `SKILL.md`
 - Skipping `## Sources` (when the framework requires it — not required for `skills`)
 - Bare URLs or footnotes without markdown link syntax
+- `**bold**` or `*italic*` in CMS body prose (non-`skills`)
 - Same framework for every `article_type`
 - Publishing on FAIL review
 - Invented citations

@@ -102,6 +102,7 @@
   },
   "resolution": {
     "graph_skill_keys": "providers where type=skill → id maps to graph skills key",
-    "run_record": "all providers including type=mcp recorded on Run.capabilities_resolved and decisions"
+    "run_record": "all providers including type=mcp recorded on Run.capabilities_resolved and decisions",
+    "lifecycle": "cross-run state in state/capability-stats.json; promotion thresholds in promotion-rules.json; updated by capability-evidence.mjs after each completed Run"
   }
 }

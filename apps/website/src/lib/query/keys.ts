@@ -2,6 +2,7 @@ export const queryKeys = {
   public: {
     all: ["public"] as const,
     home: ["public", "home"] as const,
+    homeMarkdown: ["public", "home-markdown"] as const,
     section: (typeSegment: string) =>
       ["public", "section", typeSegment] as const,
     article: (typeSegment: string, slug: string) =>
@@ -11,6 +12,7 @@ export const queryKeys = {
     pageContext: (pathname: string) =>
       ["public", "page-context", pathname] as const,
     gettingStarted: ["public", "getting-started"] as const,
+    searchIndex: ["public", "search-index"] as const,
   },
   admin: {
     all: ["admin"] as const,

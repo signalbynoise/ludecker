@@ -18,6 +18,8 @@ export {
   NAV_ITEMS,
 } from './article-type';
 
+export type { PublicSearchItem } from './search-index';
+
 export type { ContentFormState } from './content-form';
 export { toContentFormState } from './content-form';
 

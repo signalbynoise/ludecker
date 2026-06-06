@@ -4,13 +4,18 @@ import type { DocsNavEntry } from '@ludecker/types';
 import {
   DocsHeader,
   DocsNav,
+  DocsSearch,
   DocsShell,
   DocsSidebarPanel,
   ThemeToggle,
+  type DocsNavLinkComponent,
+  type DocsNavLinkProps,
 } from '@ludecker/ui';
-import { useRouterState } from '@tanstack/react-router';
+import { useQuery } from '@tanstack/react-query';
+import { useNavigate, useRouterState } from '@tanstack/react-router';
+import { publicSearchIndexQueryOptions } from '@/src/lib/query/queries';
 import { RouterLink } from '@/components/RouterLink';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { resolveDocsNavActiveState } from '@/lib/nav/resolve-docs-nav-active-state';
 import { normalizePathname } from '@/lib/routing/pathname';
 
@@ -32,6 +37,8 @@ export function DocsChrome({
     resolveDocsNavActiveState(pathname, gettingStartedHrefs);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const sidebarScrollRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  const { data: searchItems = [] } = useQuery(publicSearchIndexQueryOptions());
 
   useEffect(() => {
     const handleResize = () => {
@@ -52,6 +59,21 @@ export function DocsChrome({
     sidebarScrollRef.current.scrollTop = 0;
   }, [isMobileMenuOpen]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
+  const closeMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen(false);
+  }, []);
+
+  const mobileNavLinkComponent = useCallback<DocsNavLinkComponent>(
+    (props: DocsNavLinkProps) => (
+      <RouterLink {...props} onClick={closeMobileMenu} />
+    ),
+    [closeMobileMenu],
+  );
+
   const sidebar = (
     <DocsSidebarPanel>
       <DocsNav
@@ -61,7 +83,7 @@ export function DocsChrome({
         homeActive={homeActive}
         pathname={pathname}
         gettingStartedEntries={gettingStartedEntries}
-        linkComponent={RouterLink}
+        linkComponent={mobileNavLinkComponent}
       />
     </DocsSidebarPanel>
   );
@@ -76,6 +98,15 @@ export function DocsChrome({
           isMobileMenuOpen={isMobileMenuOpen}
           onMobileMenuClick={() => setIsMobileMenuOpen((open) => !open)}
           themeToggle={<ThemeToggle />}
+          search={
+            <DocsSearch
+              items={searchItems}
+              onSelect={(href) => {
+                setIsMobileMenuOpen(false);
+                navigate({ to: href });
+              }}
+            />
+          }
         />
       }
       sidebar={sidebar}

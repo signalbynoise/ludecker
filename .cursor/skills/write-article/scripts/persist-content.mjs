@@ -15,6 +15,7 @@ const require = createRequire(
   resolve(REPO_ROOT, "apps/website/package.json"),
 );
 const { createClient } = require("@supabase/supabase-js");
+const { stripMarkdownEmphasisFromProse } = require("@ludecker/utils");
 const ENV_PATH = resolve(REPO_ROOT, "apps/website/.env.local");
 const CONTENT_TABLE = "content";
 
@@ -92,7 +93,8 @@ function normalizeDraft(raw, publishFlag) {
   const isHomeIntro = articleType === "home";
   const title = String(raw.title ?? "").trim();
   const slug = isHomeIntro ? "home" : slugify(String(raw.slug ?? title));
-  const content = String(raw.content ?? "").trim();
+  const rawContent = String(raw.content ?? "").trim();
+  const content = stripMarkdownEmphasisFromProse(rawContent, { articleType });
 
   if (!title) throw new Error("title is required");
   if (!slug) throw new Error("slug is required");

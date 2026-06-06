@@ -1,5 +1,5 @@
 .docs-hero {
-  padding: var(--docs-column-inset-top) 0 var(--space-xl);
+  padding: 0 0 var(--space-xl);
 }
 
 @media (min-width: 1024px) {

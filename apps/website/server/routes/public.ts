@@ -11,9 +11,14 @@ import {
   fetchContentBySlug,
   fetchGettingStartedEntries,
   fetchHomePageContent,
+  fetchPublishedSearchIndex,
   fetchSectionEntries,
 } from "@/lib/content/queries";
-import { buildArticleMarkdownExport } from "@/lib/content/article-markdown-export";
+import {
+  buildArticleMarkdownExport,
+  buildHomeMarkdownExport,
+} from "@/lib/content/article-markdown-export";
+import { FALLBACK_HOME } from "@/lib/content/fallback";
 
 const publicRoutes = new Hono();
 
@@ -32,6 +37,12 @@ publicRoutes.get("/home", async (c) => {
   return jsonWithPublicCache(c, home);
 });
 
+publicRoutes.get("/home/markdown", async (c) => {
+  const home = (await fetchHomePageContent()) ?? FALLBACK_HOME;
+  const payload = buildHomeMarkdownExport(home);
+  return jsonWithPublicCache(c, payload);
+});
+
 publicRoutes.get("/getting-started", async (c) => {
   const entries = await fetchGettingStartedEntries();
   return jsonWithPublicCache(c, entries);
@@ -46,6 +57,11 @@ publicRoutes.get("/page-context", async (c) => {
 publicRoutes.get("/slugs", async (c) => {
   const slugs = await fetchAllPublishedSlugs();
   return jsonWithPublicCache(c, slugs);
+});
+
+publicRoutes.get("/search-index", async (c) => {
+  const index = await fetchPublishedSearchIndex();
+  return jsonWithPublicCache(c, index);
 });
 
 publicRoutes.get("/:typeSegment", async (c) => {

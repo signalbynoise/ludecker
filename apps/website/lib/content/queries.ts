@@ -8,6 +8,7 @@ import {
   CONTENT_SELECT,
   mapContentWithTagsRow,
 } from "@/lib/content/map-content";
+import { buildPublicSearchIndex } from "@/lib/content/search-index";
 import { withPublicContentCache } from "@/lib/content/public-content-cache";
 import { createAdminClient } from "@/lib/supabase/admin";
 
@@ -176,6 +177,13 @@ export async function fetchHomePageContent(): Promise<ContentWithTags | null> {
     }
 
     return fetchFeaturedHomeContentUncached();
+  });
+}
+
+export async function fetchPublishedSearchIndex() {
+  return withPublicContentCache("search-index", async () => {
+    const items = await fetchPublishedContent();
+    return buildPublicSearchIndex(items);
   });
 }
 

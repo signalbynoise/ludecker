@@ -3,6 +3,8 @@ import "./styles/shadcn.css";
 import "@ludecker/ui/typography.css";
 import "@ludecker/ui/docs-shell.css";
 import "@ludecker/ui/docs-header.css";
+import "@ludecker/ui/brand-logo.css";
+import "@ludecker/ui/docs-search.css";
 import "@ludecker/ui/docs-hero.css";
 import "@ludecker/ui/docs-nav.css";
 import "@ludecker/ui/docs-toc.css";

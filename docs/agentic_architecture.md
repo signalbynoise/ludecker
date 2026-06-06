@@ -241,6 +241,16 @@ object → capability → provider (skill | mcp | expert)
 
 Graph `object_skills` includes skill-type providers only. MCP providers (e.g. `supabase-mcp` on `database-design`) are recorded on the Run.
 
+**Capability lifecycle (evidence-driven):** State belongs to the **capability**, not the provider. After each completed Run, `capability-evidence.mjs` aggregates per-run evidence into [`.cursor/aaac/state/capability-stats.json`](../.cursor/aaac/state/capability-stats.json) and evaluates deterministic promotion using [`.cursor/aaac/capabilities/promotion-rules.json`](../.cursor/aaac/capabilities/promotion-rules.json):
+
+```text
+experimental → validated → trusted → canonical → deprecated
+```
+
+Promotion uses accumulated metrics: `invocations`, `success_rate`, `rollback_rate`, `gate_failure_rate`, `avg_fitness`. `canonical` requires `manual_approval` (human override on the capability entry). Providers contribute evidence; governance changes state.
+
+**Runtime behavior:** At dispatch and before `execute`, `promotion-rules.json` `runtime` section is evaluated — `deprecated` blocks execute; `experimental` on `critical`/`protected` objects requires user approval; low `success_rate` or `avg_fitness` triggers approval. Set `capability_runtime_approved: true` on the Run after user approves.
+
 ### Run (primary execution object)
 
 **SSOT:** [`.cursor/aaac/run/schema.json`](../.cursor/aaac/run/schema.json), [`.cursor/aaac/run/RUN.md`](../.cursor/aaac/run/RUN.md)

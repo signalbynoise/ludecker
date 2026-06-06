@@ -10,10 +10,14 @@ import {
   fetchGettingStarted,
   fetchPublicContent,
   fetchPublicHome,
+  fetchPublicHomeMarkdown,
   fetchPublicMarkdown,
   fetchPublicPageContext,
+  fetchPublicSearchIndex,
   fetchPublicSection,
 } from "@/lib/api/public";
+import { FALLBACK_ARTICLES, FALLBACK_HOME } from "@/lib/content/fallback";
+import { buildPublicSearchIndex } from "@/lib/content/search-index";
 import { mapDocsNavEntries } from "@/lib/nav/map-docs-nav-entries";
 import { queryKeys } from "@/src/lib/query/keys";
 
@@ -21,6 +25,20 @@ const emptyPageContext: PageContext = {
   hero: { title: "", description: "" },
   toc: [],
 };
+
+export function publicSearchIndexQueryOptions() {
+  return queryOptions({
+    queryKey: queryKeys.public.searchIndex,
+    staleTime: 0,
+    queryFn: async () => {
+      try {
+        return await fetchPublicSearchIndex();
+      } catch {
+        return buildPublicSearchIndex([FALLBACK_HOME, ...FALLBACK_ARTICLES]);
+      }
+    },
+  });
+}
 
 export function gettingStartedNavQueryOptions() {
   return queryOptions({
@@ -42,6 +60,14 @@ export function publicHomeQueryOptions() {
     queryKey: queryKeys.public.home,
     staleTime: 0,
     queryFn: () => fetchPublicHome().catch(() => null),
+  });
+}
+
+export function publicHomeMarkdownQueryOptions() {
+  return queryOptions({
+    queryKey: queryKeys.public.homeMarkdown,
+    staleTime: 0,
+    queryFn: () => fetchPublicHomeMarkdown(),
   });
 }
 
