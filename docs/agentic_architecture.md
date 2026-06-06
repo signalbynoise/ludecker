@@ -33,21 +33,24 @@ Ask: *What do I want?* Then type:
 | `cms` | `apps/website` — public site, CMS admin, content queries |
 | `ui` | `packages/ui` — design system, tokens, components |
 | `database` | `supabase/migrations` — schema, RLS, type mirrors |
+| `aaac` | `packages/aaac` — `@ludecker/aaac` npm package, CLI, templates, generators |
 
 ### Commands (Ludecker v1)
 
 | Command | When to use |
 |---------|-------------|
-| `update-module` | Change an existing bounded module (`cms`, `ui`, `database`) |
+| `update-module` | Change an existing bounded module (`cms`, `ui`, `database`, `aaac`) |
 | `update-doc` | Update architecture documentation (no code) |
 | `update-design` | UI / design-system changes (`cms` or `ui`) |
 | `create-feature` | Add a new capability in a domain |
-| `fix-bug` | Fix broken behavior |
+| `fix-module` | Fix broken module — **requires domain**; full fix swarm |
+| `fix-bug` | Same pipeline as `fix-module`; domain optional (`module-fix`, `bug-fix` aliases) |
 | `review-module` | Quality/architecture review (no code) |
 | `review-incident` | Investigate deploy or production issue |
 | `test-module` | Test and verify a module |
 | `test-function` | Test a user journey |
 | `release-app` | Phased release swarm (git → Render) |
+| `publish-aaac` | Bump, smoke-test, and publish `@ludecker/aaac` to npm |
 | `write-article` | Research swarm → CMS article persist |
 
 ### Manual commands (local dev)
@@ -62,7 +65,11 @@ Ask: *What do I want?* Then type:
 ```text
 /update-module cms "Improve docs shell navigation"
 /update-module ui "Add dark mode token for muted text"
+/update-module aaac "Add --version flag to CLI"
 /fix-bug cms "CMS publish does not revalidate home page"
+/fix-bug aaac "init fails when target dir already exists"
+/test-module aaac "Run init smoke and aaac:generate diff check"
+/publish-aaac "Ship 1.0.1 with template sync"
 /update-doc architecture "Document AAAC agent topology"
 /review-module cms "Check size budgets and layer boundaries"
 /test-module cms "Run full module verification"
@@ -180,7 +187,7 @@ Policies → Ontology → Graph → Create Run
 |------|------|------------|
 | create | discover → investigate_lite → plan → execute → verify → report | pre_execute |
 | update | same | pre_execute |
-| fix | discover → investigate → root_cause → plan → execute → verify → report | pre_execute |
+| fix | discover → investigate_swarm → root_cause → plan → execute → verify → report | pre_execute |
 | release | execute → verify → report | release |
 
 **Gate stacks** (SSOT: [`.cursor/aaac/governance/gates.json`](../.cursor/aaac/governance/gates.json)) — approval, not work.
@@ -207,6 +214,22 @@ Composed runtime in graph `verb_runtime`. Human approval at gate boundaries: Run
 **Fitness functions** — [`.cursor/aaac/fitness-functions.yaml`](../.cursor/aaac/fitness-functions.yaml): api_first, design_system, accessibility, security, layer_boundaries, performance. Scored `pass` / `warning` / `fail` before execute.
 
 Lifecycle reference: [`.cursor/skills/shared/verbs/_lifecycle.md`](../.cursor/skills/shared/verbs/_lifecycle.md)
+
+### Fix swarm (`/fix-module`, `/fix-bug`, `fix_mode`)
+
+Same rigor as `write-article` research — parallel Task subagents, one message per wave.
+
+| Phase | Agent specs | Count |
+|-------|-------------|-------|
+| discover | discovery-inventory, discovery-boundaries, discovery-ssot | 4–6 |
+| investigate_swarm | fix-repro, fix-code-path, fix-recent-changes, fix-test-failures, fix-regression-scope, fix-runtime-evidence, fix-inventory-confirm | **7** |
+| root_cause | parent + optional fix-hypothesis-validate | 0–1 |
+| verify (fix) | fix-repro-verify, unit-test-run, fallow-check-changed | **3** |
+
+Skills: [investigation/SKILL.md](../.cursor/skills/shared/investigation/SKILL.md), [testing/SKILL.md](../.cursor/skills/shared/testing/SKILL.md).  
+Contracts: [fix-module.yaml](../.cursor/aaac/contracts/commands/fix-module.yaml), [fix-bug.yaml](../.cursor/aaac/contracts/commands/fix-bug.yaml).
+
+Resolver: `fix-domain-by-slug` (`fix-module`) and `fix-bug-by-slug` → `cms-fix-bug` | `ui-fix-bug` | `database-fix-bug` | `aaac-fix-bug`.
 
 ### Capability registry
 

@@ -33,6 +33,7 @@ create · update · fix · review · check · test · release · remove
 | `cms` | `apps/website` — public site + CMS admin |
 | `ui` | `packages/ui` — design system |
 | `database` | `supabase/migrations` — schema, RLS, type mirrors |
+| `aaac` | `packages/aaac` — `@ludecker/aaac` npm package, CLI, templates, generators |
 
 ## Granular aliases
 
@@ -55,7 +56,8 @@ Finer nouns (api, endpoint, hook, spec, skill, graph, …) map to a canonical co
 
 | Command | Note |
 |---------|------|
-| `fix-bug` | Defect repair; domain resolver (`cms`, `ui`, `database`); unknown slug → `verb-fix` |
+| `fix-bug` | Defect repair; resolver (`cms`, `ui`, `database`, `aaac`); unknown slug → `verb-fix` + object `feature` |
+| `fix-module` | Module repair; **domain required**; resolver → `*-fix-bug`; full 7-agent investigate_swarm |
 | `review-incident` | Production/deploy incident (`swarm-check` alias) |
 | `test-function` | Journey verification (dedicated orchestrator) |
 | `release-app` | Full platform ship (`ship-ludecker` alias) |
@@ -77,6 +79,8 @@ Phase → skill: [lifecycle/phases.json](lifecycle/phases.json)
 ## Object capabilities
 
 Ontology declares `object_capabilities` per object. Graph resolves to provider skills via [capabilities/registry.json](capabilities/registry.json). Generated `object_skills` in graph.yaml is derived — do not edit by hand.
+
+**Complexity (create / update / fix):** [complexity.yaml](complexity.yaml) + [minimal-complexity.md](../policies/minimal-complexity.md) — reuse-first plans, score limits, YAGNI.
 
 Example: `component` → `[component-model, layer-boundaries, ui-design]` → `[component, architecture, ludecker-design-system]`
 

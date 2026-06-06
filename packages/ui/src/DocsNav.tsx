@@ -2,22 +2,12 @@
 
 import { createLogger } from '@ludecker/utils';
 import { useLayoutEffect, useRef } from 'react';
-import { flushSync } from 'react-dom';
 import { NAV_ITEMS } from '@ludecker/types';
 import { TEXT_BODY_SM_CLASS } from './constants';
 import type { DocsNavEntry } from '@ludecker/types';
-import {
-  DOCS_NAV_ALL_SECTION_TITLES,
-  DOCS_NAV_GETTING_STARTED,
-  DOCS_NAV_SECTIONS,
-} from './docs-nav-config';
-import {
-  buildOpenSnapshot,
-  findCollapsedSections,
-  pathnameMatchesNavEntry,
-  resolveActiveSectionTitle,
-} from './docs-nav-state';
+import { DOCS_NAV_GETTING_STARTED, DOCS_NAV_SECTIONS } from './docs-nav-config';
 import { useDocsNav } from './DocsNavProvider';
+import { DocsNavLink, type DocsNavLinkComponent } from './DocsNavLink';
 
 export { DOCS_NAV_GETTING_STARTED, DOCS_NAV_SECTIONS, type DocsNavSection } from './docs-nav-config';
 
@@ -25,9 +15,15 @@ const logger = createLogger('docs-nav', 'debug');
 
 export interface DocsNavProps {
   activeId?: string;
+  /** Exact href of the active Getting Started entry, if any. */
+  activeGettingStartedHref?: string;
+  /** Section title for the current route (website-owned resolution). */
+  activeSection?: string;
   homeActive?: boolean;
   pathname?: string;
   gettingStartedEntries?: readonly DocsNavEntry[];
+  /** Pass `next/link` (or equivalent) to keep section state across client navigations. */
+  linkComponent?: DocsNavLinkComponent;
 }
 
 interface ExpandableSectionProps {
@@ -45,6 +41,7 @@ function ExpandableSection({ title, isExpanded, onToggle, children }: Expandable
         className={`${TEXT_BODY_SM_CLASS} docs-nav__section-toggle`}
         onClick={onToggle}
         aria-expanded={isExpanded}
+        suppressHydrationWarning
       >
         <svg
           className="docs-nav__chevron"
@@ -58,7 +55,11 @@ function ExpandableSection({ title, isExpanded, onToggle, children }: Expandable
         </svg>
         <span className="docs-nav__section-title">{title}</span>
       </button>
-      <div className="docs-nav__section-items" data-state={isExpanded ? 'open' : 'closed'}>
+      <div
+        className="docs-nav__section-items"
+        data-state={isExpanded ? 'open' : 'closed'}
+        suppressHydrationWarning
+      >
         <div className="docs-nav__section-items-inner">{children}</div>
       </div>
     </div>
@@ -67,120 +68,68 @@ function ExpandableSection({ title, isExpanded, onToggle, children }: Expandable
 
 export function DocsNav({
   activeId,
+  activeGettingStartedHref,
+  activeSection,
   homeActive = false,
   pathname = '/',
   gettingStartedEntries = [],
+  linkComponent,
 }: DocsNavProps) {
-  const { overrides, isSectionOpen, toggleSection, persistCurrentSections, syncSectionsForRoute } =
+  const { isSectionOpen, toggleSection, bootstrapColdLoad, openActiveSectionForRoute } =
     useDocsNav();
-  const gettingStartedHrefs = gettingStartedEntries.map((entry) => entry.href);
-  const activeSection = resolveActiveSectionTitle(activeId, {
-    homeActive,
-    pathname,
-    gettingStartedHrefs,
-  });
-  const stableOpenRef = useRef(buildOpenSnapshot(overrides, activeSection));
-  const previousActiveSectionRef = useRef<string | undefined>(activeSection);
-
-  const renderOpenSnapshot = Object.fromEntries(
-    DOCS_NAV_ALL_SECTION_TITLES.map((title) => [title, isSectionOpen(title, activeSection)]),
-  );
-
-  const renderCollapsed = findCollapsedSections(stableOpenRef.current, renderOpenSnapshot);
-  if (renderCollapsed.length > 0) {
-    logger.warn('render', 'transient-auto-collapse-before-sync', {
-      activeSection,
-      previousActiveSection: previousActiveSectionRef.current,
-      collapsed: renderCollapsed,
-      stableOpen: stableOpenRef.current,
-      renderOpen: renderOpenSnapshot,
-      overrides,
-    });
-  }
+  const introductionActive = homeActive && !activeGettingStartedHref;
+  const hasBootstrappedRef = useRef(false);
+  const previousActiveSectionRef = useRef<string | undefined>(undefined);
 
   useLayoutEffect(() => {
-    const outgoingSection = previousActiveSectionRef.current;
-    const openBeforeSync = { ...stableOpenRef.current };
-
-    logger.debug('layout-sync', 'start', {
-      outgoingSection,
-      incomingSection: activeSection,
-      openBeforeSync,
-      overrides,
-    });
-
-    if (outgoingSection !== undefined && outgoingSection !== activeSection) {
-      flushSync(() => {
-        persistCurrentSections(outgoingSection);
-      });
+    if (previousActiveSectionRef.current === activeSection) {
+      return;
     }
 
-    syncSectionsForRoute(activeSection);
-
-    const openAfterSync = Object.fromEntries(
-      DOCS_NAV_ALL_SECTION_TITLES.map((title) => [title, isSectionOpen(title, activeSection)]),
-    );
-
-    const collapsedAfterSync = findCollapsedSections(openBeforeSync, openAfterSync);
-    if (collapsedAfterSync.length > 0) {
-      logger.error('layout-sync', 'auto-collapse-after-sync', {
-        outgoingSection,
-        incomingSection: activeSection,
-        collapsed: collapsedAfterSync,
-        openBeforeSync,
-        openAfterSync,
-        overrides,
-      });
-    }
-
-    stableOpenRef.current = openAfterSync;
+    const from = previousActiveSectionRef.current;
     previousActiveSectionRef.current = activeSection;
 
-    logger.debug('layout-sync', 'complete', {
-      outgoingSection,
-      incomingSection: activeSection,
-      openAfterSync,
-    });
-  }, [activeSection, isSectionOpen, persistCurrentSections, syncSectionsForRoute]);
+    if (!hasBootstrappedRef.current) {
+      hasBootstrappedRef.current = true;
+      bootstrapColdLoad(activeSection, { pathname, activeId, from, phase: 'bootstrap' });
+      return;
+    }
 
-  const handleNavLinkClick = () => {
-    const outgoingSection = activeSection;
-
-    logger.debug('link-click', 'persist-before-navigation', {
-      outgoingSection,
-      stableOpen: stableOpenRef.current,
-      overrides,
+    logger.debug('route-change', 'active-section', {
+      from,
+      to: activeSection,
+      pathname,
+      activeId,
     });
 
-    flushSync(() => {
-      persistCurrentSections(outgoingSection);
-    });
-  };
+    openActiveSectionForRoute(activeSection, { pathname, activeId, from });
+  }, [activeId, activeSection, bootstrapColdLoad, openActiveSectionForRoute, pathname]);
 
   return (
     <nav className="docs-nav" aria-label="Documentation">
       <ExpandableSection
         title={DOCS_NAV_GETTING_STARTED}
-        isExpanded={isSectionOpen(DOCS_NAV_GETTING_STARTED, activeSection)}
-        onToggle={() => toggleSection(DOCS_NAV_GETTING_STARTED, activeSection)}
+        isExpanded={isSectionOpen(DOCS_NAV_GETTING_STARTED)}
+        onToggle={() => toggleSection(DOCS_NAV_GETTING_STARTED)}
       >
-        <a
+        <DocsNavLink
+          linkComponent={linkComponent}
           className={
-            homeActive
+            introductionActive
               ? `${TEXT_BODY_SM_CLASS} docs-nav__link docs-nav__link--active`
               : `${TEXT_BODY_SM_CLASS} docs-nav__link`
           }
           href="/"
-          aria-current={homeActive ? 'page' : undefined}
-          onClick={handleNavLinkClick}
+          aria-current={introductionActive ? 'page' : undefined}
         >
           Introduction
-        </a>
+        </DocsNavLink>
         {gettingStartedEntries.map((entry) => {
-          const isActive = pathnameMatchesNavEntry(pathname, entry.href);
+          const isActive = activeGettingStartedHref === entry.href;
           return (
-            <a
+            <DocsNavLink
               key={entry.slug}
+              linkComponent={linkComponent}
               className={
                 isActive
                   ? `${TEXT_BODY_SM_CLASS} docs-nav__link docs-nav__link--active`
@@ -188,10 +137,9 @@ export function DocsNav({
               }
               href={entry.href}
               aria-current={isActive ? 'page' : undefined}
-              onClick={handleNavLinkClick}
             >
               {entry.label}
-            </a>
+            </DocsNavLink>
           );
         })}
       </ExpandableSection>
@@ -203,14 +151,15 @@ export function DocsNav({
           <ExpandableSection
             key={section.title}
             title={section.title}
-            isExpanded={isSectionOpen(section.title, activeSection)}
-            onToggle={() => toggleSection(section.title, activeSection)}
+            isExpanded={isSectionOpen(section.title)}
+            onToggle={() => toggleSection(section.title)}
           >
             {items.map((item) => {
               const isActive = item.id === activeId;
               return (
-                <a
+                <DocsNavLink
                   key={item.id}
+                  linkComponent={linkComponent}
                   className={
                     isActive
                       ? `${TEXT_BODY_SM_CLASS} docs-nav__link docs-nav__link--active`
@@ -218,10 +167,9 @@ export function DocsNav({
                   }
                   href={item.href}
                   aria-current={isActive ? 'page' : undefined}
-                  onClick={handleNavLinkClick}
                 >
                   {item.label}
-                </a>
+                </DocsNavLink>
               );
             })}
           </ExpandableSection>

@@ -1,4 +1,5 @@
 import { AnimatedArticleList } from "@/components/AnimatedArticleList";
+import { DocsPageShell } from "@/components/DocsPageShell";
 import { ARTICLE_TYPES, NAV_ITEMS } from "@ludecker/types";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -6,8 +7,9 @@ import {
   listRouteSegments,
   resolveArticleTypeFromRouteSegment,
 } from "@/lib/content/article-types";
+import { getSectionEntries } from "@/lib/content/cached-queries";
 import { FALLBACK_ARTICLES } from "@/lib/content/fallback";
-import { fetchSectionEntries } from "@/lib/content/queries";
+import { buildSectionPathname } from "@/lib/routing/pathname";
 
 export const revalidate = 3600;
 
@@ -49,19 +51,21 @@ export default async function TypeListPage({ params }: TypeListPageProps) {
     notFound();
   }
 
-  const items = await fetchSectionEntries(articleType);
+  const items = await getSectionEntries(articleType);
   const rows =
     items.length > 0
       ? items
       : FALLBACK_ARTICLES.filter((entry) => entry.article_type === articleType);
 
   return (
-    <AnimatedArticleList
-      items={rows.map((content, index) => ({
-        content,
-        index: index + 1,
-      }))}
-    />
+    <DocsPageShell pathname={buildSectionPathname(type)}>
+      <AnimatedArticleList
+        items={rows.map((content, index) => ({
+          content,
+          index: index + 1,
+        }))}
+      />
+    </DocsPageShell>
   );
 }
 

@@ -14,6 +14,9 @@ domains:
   database:
     depends_on: []
     provides: [schema, rls, content_storage]
+  aaac:
+    depends_on: []
+    provides: [aaac_cli, aaac_templates, aaac_generators, npm_package]
 
 objects:
   module:
@@ -22,6 +25,8 @@ objects:
     ui:
       depends_on: []
     database:
+      depends_on: []
+    aaac:
       depends_on: []
   feature:
     default:

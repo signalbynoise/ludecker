@@ -9,6 +9,6 @@ AAAC: `/fix-migration <domain> "<intent>"`
 
 1. [.cursor/aaac/dispatch.md](../aaac/dispatch.md)
 2. [.cursor/aaac/graph.yaml](../aaac/graph.yaml) — **`fix-migration`**
-3. [skills/shared/verbs/fix/orchestrator/SKILL.md](../skills/shared/verbs/fix/orchestrator/SKILL.md) (object: `migration`)
+3. resolver `fix-data-by-slug`
 
 Domain slug recommended.

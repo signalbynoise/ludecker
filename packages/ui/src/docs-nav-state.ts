@@ -1,164 +1,98 @@
 import {
   DOCS_NAV_ALL_SECTION_TITLES,
   DOCS_NAV_GETTING_STARTED,
-  sectionTitleForActiveId,
 } from './docs-nav-config';
 
+/** Persisted + in-memory section open map. Keys present = explicit user/bootstrap choice. */
 export type DocsNavSectionOverrides = Record<string, boolean>;
 
 export type DocsNavOpenSnapshot = Record<string, boolean>;
 
-export type SectionOpenReason =
-  | 'override-true'
-  | 'override-false'
-  | 'default-getting-started'
-  | 'default-active-section'
-  | 'closed-default';
-
-export interface SectionOpenResolution {
-  open: boolean;
-  reason: SectionOpenReason;
-}
-
-/** Resolve open state for display and for route snapshots (includes active-section default). */
-export function resolveSectionOpenState(
-  title: string,
-  overrides: DocsNavSectionOverrides,
-  activeSection?: string,
-): SectionOpenResolution {
-  if (Object.prototype.hasOwnProperty.call(overrides, title)) {
-    return {
-      open: overrides[title],
-      reason: overrides[title] ? 'override-true' : 'override-false',
-    };
-  }
-
-  if (title === DOCS_NAV_GETTING_STARTED) {
-    return { open: true, reason: 'default-getting-started' };
-  }
-
-  if (title === activeSection) {
-    return { open: true, reason: 'default-active-section' };
-  }
-
-  return { open: false, reason: 'closed-default' };
-}
-
 export function resolveSectionOpen(
   title: string,
-  overrides: DocsNavSectionOverrides,
-  activeSection?: string,
+  sections: DocsNavSectionOverrides,
 ): boolean {
-  return resolveSectionOpenState(title, overrides, activeSection).open;
+  if (Object.prototype.hasOwnProperty.call(sections, title)) {
+    return sections[title];
+  }
+
+  return title === DOCS_NAV_GETTING_STARTED;
 }
 
-export function buildOpenSnapshot(
-  overrides: DocsNavSectionOverrides,
-  activeSection?: string,
+export function buildSectionOpenSnapshot(
+  sections: DocsNavSectionOverrides,
 ): DocsNavOpenSnapshot {
   return Object.fromEntries(
-    DOCS_NAV_ALL_SECTION_TITLES.map((title) => [
-      title,
-      resolveSectionOpen(title, overrides, activeSection),
-    ]),
+    DOCS_NAV_ALL_SECTION_TITLES.map((title) => [title, resolveSectionOpen(title, sections)]),
   );
 }
 
-export function findCollapsedSections(
-  before: DocsNavOpenSnapshot,
-  after: DocsNavOpenSnapshot,
-): string[] {
-  return DOCS_NAV_ALL_SECTION_TITLES.filter((title) => before[title] && !after[title]);
-}
-
-/** Persist every section open under the outgoing route context into overrides. */
-export function persistOpenSections(
-  current: DocsNavSectionOverrides,
-  activeSectionWhen: string | undefined,
+export function toggleSectionState(
+  sections: DocsNavSectionOverrides,
+  title: string,
 ): DocsNavSectionOverrides {
-  let next = current;
-  let changed = false;
-
-  for (const title of DOCS_NAV_ALL_SECTION_TITLES) {
-    if (Object.prototype.hasOwnProperty.call(next, title) && next[title] === false) {
-      continue;
-    }
-
-    const { open } = resolveSectionOpenState(title, next, activeSectionWhen);
-    if (!open) {
-      continue;
-    }
-
-    if (next[title] === true) {
-      continue;
-    }
-
-    if (!changed) {
-      next = { ...current };
-      changed = true;
-    }
-
-    next[title] = true;
-  }
-
-  return next;
+  return {
+    ...sections,
+    [title]: !resolveSectionOpen(title, sections),
+  };
 }
 
-export function applyRouteSectionOverrides(
-  current: DocsNavSectionOverrides,
-  previousActiveSection: string | undefined,
-  nextActiveSection: string | undefined,
-): DocsNavSectionOverrides {
-  const outgoingActive = previousActiveSection ?? nextActiveSection;
-  let next = persistOpenSections(current, outgoingActive);
-
-  if (nextActiveSection && next[nextActiveSection] !== true) {
-    next = next === current ? { ...current } : { ...next };
-    next[nextActiveSection] = true;
+/** On route change: open the active section without closing others. */
+export function openActiveSectionForRoute(
+  sections: DocsNavSectionOverrides,
+  activeSection: string | undefined,
+): { sections: DocsNavSectionOverrides; changed: boolean } {
+  if (!activeSection) {
+    return { sections, changed: false };
   }
 
-  return next;
-}
-
-export function pathnameMatchesNavEntry(pathname: string, href: string): boolean {
-  const normalized = pathname.replace(/\/$/, '') || '/';
-  const normalizedHref = href.replace(/\/$/, '') || '/';
-
-  return normalized === normalizedHref || normalized.startsWith(`${normalizedHref}/`);
-}
-
-export function resolveActiveSectionTitle(
-  activeId: string | undefined,
-  options: {
-    homeActive: boolean;
-    pathname: string;
-    gettingStartedHrefs: readonly string[];
-  },
-): string | undefined {
-  if (options.homeActive) {
-    return DOCS_NAV_GETTING_STARTED;
+  if (Object.prototype.hasOwnProperty.call(sections, activeSection) && sections[activeSection] === false) {
+    return { sections, changed: false };
   }
 
-  if (
-    options.gettingStartedHrefs.some((href) =>
-      pathnameMatchesNavEntry(options.pathname, href),
-    )
-  ) {
-    return DOCS_NAV_GETTING_STARTED;
+  if (resolveSectionOpen(activeSection, sections)) {
+    return { sections, changed: false };
   }
 
-  return sectionTitleForActiveId(activeId);
+  return {
+    sections: { ...sections, [activeSection]: true },
+    changed: true,
+  };
 }
 
-export function areOverridesEqual(
+export function bootstrapActiveSectionOnce(
+  sections: DocsNavSectionOverrides,
+  activeSection: string | undefined,
+  hasBootstrapped: boolean,
+): { sections: DocsNavSectionOverrides; hasBootstrapped: boolean; changed: boolean } {
+  if (hasBootstrapped || !activeSection) {
+    return { sections, hasBootstrapped, changed: false };
+  }
+
+  if (Object.prototype.hasOwnProperty.call(sections, activeSection)) {
+    return { sections, hasBootstrapped: true, changed: false };
+  }
+
+  return {
+    sections: { ...sections, [activeSection]: true },
+    hasBootstrapped: true,
+    changed: true,
+  };
+}
+
+export function areSectionStatesEqual(
   a: DocsNavSectionOverrides,
   b: DocsNavSectionOverrides,
 ): boolean {
-  const keys = new Set([...Object.keys(a), ...Object.keys(b)]);
-  for (const key of keys) {
-    if (Boolean(a[key]) !== Boolean(b[key])) {
-      return false;
-    }
-  }
-  return true;
+  return DOCS_NAV_ALL_SECTION_TITLES.every(
+    (title) => resolveSectionOpen(title, a) === resolveSectionOpen(title, b),
+  );
+}
+
+export function serializeSectionStateForCookie(
+  sections: DocsNavSectionOverrides,
+): DocsNavSectionOverrides {
+  return Object.fromEntries(
+    DOCS_NAV_ALL_SECTION_TITLES.map((title) => [title, resolveSectionOpen(title, sections)]),
+  );
 }

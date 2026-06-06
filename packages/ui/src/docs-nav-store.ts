@@ -1,47 +1,93 @@
 import { createLogger } from '@ludecker/utils';
-import { areOverridesEqual } from './docs-nav-state';
-import type { DocsNavSectionOverrides } from './docs-nav-state';
+import { readDocumentCookieSections, writeSectionsCookie } from './docs-nav-persistence';
+import {
+  areSectionStatesEqual,
+  bootstrapActiveSectionOnce,
+  buildSectionOpenSnapshot,
+  openActiveSectionForRoute,
+  toggleSectionState,
+  type DocsNavOpenSnapshot,
+  type DocsNavSectionOverrides,
+} from './docs-nav-state';
 
-export const DOCS_NAV_OVERRIDES_COOKIE = 'docs_nav_overrides';
+export { DOCS_NAV_OVERRIDES_COOKIE } from './docs-nav-persistence';
 
 const logger = createLogger('docs-nav-store', 'debug');
 
-const EMPTY_OVERRIDES: DocsNavSectionOverrides = Object.freeze({});
-const COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 30;
+const EMPTY_SECTIONS: DocsNavSectionOverrides = Object.freeze({});
 
 type Listener = () => void;
 
-function writeOverridesCookie(overrides: DocsNavSectionOverrides): void {
-  if (typeof document === 'undefined') {
-    return;
-  }
+let sharedStore: DocsNavStore | null = null;
 
-  if (Object.keys(overrides).length === 0) {
-    document.cookie = `${DOCS_NAV_OVERRIDES_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
-    return;
-  }
+function cloneSections(sections: DocsNavSectionOverrides): DocsNavSectionOverrides {
+  return Object.keys(sections).length > 0 ? { ...sections } : EMPTY_SECTIONS;
+}
 
-  document.cookie = `${DOCS_NAV_OVERRIDES_COOKIE}=${encodeURIComponent(JSON.stringify(overrides))}; path=/; max-age=${COOKIE_MAX_AGE_SECONDS}; SameSite=Lax`;
+function persistSections(sections: DocsNavSectionOverrides): void {
+  writeSectionsCookie(sections);
 }
 
 export interface DocsNavStore {
   subscribe: (listener: Listener) => () => void;
   getSnapshot: () => DocsNavSectionOverrides;
   getServerSnapshot: () => DocsNavSectionOverrides;
-  getLastActiveSection: () => string | undefined;
-  update: (
-    updater: (current: DocsNavSectionOverrides) => DocsNavSectionOverrides,
-    operation: string,
+  getDisplaySnapshot: () => DocsNavOpenSnapshot;
+  bootstrapColdLoad: (
+    activeSection: string | undefined,
     context?: Record<string, unknown>,
-  ) => DocsNavSectionOverrides;
-  setLastActiveSection: (section: string | undefined) => void;
+  ) => void;
+  openActiveSectionForRoute: (
+    activeSection: string | undefined,
+    context?: Record<string, unknown>,
+  ) => void;
+  toggleSection: (title: string) => void;
+  hydrateFromDocumentCookie: () => void;
 }
 
-export function createDocsNavStore(initialOverrides: DocsNavSectionOverrides = EMPTY_OVERRIDES): DocsNavStore {
-  let overrides =
-    Object.keys(initialOverrides).length > 0 ? { ...initialOverrides } : EMPTY_OVERRIDES;
-  let lastActiveSection: string | undefined;
+export interface CreateDocsNavStoreOptions {
+  serverSnapshot?: DocsNavSectionOverrides;
+}
+
+export function createDocsNavStore(
+  initialSections: DocsNavSectionOverrides = EMPTY_SECTIONS,
+  options: CreateDocsNavStoreOptions = {},
+): DocsNavStore {
+  let sections = cloneSections(initialSections);
+  const serverSnapshot = cloneSections(options.serverSnapshot ?? initialSections);
+  let hasBootstrappedColdLoad = false;
   const listeners = new Set<Listener>();
+
+  const publish = (
+    nextSections: DocsNavSectionOverrides,
+    operation: string,
+    context?: Record<string, unknown>,
+  ): void => {
+    if (areSectionStatesEqual(sections, nextSections)) {
+      logger.debug(operation, 'update-skipped', {
+        ...context,
+        sections,
+        display: buildSectionOpenSnapshot(sections),
+      });
+      return;
+    }
+
+    const before = sections;
+    const displayBefore = buildSectionOpenSnapshot(before);
+    sections = cloneSections(nextSections);
+    const displayAfter = buildSectionOpenSnapshot(sections);
+
+    persistSections(sections);
+    listeners.forEach((listener) => listener());
+
+    logger.debug(operation, 'update-applied', {
+      ...context,
+      before,
+      after: sections,
+      displayBefore,
+      displayAfter,
+    });
+  };
 
   return {
     subscribe(listener: Listener) {
@@ -49,48 +95,113 @@ export function createDocsNavStore(initialOverrides: DocsNavSectionOverrides = E
       return () => listeners.delete(listener);
     },
     getSnapshot() {
-      return overrides;
+      return sections;
     },
     getServerSnapshot() {
-      return overrides;
+      return serverSnapshot;
     },
-    getLastActiveSection() {
-      return lastActiveSection;
+    getDisplaySnapshot() {
+      return buildSectionOpenSnapshot(sections);
     },
-    setLastActiveSection(section: string | undefined) {
-      logger.debug('set-last-active-section', 'updated', { from: lastActiveSection, to: section });
-      lastActiveSection = section;
-    },
-    update(updater, operation, context) {
-      const before = overrides;
-      const next = updater(overrides);
-
-      logger.debug(operation, 'update-evaluated', {
+    bootstrapColdLoad(activeSection, context) {
+      logger.debug('bootstrap-cold-load', 'start', {
         ...context,
-        before,
-        next,
-        changed: !areOverridesEqual(before, next),
+        activeSection,
+        hasBootstrappedColdLoad,
+        sections,
+        displayBefore: buildSectionOpenSnapshot(sections),
       });
 
-      if (areOverridesEqual(before, next)) {
-        logger.debug(operation, 'update-skipped', context);
-        return overrides;
+      const result = bootstrapActiveSectionOnce(sections, activeSection, hasBootstrappedColdLoad);
+      hasBootstrappedColdLoad = result.hasBootstrapped;
+
+      if (!result.changed) {
+        logger.debug('bootstrap-cold-load', 'skipped', {
+          ...context,
+          activeSection,
+          hasBootstrappedColdLoad,
+        });
+        return;
       }
 
-      overrides = Object.keys(next).length > 0 ? { ...next } : EMPTY_OVERRIDES;
-      writeOverridesCookie(overrides);
-      listeners.forEach((listener) => listener());
-
-      logger.info(operation, 'update-applied', {
+      publish(result.sections, 'bootstrap-cold-load', {
         ...context,
-        before,
-        after: overrides,
+        activeSection,
+      });
+    },
+    openActiveSectionForRoute(activeSection, context) {
+      logger.debug('open-active-route', 'start', {
+        ...context,
+        activeSection,
+        sections,
+        displayBefore: buildSectionOpenSnapshot(sections),
       });
 
-      return overrides;
+      const result = openActiveSectionForRoute(sections, activeSection);
+
+      if (!result.changed) {
+        logger.debug('open-active-route', 'skipped', {
+          ...context,
+          activeSection,
+        });
+        return;
+      }
+
+      publish(result.sections, 'open-active-route', {
+        ...context,
+        activeSection,
+      });
+    },
+    toggleSection(title) {
+      logger.debug('toggle', 'start', {
+        title,
+        currentlyOpen: buildSectionOpenSnapshot(sections)[title],
+        sections,
+      });
+
+      publish(toggleSectionState(sections, title), 'toggle', { title });
+    },
+    hydrateFromDocumentCookie() {
+      const cookieSections = readDocumentCookieSections();
+      if (!cookieSections) {
+        logger.debug('cookie-hydrate', 'skipped', { reason: 'no-cookie' });
+        return;
+      }
+
+      logger.debug('cookie-hydrate', 'start', {
+        cookieSections,
+        sections,
+        displayBefore: buildSectionOpenSnapshot(sections),
+      });
+
+      publish(cookieSections, 'cookie-hydrate');
     },
   };
 }
 
-export { EMPTY_OVERRIDES };
+export function getOrCreateDocsNavStore(
+  serverInitial: DocsNavSectionOverrides = EMPTY_SECTIONS,
+): DocsNavStore {
+  if (typeof window === 'undefined') {
+    return createDocsNavStore(serverInitial, { serverSnapshot: serverInitial });
+  }
+
+  if (!sharedStore) {
+    sharedStore = createDocsNavStore(serverInitial, { serverSnapshot: serverInitial });
+    // Before any child useLayoutEffect (bootstrap), restore cookie from static SSR pages.
+    sharedStore.hydrateFromDocumentCookie();
+    logger.debug('shared-store', 'created', {
+      serverInitial,
+      display: sharedStore.getDisplaySnapshot(),
+    });
+  }
+
+  return sharedStore;
+}
+
+export function resetDocsNavStoreForTests(): void {
+  sharedStore = null;
+}
+
+export { EMPTY_SECTIONS as EMPTY_OVERRIDES };
 export type { DocsNavSectionOverrides } from './docs-nav-state';

@@ -10,12 +10,13 @@ import {
 import { resolveArticleTypeFromRouteSegment } from '@/lib/content/article-types';
 import { FALLBACK_ARTICLES, FALLBACK_HOME } from '@/lib/content/fallback';
 import {
-  fetchContentBySlug,
-  fetchHomePageContent,
-  fetchSectionEntries,
-  fetchSectionPage,
-} from '@/lib/content/queries';
+  getContentBySlug,
+  getHomePageContent,
+  getSectionEntries,
+  getSectionPage,
+} from '@/lib/content/query-cache';
 import { SITE_CONFIG } from '@/lib/constants';
+import { normalizePathname } from '@/lib/routing/pathname';
 
 const log = createLogger('content:page-context');
 
@@ -40,12 +41,12 @@ function sectionFallback(articleType: Exclude<ArticleType, 'home'>): PageHero {
 }
 
 export async function fetchPageContext(pathname: string): Promise<PageContext> {
-  const normalized = pathname.replace(/\/$/, '') || '/';
+  const normalized = normalizePathname(pathname);
 
   log.debug('fetchPageContext', 'start', { pathname: normalized });
 
   if (normalized === '/') {
-    const home = await fetchHomePageContent();
+    const home = await getHomePageContent();
     const content = home ?? FALLBACK_HOME;
     const context = {
       hero: mapContentToPageHero(content, siteFallback()),
@@ -66,8 +67,8 @@ export async function fetchPageContext(pathname: string): Promise<PageContext> {
 
   if (segments.length === 1) {
     const [section, items] = await Promise.all([
-      fetchSectionPage(articleType),
-      fetchSectionEntries(articleType),
+      getSectionPage(articleType),
+      getSectionEntries(articleType),
     ]);
 
     const rows =
@@ -97,7 +98,7 @@ export async function fetchPageContext(pathname: string): Promise<PageContext> {
 
   if (segments.length >= 2) {
     const slug = segments[1] ?? '';
-    const content = await fetchContentBySlug(articleType, slug);
+    const content = await getContentBySlug(articleType, slug);
     if (content) {
       const context = {
         hero: mapContentToPageHero(content, {

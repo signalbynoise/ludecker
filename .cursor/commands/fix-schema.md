@@ -9,6 +9,6 @@ AAAC: `/fix-schema <domain> "<intent>"`
 
 1. [.cursor/aaac/dispatch.md](../aaac/dispatch.md)
 2. [.cursor/aaac/graph.yaml](../aaac/graph.yaml) — **`fix-schema`**
-3. [skills/shared/verbs/fix/orchestrator/SKILL.md](../skills/shared/verbs/fix/orchestrator/SKILL.md) (object: `schema`)
+3. resolver `fix-data-by-slug`
 
 Domain slug recommended.

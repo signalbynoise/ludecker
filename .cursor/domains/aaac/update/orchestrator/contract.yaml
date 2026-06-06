@@ -1,0 +1,39 @@
+name: aaac-update-orchestrator
+purpose: Evolve @ludecker/aaac package, templates, and npm publish workflow safely
+inputs:
+  domain:
+    required: true
+    enum: [aaac]
+  intent:
+    required: true
+outputs:
+  code_changes:
+    type: boolean
+  inventory_synced:
+    type: boolean
+  published_version:
+    type: string
+    optional: true
+  report:
+    type: markdown
+success_criteria:
+  - generic templates stay free of Lüdecker-only overlay
+  - generators remain SSOT in packages/aaac/src/generators
+  - publish_mode uses pnpm publish only
+  - init smoke passes before publish
+  - inventory Section 3 matches repo after execute
+failure_conditions:
+  - work outside inventory out-of-scope without user confirm
+  - execute without approved plan
+  - npm CLI in publish path
+  - publish without version bump
+dependencies:
+  skills: [discovery, planning, execution, testing, verification, reporting, integration]
+  policies: [master-rules, implementation]
+  docs:
+    - docs/agentic_architecture.md
+    - packages/aaac/README.md
+verification:
+  - sync_inventory
+  - init_smoke_test
+  - aaac_generate_diff_clean

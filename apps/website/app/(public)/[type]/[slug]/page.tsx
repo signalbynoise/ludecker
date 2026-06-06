@@ -1,15 +1,15 @@
 import { AnimatedArticleBody } from "@/components/AnimatedArticleBody";
+import { DocsPageShell } from "@/components/DocsPageShell";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import {
   isListableArticleType,
   resolveArticleTypeFromRouteSegment,
 } from "@/lib/content/article-types";
-import {
-  fetchAllPublishedSlugs,
-  fetchContentBySlug,
-} from "@/lib/content/queries";
+import { getContentBySlug } from "@/lib/content/cached-queries";
+import { fetchAllPublishedSlugs } from "@/lib/content/queries";
 import { SITE_CONFIG } from "@/lib/constants";
+import { buildContentPathname } from "@/lib/routing/pathname";
 import { getNavHref } from "@ludecker/utils";
 
 export const revalidate = 3600;
@@ -35,7 +35,7 @@ export async function generateMetadata({
     return { title: "Not found" };
   }
 
-  const content = await fetchContentBySlug(articleType, slug);
+  const content = await getContentBySlug(articleType, slug);
   if (!content) return { title: "Not found" };
 
   return {
@@ -57,13 +57,15 @@ export default async function ContentPage({ params }: ContentPageProps) {
   const articleType = resolveArticleTypeFromRouteSegment(type);
   if (!articleType || articleType === "home") notFound();
 
-  const item = await fetchContentBySlug(articleType, slug);
+  const item = await getContentBySlug(articleType, slug);
   if (!item) notFound();
 
   return (
-    <AnimatedArticleBody
-      content={item.content}
-      articleType={item.article_type}
-    />
+    <DocsPageShell pathname={buildContentPathname(type, slug)}>
+      <AnimatedArticleBody
+        content={item.content}
+        articleType={item.article_type}
+      />
+    </DocsPageShell>
   );
 }

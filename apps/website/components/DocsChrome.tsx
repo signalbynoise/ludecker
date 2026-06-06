@@ -3,36 +3,30 @@
 import type { DocsNavEntry } from '@ludecker/types';
 import {
   DocsHeader,
-  DocsHero,
   DocsNav,
   DocsShell,
   DocsSidebarPanel,
-  DocsTableOfContents,
   ThemeToggle,
-  type DocsTableOfContentsItem,
 } from '@ludecker/ui';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { resolveActiveNavId, resolveHomeActive } from '@/lib/nav/resolve-active-nav-id';
+import { resolveDocsNavActiveState } from '@/lib/nav/resolve-docs-nav-active-state';
+import { normalizePathname } from '@/lib/routing/pathname';
 
 export interface DocsChromeProps {
   children: ReactNode;
-  heroTitle: string;
-  heroDescription?: string;
-  tocItems?: DocsTableOfContentsItem[];
   gettingStartedEntries?: readonly DocsNavEntry[];
 }
 
 export function DocsChrome({
   children,
-  heroTitle,
-  heroDescription,
-  tocItems = [],
   gettingStartedEntries = [],
 }: DocsChromeProps) {
-  const pathname = usePathname();
-  const activeNavId = resolveActiveNavId(pathname);
-  const homeActive = resolveHomeActive(pathname);
+  const pathname = normalizePathname(usePathname() || '/');
+  const gettingStartedHrefs = gettingStartedEntries.map((entry) => entry.href);
+  const { homeActive, activeGettingStartedHref, activeNavId, activeSection } =
+    resolveDocsNavActiveState(pathname, gettingStartedHrefs);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const sidebarScrollRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +53,12 @@ export function DocsChrome({
     <DocsSidebarPanel>
       <DocsNav
         activeId={activeNavId}
+        activeGettingStartedHref={activeGettingStartedHref}
+        activeSection={activeSection}
         homeActive={homeActive}
         pathname={pathname}
         gettingStartedEntries={gettingStartedEntries}
+        linkComponent={Link}
       />
     </DocsSidebarPanel>
   );
@@ -79,10 +76,6 @@ export function DocsChrome({
         />
       }
       sidebar={sidebar}
-      hero={
-        <DocsHero title={heroTitle} description={heroDescription} />
-      }
-      tableOfContents={<DocsTableOfContents items={tocItems} />}
     >
       {children}
     </DocsShell>

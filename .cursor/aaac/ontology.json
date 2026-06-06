@@ -122,6 +122,13 @@
     "requirements": 0.8,
     "scope": 0.8
   },
+  "complexity_ref": "aaac/complexity.yaml",
+  "complexity_strategy": {
+    "optimization": "capability_per_complexity",
+    "default_verb_when_ambiguous": "update",
+    "mutating_verbs": ["create", "update", "fix"],
+    "priority": ["reuse", "extend", "modify", "create"]
+  },
   "object_maturity": {
     "function": "evolving",
     "component": "evolving",
@@ -173,11 +180,22 @@
     "update-architecture": { "orchestrator": "update-doc" },
     "create-feature": { "resolver": "create-feature-by-slug" },
     "fix-bug": { "resolver": "fix-bug-by-slug" },
+    "fix-module": { "resolver": "fix-domain-by-slug" },
+    "fix-component": { "resolver": "fix-component-by-scope" },
+    "fix-schema": { "resolver": "fix-data-by-slug" },
+    "fix-model": { "resolver": "fix-data-by-slug" },
+    "fix-migration": { "resolver": "fix-data-by-slug" },
+    "fix-integration": { "resolver": "fix-integration-by-slug" },
+    "fix-domain": { "resolver": "fix-domain-by-slug" },
+    "fix-app": { "resolver": "fix-domain-by-slug" },
+    "fix-feature": { "resolver": "fix-domain-by-slug" },
+    "fix-workflow": { "resolver": "fix-domain-by-slug" },
     "test-module": { "resolver": "test-module-by-slug" },
     "review-module": { "orchestrator": "review-module" },
     "review-incident": { "orchestrator": "review-incident" },
     "test-function": { "orchestrator": "test-function" },
     "release-app": { "orchestrator": "release-app" },
+    "publish-aaac": { "orchestrator": "aaac-publish" },
     "write-article": { "orchestrator": "write-article" },
     "module-update": { "alias": "update-module" },
     "update-doc": { "alias": "update-architecture" },
@@ -185,7 +203,8 @@
     "swarm-check": { "alias": "review-incident" },
     "refactor": { "alias": "review-module" },
     "ship-ludecker": { "alias": "release-app" },
-    "release-platform": { "alias": "release-app" }
+    "release-platform": { "alias": "release-app" },
+    "release-aaac": { "alias": "publish-aaac" }
   },
   "command_aliases": {
     "update-api": "update-integration",
@@ -226,6 +245,8 @@
     "write-content": "write-article",
     "cms-write": "write-article",
     "create-article": "write-article",
-    "publish-article": "write-article"
+    "publish-article": "write-article",
+    "module-fix": "fix-module",
+    "bug-fix": "fix-bug"
   }
 }

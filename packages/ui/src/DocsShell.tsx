@@ -3,8 +3,6 @@ import type { ReactNode, Ref } from 'react';
 export interface DocsShellProps {
   header: ReactNode;
   sidebar: ReactNode;
-  hero?: ReactNode;
-  tableOfContents?: ReactNode;
   children: ReactNode;
   isMobileMenuOpen: boolean;
   onMobileOverlayClick: () => void;
@@ -14,8 +12,6 @@ export interface DocsShellProps {
 export function DocsShell({
   header,
   sidebar,
-  hero,
-  tableOfContents,
   children,
   isMobileMenuOpen,
   onMobileOverlayClick,
@@ -44,17 +40,7 @@ export function DocsShell({
                 {sidebar}
               </div>
             </aside>
-            <main className="docs-shell__main">
-              <div className="docs-shell__page">
-                {hero ? <div className="docs-shell__hero">{hero}</div> : null}
-                <div className="docs-shell__content">{children}</div>
-              </div>
-            </main>
-            {tableOfContents ? (
-              <aside className="docs-shell__toc" aria-label="On this page">
-                {tableOfContents}
-              </aside>
-            ) : null}
+            {children}
           </div>
         </div>
       </div>

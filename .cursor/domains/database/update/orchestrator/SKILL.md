@@ -19,13 +19,15 @@ disable-model-invocation: true
 |------|----------------|
 | default | update |
 | `test_only` | — |
-| `fix_mode` | fix |
+| `fix_mode` | fix | fix lifecycle — see [cms orchestrator fix_mode](../../cms/update/orchestrator/SKILL.md#fix_mode-mandatory); Supabase project `anseivwusnyiwopihnqu` |
 
 ## Phases
 
 Follow [_lifecycle.md](../../../skills/shared/verbs/_lifecycle.md).
 
 **Protected maturity:** schema/migration objects — **rollback phase mandatory** before execute. Never skip impact_analysis or dependency_graph.
+
+**Plan gate:** `requirement_map` + `complexity_score` per [minimal-complexity.md](../../../../policies/minimal-complexity.md). Prefer modify migration over new tables unless required.
 
 Apply migrations via Supabase MCP per policies.
 

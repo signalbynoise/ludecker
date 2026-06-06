@@ -5,12 +5,12 @@ export { DocsShell, type DocsShellProps } from './DocsShell';
 export { DocsHeader, type DocsHeaderProps } from './DocsHeader';
 export { DocsHero, type DocsHeroProps } from './DocsHero';
 export { DocsNav, DOCS_NAV_GETTING_STARTED, DOCS_NAV_SECTIONS, type DocsNavProps, type DocsNavSection } from './DocsNav';
+export type { DocsNavLinkComponent, DocsNavLinkProps } from './DocsNavLink';
 export {
   DocsNavProvider,
   DOCS_NAV_OVERRIDES_COOKIE,
-  resolveSectionOpen,
-  persistOpenSections,
-  applyRouteSectionOverrides,
+  getOrCreateDocsNavStore,
+  resetDocsNavStoreForTests,
   useDocsNav,
   type DocsNavProviderProps,
   type DocsNavSectionOverrides,

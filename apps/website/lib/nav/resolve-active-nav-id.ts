@@ -1,12 +1,22 @@
 import { NAV_ITEMS } from '@ludecker/types';
+import { normalizePathname } from '@/lib/routing/pathname';
 
 export function resolveActiveNavId(pathname: string): string | undefined {
-  if (pathname === '/') return undefined;
+  const normalized = normalizePathname(pathname);
+
+  if (normalized === '/') {
+    return undefined;
+  }
 
   const match = NAV_ITEMS.find((item) => {
-    if (pathname === item.href) return true;
-    if (item.href !== '/' && pathname.startsWith(`${item.href}/`)) return true;
-    if (pathname.startsWith(`/${item.articleType}/`)) return true;
+    if (normalized === item.href) {
+      return true;
+    }
+
+    if (item.href !== '/' && normalized.startsWith(`${item.href}/`)) {
+      return true;
+    }
+
     return false;
   });
 

@@ -9,6 +9,6 @@ AAAC: `/fix-model <domain> "<intent>"`
 
 1. [.cursor/aaac/dispatch.md](../aaac/dispatch.md)
 2. [.cursor/aaac/graph.yaml](../aaac/graph.yaml) — **`fix-model`**
-3. [skills/shared/verbs/fix/orchestrator/SKILL.md](../skills/shared/verbs/fix/orchestrator/SKILL.md) (object: `model`)
+3. resolver `fix-data-by-slug`
 
 Domain slug recommended.

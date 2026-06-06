@@ -26,7 +26,7 @@ invalid_pairs:
 verb_work_phases:
   create: [discover, investigate_lite, plan, execute, verify, report]
   update: [discover, investigate_lite, plan, execute, verify, report]
-  fix: [discover, investigate, root_cause, plan, execute, verify, report]
+  fix: [discover, investigate_swarm, root_cause, plan, execute, verify, report]
   review: [discover, plan, report]
   check: [discover, report]
   test: [discover, plan, verify, report]
@@ -52,7 +52,7 @@ governance_gate_stacks:
 verb_runtime:
   create: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
   update: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
-  fix: [discover, investigate, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
+  fix: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
   review: [discover, plan, report]
   check: [discover, validate, impact_analysis, dependency_graph, fitness_functions, report]
   test: [discover, plan, verify, report]
@@ -62,6 +62,8 @@ verb_runtime:
 # Exception commands — not verb×object; use for Run.pending when command matches
 command_workflows:
   write-article: [parse, research_swarm, write, review, persist, report]
+  fix-module: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
+  fix-bug: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
 
 confidence:
   architecture: 0.9
@@ -107,6 +109,7 @@ maturity_rules:
 lifecycle: aaac/lifecycle/lifecycle.json
 lifecycle_phases: aaac/lifecycle/phases.json
 governance_gates: aaac/governance/gates.json
+complexity: aaac/complexity.yaml
 run: aaac/run/schema.json
 capabilities: aaac/capabilities/registry.json
 dependencies: aaac/dependencies.yaml
@@ -128,6 +131,26 @@ commands:
     resolver: create-feature-by-slug
   fix-bug:
     resolver: fix-bug-by-slug
+  fix-module:
+    resolver: fix-domain-by-slug
+  fix-component:
+    resolver: fix-component-by-scope
+  fix-schema:
+    resolver: fix-data-by-slug
+  fix-model:
+    resolver: fix-data-by-slug
+  fix-migration:
+    resolver: fix-data-by-slug
+  fix-integration:
+    resolver: fix-integration-by-slug
+  fix-domain:
+    resolver: fix-domain-by-slug
+  fix-app:
+    resolver: fix-domain-by-slug
+  fix-feature:
+    resolver: fix-domain-by-slug
+  fix-workflow:
+    resolver: fix-domain-by-slug
   test-module:
     resolver: test-module-by-slug
   review-module:
@@ -138,6 +161,8 @@ commands:
     orchestrator: test-function
   release-app:
     orchestrator: release-app
+  publish-aaac:
+    orchestrator: aaac-publish
   write-article:
     orchestrator: write-article
   module-update:
@@ -154,6 +179,8 @@ commands:
     alias: release-app
   release-platform:
     alias: release-app
+  release-aaac:
+    alias: publish-aaac
   create-function:
     orchestrator: verb-create
     object: function
@@ -217,36 +244,6 @@ commands:
   fix-function:
     orchestrator: verb-fix
     object: function
-  fix-component:
-    orchestrator: verb-fix
-    object: component
-  fix-module:
-    orchestrator: verb-fix
-    object: module
-  fix-schema:
-    orchestrator: verb-fix
-    object: schema
-  fix-model:
-    orchestrator: verb-fix
-    object: model
-  fix-migration:
-    orchestrator: verb-fix
-    object: migration
-  fix-feature:
-    orchestrator: verb-fix
-    object: feature
-  fix-workflow:
-    orchestrator: verb-fix
-    object: workflow
-  fix-integration:
-    orchestrator: verb-fix
-    object: integration
-  fix-app:
-    orchestrator: verb-fix
-    object: app
-  fix-domain:
-    orchestrator: verb-fix
-    object: domain
   fix-architecture:
     orchestrator: verb-fix
     object: architecture
@@ -469,6 +466,10 @@ commands:
     alias: write-article
   publish-article:
     alias: write-article
+  module-fix:
+    alias: fix-module
+  bug-fix:
+    alias: fix-bug
 
 
 resolvers:
@@ -477,6 +478,7 @@ resolvers:
       cms: cms-update
       ui: ui-update
       database: database-update
+      aaac: aaac-update
   update-component-by-scope:
     map:
       cms: cms-design-update
@@ -484,18 +486,48 @@ resolvers:
   create-feature-by-slug:
     map:
       cms: cms-create-feature
+      aaac: aaac-create-feature
   fix-bug-by-slug:
     map:
       cms: cms-fix-bug
       ui: ui-fix-bug
       database: database-fix-bug
+      aaac: aaac-fix-bug
     default: verb-fix
     default_object: feature
+  fix-domain-by-slug:
+    map:
+      cms: cms-fix-bug
+      ui: ui-fix-bug
+      database: database-fix-bug
+      aaac: aaac-fix-bug
+    default: verb-fix
+    default_object: module
+  fix-component-by-scope:
+    map:
+      cms: cms-fix-bug
+      ui: ui-fix-bug
+    default: verb-fix
+    default_object: component
+  fix-data-by-slug:
+    map:
+      database: database-fix-bug
+    default: database-fix-bug
+    default_object: schema
+  fix-integration-by-slug:
+    map:
+      cms: cms-fix-bug
+      ui: ui-fix-bug
+      database: database-fix-bug
+      aaac: aaac-fix-bug
+    default: verb-fix
+    default_object: integration
   test-module-by-slug:
     map:
       cms: cms-test-module
       ui: ui-test-module
       database: database-test-module
+      aaac: aaac-test-module
 
 orchestrators:
   cms-update:
@@ -544,22 +576,25 @@ orchestrators:
     domain: cms
     path: domains/cms/update/orchestrator
     inventory: domains/cms/update/inventory
-    requires: [investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
+    requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
 
   ui-fix-bug:
     domain: ui
     path: domains/ui/update/orchestrator
     inventory: domains/ui/update/inventory
-    requires: [investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
+    requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
 
   database-fix-bug:
     domain: database
     path: domains/database/update/orchestrator
     inventory: domains/database/update/inventory
-    requires: [investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
+    requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
 
   update-doc:
     path: skills/shared/documentation/orchestrator
@@ -606,6 +641,42 @@ orchestrators:
     requires: [testing, verification, reporting]
     test_only: true
 
+  aaac-update:
+    domain: aaac
+    path: domains/aaac/update/orchestrator
+    inventory: domains/aaac/update/inventory
+    requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+
+  aaac-create-feature:
+    domain: aaac
+    path: domains/aaac/update/orchestrator
+    inventory: domains/aaac/update/inventory
+    requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, module-authoring, integration]
+    create_mode: true
+
+  aaac-fix-bug:
+    domain: aaac
+    path: domains/aaac/update/orchestrator
+    inventory: domains/aaac/update/inventory
+    requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
+    fix_mode: true
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+
+  aaac-test-module:
+    domain: aaac
+    path: domains/aaac/update/orchestrator
+    inventory: domains/aaac/update/inventory
+    requires: [testing, verification, reporting, integration]
+    test_only: true
+
+  aaac-publish:
+    domain: aaac
+    path: domains/aaac/update/orchestrator
+    inventory: domains/aaac/update/inventory
+    requires: [testing, verification, execution, reporting, integration]
+    publish_mode: true
+
   write-article:
     domain: content
     path: domains/content/write/orchestrator
@@ -628,6 +699,7 @@ orchestrators:
   verb-fix:
     path: skills/shared/verbs/fix/orchestrator
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
 
   verb-review:
     path: skills/shared/verbs/review/orchestrator
@@ -693,7 +765,7 @@ skills:
     depends: [governance/implementation]
   testing:
     path: skills/shared/testing
-    agents: [unit-test-run, fallow-check-changed]
+    agents: [unit-test-run, fallow-check-changed, fix-repro-verify]
   verification:
     path: skills/shared/verification
   reporting:
@@ -705,10 +777,19 @@ skills:
     path: skills/shared/documentation
   investigation:
     path: skills/shared/investigation
-  investigation-lite:
-    path: skills/shared/investigation-lite
+    agents:
+      - fix-repro
+      - fix-code-path
+      - fix-recent-changes
+      - fix-test-failures
+      - fix-regression-scope
+      - fix-runtime-evidence
+      - fix-inventory-confirm
   root-cause:
     path: skills/shared/root-cause
+    agents: [fix-hypothesis-validate]
+  investigation-lite:
+    path: skills/shared/investigation-lite
   validation:
     path: skills/shared/validation
   impact-analysis:
@@ -786,6 +867,24 @@ agents:
     path: agents/check-capability-trace.md
   impact-analysis:
     path: agents/impact-analysis.md
+  fix-repro:
+    path: agents/fix-repro.md
+  fix-code-path:
+    path: agents/fix-code-path.md
+  fix-recent-changes:
+    path: agents/fix-recent-changes.md
+  fix-test-failures:
+    path: agents/fix-test-failures.md
+  fix-regression-scope:
+    path: agents/fix-regression-scope.md
+  fix-runtime-evidence:
+    path: agents/fix-runtime-evidence.md
+  fix-inventory-confirm:
+    path: agents/fix-inventory-confirm.md
+  fix-repro-verify:
+    path: agents/fix-repro-verify.md
+  fix-hypothesis-validate:
+    path: agents/fix-hypothesis-validate.md
   release-git:
     path: agents/release-git.md
     wave: 1

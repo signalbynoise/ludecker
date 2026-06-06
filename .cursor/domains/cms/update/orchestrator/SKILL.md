@@ -21,17 +21,29 @@ disable-model-invocation: true
 | `test_only` | — | testing → verification → report |
 | `design_mode` | update | + design_system fitness emphasis |
 | `create_mode` | create | create lifecycle + module-authoring |
-| `fix_mode` | fix | fix lifecycle (deep investigation) |
+| `fix_mode` | fix | fix lifecycle — discovery (4–6) + investigate_swarm (7) + root_cause + gates + fix verify swarm (3) |
+
+## fix_mode (mandatory)
+
+When graph sets `fix_mode: true`:
+
+1. Read [investigation/SKILL.md](../../../skills/shared/investigation/SKILL.md) Mode A — **do not skip swarms**
+2. Store artifacts on Run: `investigation.md`, `root_cause.yaml`, `testing` with `repro_status`
+3. **plan** — `complexity_score` ≤ 5; cite `fix_strategy` from root cause
+4. **rollback** mandatory for auth, revalidation, RLS, public API touches
+5. **verify** — fail if `repro_status: not_fixed`
+6. **sync_inventory** — mandatory after execute
 
 ## Phases
 
 Follow [_lifecycle.md](../../../skills/shared/verbs/_lifecycle.md) for the mode's verb. Domain-specific additions:
 
 1. `load_inventory` — read inventory constraints first
-2. Run lifecycle phases in order — **no skipping validate, impact_analysis, dependency_graph, fitness_functions**
-3. `rollback` mandatory for auth/revalidation/API plan touches
-4. `sync_inventory` — **mandatory** after execute
-5. `report` — include confidence, impact, fitness scores
+2. Run lifecycle phases in order — **no skipping validate, impact_analysis, dependency_graph, fitness_functions** (includes `minimal_complexity` on create/update/fix)
+3. **plan** must include `requirement_map` + `complexity_score` per [minimal-complexity.md](../../../../policies/minimal-complexity.md)
+4. `rollback` mandatory for auth/revalidation/API plan touches
+5. `sync_inventory` — **mandatory** after execute
+6. `report` — include confidence, complexity score, impact, fitness scores
 
 ## Docs
 

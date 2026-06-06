@@ -20,10 +20,12 @@ disable-model-invocation: true
 | default | update |
 | `test_only` | — |
 | `design_mode` | update |
-| `fix_mode` | fix |
+| `fix_mode` | fix | fix lifecycle — see [cms orchestrator fix_mode](../../cms/update/orchestrator/SKILL.md#fix_mode-mandatory) | fix lifecycle — see [cms orchestrator fix_mode](../cms/update/orchestrator/SKILL.md#fix_mode-mandatory) (same swarm rules) |
 
 ## Phases
 
-Follow [_lifecycle.md](../../../skills/shared/verbs/_lifecycle.md). Emphasize [fitness-functions](../../../skills/shared/fitness-functions/SKILL.md) `design_system` and `accessibility` on execute-bound phases.
+Follow [_lifecycle.md](../../../skills/shared/verbs/_lifecycle.md). Emphasize [fitness-functions](../../../skills/shared/fitness-functions/SKILL.md) `design_system`, `accessibility`, and **`minimal_complexity`** on create/update/fix.
+
+**Plan gate:** `requirement_map` + `complexity_score` per [minimal-complexity.md](../../../../policies/minimal-complexity.md).
 
 `sync_inventory` mandatory after execute.

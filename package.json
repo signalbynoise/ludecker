@@ -6,6 +6,7 @@
     "build": "pnpm -r build",
     "lint": "pnpm -r lint",
     "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
     "aaac:generate": "node packages/aaac/src/generators/generate-graph.mjs --root .cursor && node packages/aaac/src/generators/generate-commands.mjs --root .cursor"
   },
   "devDependencies": {

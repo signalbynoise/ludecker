@@ -29,7 +29,8 @@
     "./button.css": "./src/Button.css"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
   },
   "dependencies": {
     "@ludecker/types": "workspace:*",
@@ -43,6 +44,8 @@
   "devDependencies": {
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "typescript": "^5.8.3"
+    "jsdom": "^29.1.1",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

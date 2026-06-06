@@ -60,11 +60,6 @@
   grid-template-rows: 0fr;
   margin-left: var(--docs-nav-link-indent);
   padding-left: var(--docs-nav-link-indent);
-  transition: grid-template-rows 0.2s ease;
-}
-
-.docs-nav--hydrating .docs-nav__section-items {
-  transition: none;
 }
 
 .docs-nav__section-items[data-state='open'] {
