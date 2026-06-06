@@ -1,8 +1,8 @@
 ---
 name: release-app-orchestrator
 description: >-
-  Orchestrates release-app with phased expert subagents: git (blocking),
-  then Render deploy verification.
+  Orchestrates release-app with phased expert subagents: preflight, git (blocking),
+  Render deploy poll (mandatory), verify, report.
 disable-model-invocation: true
 ---
 
@@ -16,36 +16,52 @@ disable-model-invocation: true
 ## Load
 
 1. [../SKILL.md](../SKILL.md) — swarm DAG
-2. [ship-procedure.md](../ship-procedure.md) — step reference
+2. [ship-procedure.md](../ship-procedure.md) — step reference (mandatory Render poll)
 3. [graph.yaml](../../../../aaac/graph.yaml) — `release-app`
 4. [ludecker-infrastructure](../../../ludecker/infrastructure/SKILL.md)
 
-## Phases
+## Phases (all mandatory unless noted)
 
 ### 0. Preflight
 
-If intent requests tests: run `pnpm typecheck` before any git work ([shared/testing](../../testing/SKILL.md) patterns).
+**Always** run before git:
+
+```bash
+pnpm typecheck
+```
+
+If intent includes `with tests` / `test`: run additional tests per [testing](../../testing/SKILL.md).
+
+On failure → **STOP**. No commit.
 
 ### 1. Wave 1 — Git (blocking)
 
-Spawn subagent per [agents/release-git.md](../../../../agents/release-git.md).
+Execute [agents/release-git.md](../../../../agents/release-git.md) procedure (or spawn shell subagent).
 
-**Do not** start Wave 2 until `commit_sha` is returned.
+If nothing to commit: still record current `HEAD` as `commit_sha` and verify it matches `origin/main`.
 
-### 2. Wave 2 — Render
+**Do not** start Wave 2 until `commit_sha` is known and pushed (or already on remote).
 
-Spawn [release-render](../../../../agents/release-render.md) with `commit_sha`, `commit_message_first_line`, `commit_message_body`.
+### 2. Wave 2 — Render (blocking)
 
-If Render `build_failed`, overall status is failed.
+Execute [agents/release-render.md](../../../../agents/release-render.md):
+
+- MCP `user-render` with workspace bootstrap, **or**
+- `watch-render-deploy.mjs --commit-sha <sha>` when `RENDER_API_KEY` set
+
+Poll until `live` or terminal failure. Fetch logs on failure.
+
+**Ship fails** if Wave 2 does not return `status: live` and smoke **200**.
 
 ### 3. Verify + report
 
-- [verification](../../verification/SKILL.md): deploy live, intent met
-- [reporting](../../reporting/SKILL.md): layman summary + technical details table per agent
+- [verification](../../verification/SKILL.md): deploy commit matches push; site returns 200
+- [reporting](../../reporting/SKILL.md): table with preflight, git SHA, deploy id/status, smoke code
 
 ## Anti-patterns
 
-- Starting Render before push completes
-- Single agent doing git + deploy without expert prompts
+- Stopping after push ("should be building")
+- Skipping Render poll when MCP workspace unset (bootstrap workspace first)
+- Skipping preflight typecheck
 - Using `plugin-render-render` MCP
 - Force-pushing `main`

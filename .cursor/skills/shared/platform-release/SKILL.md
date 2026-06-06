@@ -1,8 +1,7 @@
 ---
 name: shared-platform-release
 description: >-
-  Phased release swarm coordination for release-app. Wave 1 git (blocking),
-  Wave 2 Render deploy. Internal only.
+  Phased release for release-app: mandatory preflight, git, Render poll, verify, report.
 disable-model-invocation: true
 ---
 
@@ -11,36 +10,35 @@ disable-model-invocation: true
 ## Swarm DAG
 
 ```text
-Preflight (optional tests)
+Wave 0: pnpm typecheck (mandatory)
   ↓
 Wave 1: release-git  ← BLOCKING
   ↓
-Wave 2: release-render
+Wave 2: release-render ← BLOCKING (poll until live or fail)
   ↓
-Parent: verification + reporting
+Wave 3: verification + reporting
 ```
 
-## Wave 1 — launch one agent
+## Wave 0 — preflight
 
-```
-Task (shell or generalPurpose): release-git
-Read: agents/release-git.md, ship-procedure.md
-Return: commit_sha, commit_message_*
-On failure: abort pipeline
+```bash
+pnpm typecheck
 ```
 
-## Wave 2 — Render deploy
+Always. Optional extra tests when intent requests them.
 
-Only after Wave 1 `status: success`. Pass `commit_sha` and messages.
+## Wave 1 — git
 
-| Agent spec | Tool |
-|------------|------|
-| [release-render.md](../../../agents/release-render.md) | generalPurpose or render-assistant MCP |
+Execute [agents/release-git.md](../../../agents/release-git.md) or spawn shell subagent.
 
-## Preflight
+## Wave 2 — Render (mandatory)
 
-If intent contains "test" / "with tests": run `pnpm typecheck` before Wave 1.
+Execute [agents/release-render.md](../../../agents/release-render.md).
+
+Tools: `user-render` MCP (workspace `tea-csp7qr3gbbvc73d1fvqg`) or [scripts/watch-render-deploy.mjs](scripts/watch-render-deploy.mjs).
+
+**Never** end ship without polled deploy status.
 
 ## Reference
 
-Full step detail: [ship-procedure.md](ship-procedure.md)
+Full steps: [ship-procedure.md](ship-procedure.md)

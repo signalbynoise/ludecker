@@ -15,9 +15,11 @@ globs:
 | Fact | Location |
 |------|----------|
 | Render service name | `ludecker-website` |
+| Render MCP workspace | Erik — owner ID `tea-csp7qr3gbbvc73d1fvqg` |
 | Blueprint | `render.yaml` at repo root |
 | Production smoke URL | `https://ludecker-website.onrender.com/` |
-| Deploy flow | Push to `main` → Render auto-build → Cloudflare → production |
+| Deploy flow | Push to `main` → poll Render until `live` → smoke 200 |
+| Watch script | `.cursor/skills/shared/platform-release/scripts/watch-render-deploy.mjs` |
 
 ## Ship commands
 
@@ -27,6 +29,8 @@ globs:
 
 ## Render MCP
 
-Use **`user-render`** only. Service id from `list_services` where `name === "ludecker-website"`.
+Use **`user-render`** only. Bootstrap workspace if unset: `select_workspace` → `tea-csp7qr3gbbvc73d1fvqg`.
 
-Poll deploy until `status === "live"` or report failure with build logs.
+Service id from `list_services` where `name === "ludecker-website"`.
+
+**Mandatory on every ship:** poll deploy until `status === "live"` or report failure with `list_logs`. Never stop at push alone.

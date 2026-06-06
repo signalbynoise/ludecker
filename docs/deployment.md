@@ -22,7 +22,16 @@ Local development: copy `apps/website/.env.example` to `.env.local`. Use the **s
 
 ## Render (Erik workspace)
 
+| Fact | Value |
+|------|-------|
+| Workspace | Erik |
+| MCP owner ID | `tea-csp7qr3gbbvc73d1fvqg` |
+| Service name | `ludecker-website` |
+| Service URL | `https://ludecker-website.onrender.com/` |
+
 Blueprint: `render.yaml` at repo root.
+
+Ship commands poll Render until deploy is `live` (see `ship-procedure.md`). Optional CLI: set `RENDER_API_KEY` and run `watch-render-deploy.mjs`.
 
 ```bash
 # Validate locally (optional)

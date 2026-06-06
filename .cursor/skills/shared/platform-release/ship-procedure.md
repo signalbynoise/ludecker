@@ -1,31 +1,78 @@
 # Release ship procedure (reference)
 
-Canonical steps migrated from legacy `/ship-ludecker`. Subagents in `agents/release-*.md` own each slice.
+Canonical steps for `/ship-ludecker` and `/release-app`. Subagents in `agents/release-*.md` own each slice.
+
+## SSOT (Lüdecker)
+
+| Fact | Value |
+|------|-------|
+| Render service | `ludecker-website` |
+| Render workspace (MCP) | Erik — owner ID `tea-csp7qr3gbbvc73d1fvqg` |
+| Smoke URL | `https://ludecker-website.onrender.com/` |
+| MCP server | `user-render` only (not `plugin-render-render`) |
+
+## Wave 0 — Preflight (mandatory)
+
+Run **before** any git work on every ship:
+
+```bash
+pnpm typecheck
+```
+
+Exit non-zero → **STOP**. Do not commit or push.
+
+Optional extras when intent says `with tests`:
+
+```bash
+pnpm -r test   # when test scripts exist
+```
 
 ## Git (Wave 1 — blocking)
 
 1. Confirm repo: `signalbynoise/ludecker` (or local ludecker monorepo)
 2. `git status` + `git diff` + `git diff --staged` + `git log -5 --oneline`
 3. Never stage `.env`, `.env.local`, credentials, or API keys
-4. Draft 1–2 sentence commit message from diff and user intent
-5. `git add` intentional paths → `git commit` (HEREDOC message)
-6. Ensure on `main`: `git checkout main` if needed; `git pull --rebase origin main`
-7. `git push origin main` — on reject, rebase once more; never force-push main
-8. Output: `commit_sha`, `commit_message_first_line`, `commit_message_body`
+4. If `.github/workflows/**` push fails with OAuth `workflow` scope → unstage workflows, commit rest, note workflows for separate push
+5. Draft 1–2 sentence commit message from diff and user intent
+6. `git add` intentional paths → `git commit` (HEREDOC message)
+7. Ensure on `main`: `git checkout main` if needed; `git pull --rebase origin main`
+8. `git push origin main` — on reject, rebase once more; never force-push main
+9. Output: `commit_sha`, `commit_message_first_line`, `commit_message_body`
 
 **Rules:** No force-push main. On pre-commit hook failure: fix and new commit — never amend unless user asked.
 
-## Render (Wave 2 — after push)
+## Render (Wave 2 — mandatory after push)
 
-MCP: `user-render` only (not `plugin-render-render`).
+**Do not** report ship complete until deploy is `live` or `build_failed` with evidence.
 
-**Service SSOT:** `ludecker-website` (see `render.yaml`, `docs/deployment.md`).
+### Path A — Render MCP (preferred in Cursor)
 
-1. `list_services` — find `name === "ludecker-website"`, note `id`
-2. After push: `list_deploys` (`limit: 5`) — match deploy `commit.id` to `commit_sha`
-3. Poll up to **15 minutes**, every **30s**, until `status === "live"` or terminal failure
-4. Smoke check: `curl -fsS -o /dev/null -w "%{http_code}" https://ludecker-website.onrender.com/` — expect **200**
+1. `get_selected_workspace` on `user-render`
+2. If no workspace: `select_workspace` with owner ID `tea-csp7qr3gbbvc73d1fvqg` (Erik — see `docs/deployment.md`)
+3. `list_services` — find `name === "ludecker-website"`, note `id`
+4. `list_deploys` (`limit: 5`) — match deploy `commit.id` to Wave 1 `commit_sha`
+5. Poll up to **15 minutes**, every **30s**, via `list_deploys` / `get_deploy` until `status === "live"` or terminal failure
+6. On failure: `list_logs` for build errors; include excerpt in report
+7. Smoke check: `curl -fsS -o /dev/null -w "%{http_code}" https://ludecker-website.onrender.com/` — expect **200**
 
-## Preflight (optional, Wave 0)
+### Path B — CLI script (when `RENDER_API_KEY` is set)
 
-If intent includes "with tests": run `pnpm typecheck` from repo root before git work.
+```bash
+node .cursor/skills/shared/platform-release/scripts/watch-render-deploy.mjs \
+  --commit-sha <commit_sha>
+```
+
+Exit 0 = live + smoke 200. Exit 1 = failed/timeout. Exit 2 = no API key → use Path A.
+
+## Wave 3 — Verify + report
+
+- Confirm deploy commit matches pushed `commit_sha`
+- Record deploy id, status, smoke HTTP code
+- [reporting/SKILL.md](../reporting/SKILL.md): layman summary + technical table (preflight, git, render, smoke)
+
+## Anti-patterns
+
+- Stopping after `git push` without Render poll
+- Skipping preflight typecheck
+- Using `plugin-render-render` MCP
+- Reporting "should be building" instead of polled status
