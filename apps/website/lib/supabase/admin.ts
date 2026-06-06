@@ -1,7 +1,12 @@
 import { createClient } from "@supabase/supabase-js";
 import { createLogger } from "@ludecker/utils";
+import ws from "ws";
 
 const log = createLogger("supabase:admin");
+
+if (typeof globalThis.WebSocket === "undefined") {
+  globalThis.WebSocket = ws as unknown as typeof WebSocket;
+}
 
 let adminClient: ReturnType<typeof createClient> | null = null;
 
