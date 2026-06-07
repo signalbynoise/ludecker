@@ -54,7 +54,7 @@ export const HOME_INTRO_CONTENT = [
   "",
   "This site is about Agentic OS—also called Agentic Architecture as Code (AAAC). You run slash commands; the repo owns the workflow; every chat leaves a reviewable trail.",
   "",
-  "If you build with Cursor on a shared codebase, start here. For the full story, read [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
+  "If you build with Cursor on a shared codebase, start here. Install the generic kernel on any project with the [Install AAAC guide](https://ludecker.com/guide/install-aaac). For the full story, read [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
   "",
   "## How Agentic OS flows in one picture",
   "",
@@ -70,5 +70,5 @@ export const HOME_INTRO_CONTENT = [
   "",
   "## What you will find here",
   "",
-  "Essays, guides, skills, tools, and diagrams for people who ship with agents. Pick a section in the sidebar, or continue with [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
+  "Essays, guides, skills, tools, and diagrams for people who ship with agents. Pick a section in the sidebar, install AAAC on your own repo with the [install guide](https://ludecker.com/guide/install-aaac), or continue with [Introducing Agentic OS](https://ludecker.com/articles/agentic-os).",
 ].join("\n");

@@ -10,7 +10,7 @@
     "domain": "string | null",
     "intent": "string",
     "orchestrator": "string",
-    "status": "pending | running | blocked | completed | failed",
+    "status": "pending | running | blocked | completed | failed | cancelled",
     "phase": "string | null",
     "phase_kind": "work | gate | null",
     "awaiting_approval": false,

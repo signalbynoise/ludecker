@@ -46,3 +46,7 @@ export {
   type StripMarkdownEmphasisOptions,
 } from './content-emphasis';
 export { filterSearchResults, isSearchShortcutEvent } from './search-index';
+export {
+  quickStartGuideNeedsAaacVersionSync,
+  replaceAaacPackageVersionPins,
+} from './aaac-guide-version';

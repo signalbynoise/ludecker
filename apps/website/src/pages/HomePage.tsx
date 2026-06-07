@@ -1,6 +1,7 @@
 'use client';
 
-import { ArticleBody, ArticlePageCopyActions } from '@ludecker/ui';
+import { ArticlePageCopyActions } from '@ludecker/ui';
+import { HomeArticleBody } from '@/components/HomeArticleBody';
 import { formatArticleMarkdown } from '@ludecker/utils';
 import { getRouteApi } from '@tanstack/react-router';
 import { useEffect } from 'react';
@@ -39,7 +40,7 @@ export function HomePage() {
       }
     >
       <HomeIntroReveal>
-        <ArticleBody content={home.content} articleType={home.article_type} />
+        <HomeArticleBody content={home.content} articleType={home.article_type} />
       </HomeIntroReveal>
     </DocsPageShell>
   );

@@ -8,7 +8,7 @@ export const FALLBACK_HOME: ContentWithTags = {
   title: "Lüdecker",
   slug: "home",
   excerpt:
-    "Agentic OS (AAAC) — design, technology, and practice for teams running Cursor agents with architecture in git.",
+    "Agentic OS (AAAC) — design, technology, and practice for teams running Cursor agents with architecture in git. Install the generic kernel on any stack.",
   content: HOME_INTRO_CONTENT,
   status: "published",
   article_type: "home",

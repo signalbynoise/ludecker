@@ -15,6 +15,8 @@ import { SkillArticleBody } from './SkillArticleBody';
 export interface ArticleBodyProps {
   content: string;
   articleType?: ArticleType;
+  /** When false, Mermaid blocks defer client render until true. Default true. */
+  diagramReady?: boolean;
 }
 
 function renderHeading(
@@ -39,7 +41,11 @@ function renderHeading(
   );
 }
 
-export function ArticleBody({ content, articleType }: ArticleBodyProps) {
+export function ArticleBody({
+  content,
+  articleType,
+  diagramReady = true,
+}: ArticleBodyProps) {
   if (articleType === 'skills') {
     return <SkillArticleBody content={content} />;
   }
@@ -66,7 +72,11 @@ export function ArticleBody({ content, articleType }: ArticleBodyProps) {
 
         if (block.type === 'mermaid') {
           return (
-            <ArticleMermaidDiagram key={key} source={block.source} />
+            <ArticleMermaidDiagram
+              key={key}
+              source={block.source}
+              diagramReady={diagramReady}
+            />
           );
         }
 

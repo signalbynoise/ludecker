@@ -77,6 +77,13 @@ node .cursor/skills/shared/platform-release/scripts/watch-aaac-publish.mjs \
   --version <version>
 ```
 
+6. Sync Quick Start guide pinned version in Supabase (blocking when publish succeeded):
+
+```bash
+node .cursor/skills/shared/platform-release/scripts/sync-quick-start-aaac-version.mjs \
+  --version <version>
+```
+
 **Skip:** When `needs_publish: false`, record `aaac_publish_skipped: true` and continue to Render.
 
 **Failure:** Check or monitor failure → **STOP**. Do not start Render poll.

@@ -47,6 +47,13 @@ node .cursor/skills/shared/platform-release/scripts/watch-aaac-publish.mjs \
   --version <version>
 ```
 
+   e. Sync Quick Start guide (pinned `@ludecker/aaac@<version>` in CMS):
+
+```bash
+node .cursor/skills/shared/platform-release/scripts/sync-quick-start-aaac-version.mjs \
+  --version <version>
+```
+
 ## Return
 
 ```yaml

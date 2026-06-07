@@ -47,7 +47,7 @@ If nothing to commit: still record current `HEAD` as `commit_sha` and verify it 
 Execute [agents/release-aaac.md](../../../../agents/release-aaac.md):
 
 1. `detect-aaac-changes.mjs --commit-sha <sha>`
-2. When `needs_publish`: run ship checks, push `aaac-v{version}` tag, `watch-aaac-publish.mjs`
+2. When `needs_publish`: run ship checks, push `aaac-v{version}` tag, `watch-aaac-publish.mjs`, then `sync-quick-start-aaac-version.mjs`
 
 **Ship fails** if AAAC wave is triggered and checks or npm monitoring fail.
 

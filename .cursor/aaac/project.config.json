@@ -1,3 +1,12 @@
 {
-  "manual_commands": ["launch-ludecker.md", "kill-ludecker.md", "write-article.md"]
+  "manual_commands": ["launch-ludecker.md", "kill-ludecker.md", "write-article.md"],
+  "verify": {
+    "enabled": true,
+    "app_root": "apps/website",
+    "index_html": "apps/website/index.html",
+    "build": {
+      "command": "pnpm",
+      "args": ["--filter", "@ludecker/website", "build"]
+    }
+  }
 }
