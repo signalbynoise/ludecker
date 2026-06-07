@@ -119,7 +119,7 @@ async function main() {
   let lastStatus = null;
   let deployId = null;
 
-  while Date.now() < deadline) {
+  while (Date.now() < deadline) {
     const data = unwrapList(
       await renderFetch(apiKey, `/services/${serviceId}/deploys?limit=10`),
     );
