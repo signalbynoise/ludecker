@@ -53,7 +53,7 @@ disable-model-invocation: true
 
 ## 3. Module inventory (auto-maintained)
 
-> **Last synced:** 2026-06-06 — v1.1.0 publish (hooks, enforcement, complexity, runtime registry)
+> **Last synced:** 2026-06-07 — v1.1.3 publish (out-of-the-box install UX, ready docs, CLI messaging)
 
 ### Package surface
 
@@ -61,7 +61,7 @@ disable-model-invocation: true
 |------|------|
 | `package.json` | `@ludecker/aaac` name, bin, files, publishConfig |
 | `README.md` | Install commands, publish notes |
-| `src/cli.mjs` | `init`, `generate`, `--help` |
+| `src/cli.mjs` | `init`, `generate`, `log-dump`, `debug-run`, `--help` |
 | `src/lib/install.mjs` | Template copy + generator run |
 | `src/lib/copy.mjs` | Recursive copy + placeholder substitution |
 | `src/lib/paths.mjs` | `--root`, template paths |
@@ -77,7 +77,7 @@ disable-model-invocation: true
 | `templates/cursor/skills/shared/` | Pipeline + verb orchestrators |
 | `templates/cursor/agents/` | 13 generic agent specs |
 | `templates/cursor/policies/` | Templated policies |
-| `templates/docs/` | agentic_architecture.md, master_rules, architecture stubs |
+| `templates/docs/` | OOTB `master_rules.md`, `architecture.md`, `agentic_architecture.md` (no post-install setup) |
 
 ### Lüdecker wiring (repo, not in npm tarball)
 
@@ -99,6 +99,7 @@ disable-model-invocation: true
 
 ### Tests and verification
 
+- `pnpm --filter @ludecker/aaac test` — vitest + node tests
 - `node packages/aaac/src/cli.mjs init --yes --dir /tmp/aaac-smoke` → ~129 commands
 - `pnpm aaac:generate` → diff-clean Lüdecker `graph.yaml`
 - `npx @ludecker/aaac@latest --help` after publish (propagation delay possible)
