@@ -53,7 +53,7 @@ disable-model-invocation: true
 
 ## 3. Module inventory (auto-maintained)
 
-> **Last synced:** 2026-06-07 — v1.1.3 publish (out-of-the-box install UX, ready docs, CLI messaging)
+> **Last synced:** 2026-06-07 — 42 master rules, ui_design.md SSOT, project_context, mcp-and-deploy stub
 
 ### Package surface
 
@@ -76,8 +76,8 @@ disable-model-invocation: true
 | `templates/cursor/aaac/` | Generic ontology, graph.project.yaml, lifecycle, run |
 | `templates/cursor/skills/shared/` | Pipeline + verb orchestrators |
 | `templates/cursor/agents/` | 13 generic agent specs |
-| `templates/cursor/policies/` | Templated policies |
-| `templates/docs/` | OOTB `master_rules.md`, `architecture.md`, `agentic_architecture.md` (no post-install setup) |
+| `templates/cursor/policies/` | `master-rules`, `project-context`, `ui-design`, `implementation`, `mcp-and-deploy`, `minimal-complexity` |
+| `templates/docs/` | OOTB `master_rules.md`, `ui_design.md`, `project_context.md`, `architecture.md`, `agentic_architecture.md` |
 
 ### Lüdecker wiring (repo, not in npm tarball)
 
