@@ -12,10 +12,10 @@ AAAC: `/bug-fix <domain> "<intent>"`
 
 1. [.cursor/aaac/dispatch.md](../aaac/dispatch.md)
 2. [.cursor/aaac/graph.yaml](../aaac/graph.yaml) — **`fix-bug`**
-3. resolver **`fix-bug-by-slug`** → `cms-fix-bug` | `ui-fix-bug` | `database-fix-bug` | `aaac-fix-bug`
-4. [investigation/SKILL.md](../skills/shared/investigation/SKILL.md) Mode A + domain `fix_mode`
+3. [verb-fix orchestrator](../skills/shared/verbs/fix/orchestrator/SKILL.md) — object `feature`
+4. [investigation/SKILL.md](../skills/shared/investigation/SKILL.md) Mode A
 
-Domain slug **recommended** (`cms`, `ui`, `database`, `aaac`).
+Domain slug optional.
 
 ## Swarm (mandatory)
 
@@ -31,6 +31,6 @@ Contract: [fix-bug.yaml](../aaac/contracts/commands/fix-bug.yaml)
 ## Example
 
 ```text
-/bug-fix cms "Getting Started nav missing published guides"
-/bug-fix ui "DocsNav section state lost on route change"
+/bug-fix payments "Webhook handler drops events on retry"
+/bug-fix api "Auth middleware returns 500 on expired token"
 ```

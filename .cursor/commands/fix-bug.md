@@ -12,10 +12,10 @@ Aliases: `/bug-fix` → same command.
 
 1. [.cursor/aaac/dispatch.md](../aaac/dispatch.md)
 2. [.cursor/aaac/graph.yaml](../aaac/graph.yaml) — **`fix-bug`**
-3. resolver **`fix-bug-by-slug`** → `cms-fix-bug` | `ui-fix-bug` | `database-fix-bug` | `aaac-fix-bug`
-4. [investigation/SKILL.md](../skills/shared/investigation/SKILL.md) Mode A + domain `fix_mode`
+3. resolver **`fix-bug-by-slug`** (project overlay in `graph.project.yaml`)
+4. [investigation/SKILL.md](../skills/shared/investigation/SKILL.md) Mode A + domain `fix_mode` when resolver routes to a domain orchestrator
 
-Domain slug **recommended** (`cms`, `ui`, `database`, `aaac`).
+Domain slug **recommended** when your project overlay defines domain resolvers (see `graph.project.yaml`).
 
 ## Swarm (mandatory)
 
@@ -31,6 +31,6 @@ Contract: [fix-bug.yaml](../aaac/contracts/commands/fix-bug.yaml)
 ## Example
 
 ```text
-/fix-bug cms "Getting Started nav missing published guides"
-/fix-bug ui "DocsNav section state lost on route change"
+/fix-bug payments "Webhook handler drops events on retry"
+/fix-bug api "Auth middleware returns 500 on expired token"
 ```
