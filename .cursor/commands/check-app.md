@@ -12,3 +12,4 @@ AAAC: `/check-app <domain> "<intent>"`
 3. [skills/shared/verbs/check/orchestrator/SKILL.md](../skills/shared/verbs/check/orchestrator/SKILL.md) (object: `app`)
 
 Domain slug recommended.
+

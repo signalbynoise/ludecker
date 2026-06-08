@@ -12,3 +12,4 @@ AAAC: `/check-hook <domain> "<intent>"`
 3. alias → `check-function`
 
 Domain slug recommended.
+

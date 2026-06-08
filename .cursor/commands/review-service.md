@@ -12,3 +12,4 @@ AAAC: `/review-service <domain> "<intent>"`
 3. alias → `review-module`
 
 Domain slug recommended.
+

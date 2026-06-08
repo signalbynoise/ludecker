@@ -12,3 +12,4 @@ AAAC: `/swarm-check <domain> "<intent>"`
 3. alias → `review-incident`
 
 Domain slug recommended.
+

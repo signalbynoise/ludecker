@@ -472,6 +472,7 @@ commands:
     alias: fix-bug
 
 
+
 resolvers:
   update-module-by-slug:
     map:

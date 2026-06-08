@@ -12,3 +12,4 @@ AAAC: `/remove-domain <domain> "<intent>"`
 3. [skills/shared/verbs/remove/orchestrator/SKILL.md](../skills/shared/verbs/remove/orchestrator/SKILL.md) (object: `domain`)
 
 Domain slug required (bounded context).
+

@@ -12,3 +12,4 @@ AAAC: `/check-inventory <domain> "<intent>"`
 3. alias → `check-module`
 
 Domain slug recommended.
+

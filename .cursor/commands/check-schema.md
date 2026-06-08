@@ -12,3 +12,4 @@ AAAC: `/check-schema <domain> "<intent>"`
 3. [skills/shared/verbs/check/orchestrator/SKILL.md](../skills/shared/verbs/check/orchestrator/SKILL.md) (object: `schema`)
 
 Domain slug recommended.
+

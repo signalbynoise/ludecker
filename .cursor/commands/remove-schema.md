@@ -12,3 +12,4 @@ AAAC: `/remove-schema <domain> "<intent>"`
 3. [skills/shared/verbs/remove/orchestrator/SKILL.md](../skills/shared/verbs/remove/orchestrator/SKILL.md) (object: `schema`)
 
 Domain slug recommended.
+

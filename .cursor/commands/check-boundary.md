@@ -12,3 +12,4 @@ AAAC: `/check-boundary <domain> "<intent>"`
 3. alias → `check-architecture`
 
 Domain slug recommended.
+

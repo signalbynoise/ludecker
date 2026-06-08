@@ -12,3 +12,4 @@ AAAC: `/review-hook <domain> "<intent>"`
 3. alias → `review-function`
 
 Domain slug recommended.
+

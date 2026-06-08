@@ -12,3 +12,4 @@ AAAC: `/review-runbook <domain> "<intent>"`
 3. alias → `review-architecture`
 
 Domain slug recommended.
+

@@ -12,3 +12,4 @@ AAAC: `/remove-architecture <domain> "<intent>"`
 3. [skills/shared/verbs/remove/orchestrator/SKILL.md](../skills/shared/verbs/remove/orchestrator/SKILL.md) (object: `architecture`)
 
 Domain slug recommended.
+

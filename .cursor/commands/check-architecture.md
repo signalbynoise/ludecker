@@ -12,3 +12,4 @@ AAAC: `/check-architecture <domain> "<intent>"`
 3. [skills/shared/verbs/check/orchestrator/SKILL.md](../skills/shared/verbs/check/orchestrator/SKILL.md) (object: `architecture`)
 
 Domain slug recommended.
+

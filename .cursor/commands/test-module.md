@@ -12,3 +12,4 @@ AAAC: `/test-module <domain> "<intent>"`
 3. resolver `test-module-by-slug`
 
 Domain slug required (bounded context).
+

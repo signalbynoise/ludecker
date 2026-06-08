@@ -12,3 +12,4 @@ AAAC: `/test-component <domain> "<intent>"`
 3. [skills/shared/verbs/test/orchestrator/SKILL.md](../skills/shared/verbs/test/orchestrator/SKILL.md) (object: `component`)
 
 Domain slug recommended.
+

@@ -12,3 +12,4 @@ AAAC: `/review-api <domain> "<intent>"`
 3. alias → `review-integration`
 
 Domain slug recommended.
+

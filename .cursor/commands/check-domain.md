@@ -12,3 +12,4 @@ AAAC: `/check-domain <domain> "<intent>"`
 3. [skills/shared/verbs/check/orchestrator/SKILL.md](../skills/shared/verbs/check/orchestrator/SKILL.md) (object: `domain`)
 
 Domain slug required (bounded context).
+

@@ -12,3 +12,4 @@ AAAC: `/review-spec <domain> "<intent>"`
 3. alias → `review-architecture`
 
 Domain slug recommended.
+

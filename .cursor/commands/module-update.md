@@ -12,3 +12,4 @@ AAAC: `/module-update <domain> "<intent>"`
 3. alias → `update-module`
 
 Domain slug recommended.
+

@@ -12,3 +12,4 @@ AAAC: `/check-api <domain> "<intent>"`
 3. alias → `check-integration`
 
 Domain slug recommended.
+

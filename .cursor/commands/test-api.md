@@ -12,3 +12,4 @@ AAAC: `/test-api <domain> "<intent>"`
 3. alias → `test-integration`
 
 Domain slug recommended.
+

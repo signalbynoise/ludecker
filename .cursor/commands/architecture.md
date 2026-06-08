@@ -12,3 +12,4 @@ AAAC: `/architecture <domain> "<intent>"`
 3. alias → `update-architecture`
 
 Domain slug recommended.
+

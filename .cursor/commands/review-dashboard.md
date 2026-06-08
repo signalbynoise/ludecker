@@ -12,3 +12,4 @@ AAAC: `/review-dashboard <domain> "<intent>"`
 3. alias → `review-component`
 
 Domain slug recommended.
+
