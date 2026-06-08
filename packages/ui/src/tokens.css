@@ -9,8 +9,8 @@
   --color-hairline: #ebebeb;
   --color-hairline-strong: #a1a1a1;
   --color-on-primary: #ffffff;
-  --color-link: #0070f3;
-  --color-link-deep: #0761d1;
+  --color-link: oklch(0.50 0.15 162.48);
+  --color-link-deep: oklch(0.42 0.13 162.48);
   --color-error: #ee0000;
   --color-error-soft: #f7d4d6;
 
@@ -135,7 +135,7 @@
   --color-hairline-strong: oklch(0.439 0 0);
   --color-on-primary: oklch(0.205 0 0);
   --color-link: oklch(0.696 0.17 162.48);
-  --color-link-deep: oklch(0.627 0.265 303.9);
+  --color-link-deep: oklch(0.78 0.18 162.48);
 
   --color-bg: var(--color-canvas-soft);
   --color-bg-card: var(--color-canvas);

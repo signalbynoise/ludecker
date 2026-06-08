@@ -8,6 +8,7 @@ import {
 } from './article-mermaid-svg';
 import { TEXT_BODY_CLASS } from './constants';
 import { renderLudeckerMermaid } from './mermaid-config';
+import { useTheme } from './ThemeProvider';
 
 export interface ArticleMermaidDiagramProps {
   source: string;
@@ -33,6 +34,7 @@ export function ArticleMermaidDiagram({
   const containerRef = useRef<HTMLDivElement>(null);
   const renderGenerationRef = useRef(0);
   const reactId = useId();
+  const { theme } = useTheme();
   const diagramId = `ludecker-mmd-${reactId.replace(/:/g, '')}`;
   const [status, setStatus] = useState<DiagramStatus>(
     diagramReady ? 'loading' : 'idle',
@@ -55,7 +57,7 @@ export function ArticleMermaidDiagram({
     async function renderDiagram() {
       try {
         const renderId = `${diagramId}-g${generation}`;
-        const svg = await renderLudeckerMermaid(renderId, source);
+        const svg = await renderLudeckerMermaid(renderId, source, theme);
 
         if (generation !== renderGenerationRef.current) {
           return;
@@ -81,7 +83,7 @@ export function ArticleMermaidDiagram({
     }
 
     void renderDiagram();
-  }, [diagramId, source, diagramReady]);
+  }, [diagramId, source, diagramReady, theme]);
 
   const isLoading = status === 'loading';
   const isReady = status === 'ready';

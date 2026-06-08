@@ -1,10 +1,10 @@
 import type { MermaidConfig } from 'mermaid';
 
 type MermaidApi = typeof import('mermaid').default;
-type ThemeKey = 'light' | 'dark';
+export type MermaidThemeKey = 'light' | 'dark';
 
 let mermaidModule: MermaidApi | null = null;
-let initializedThemeKey: ThemeKey | null = null;
+let initializedThemeKey: MermaidThemeKey | null = null;
 
 function rgbStringToHex(rgb: string): string | null {
   const match = rgb.match(/^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
@@ -85,24 +85,17 @@ function readToken(name: string, fallback: string): string {
   return value || fallback;
 }
 
-function currentThemeKey(): ThemeKey {
-  if (typeof document === 'undefined') {
-    return 'dark';
-  }
-
-  return document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-}
-
 /**
  * SSOT: Mermaid theme reads colors and typography from tokens.css.
+ * themeKey must match ThemeProvider state (not inferred from DOM during toggle).
  */
-function buildMermaidConfig(): MermaidConfig {
+function buildMermaidConfig(themeKey: MermaidThemeKey): MermaidConfig {
   const background = readColorToken('--color-bg', '#fafafa');
   const ink = readColorToken('--color-ink', '#171717');
   const body = readColorToken('--color-body', '#4d4d4d');
   const hairline = readColorToken('--color-hairline', '#ebebeb');
   const outline = readColorToken('--color-hairline-strong', '#a1a1a1');
-  const isDark = currentThemeKey() === 'dark';
+  const isDark = themeKey === 'dark';
 
   return {
     startOnLoad: false,
@@ -155,14 +148,15 @@ function buildMermaidConfig(): MermaidConfig {
   };
 }
 
-async function ensureMermaidInitialized(): Promise<MermaidApi> {
+async function ensureMermaidInitialized(
+  themeKey: MermaidThemeKey,
+): Promise<MermaidApi> {
   if (!mermaidModule) {
     mermaidModule = (await import('mermaid')).default;
   }
 
-  const themeKey = currentThemeKey();
   if (initializedThemeKey !== themeKey) {
-    mermaidModule.initialize(buildMermaidConfig());
+    mermaidModule.initialize(buildMermaidConfig(themeKey));
     initializedThemeKey = themeKey;
   }
 
@@ -172,8 +166,9 @@ async function ensureMermaidInitialized(): Promise<MermaidApi> {
 export async function renderLudeckerMermaid(
   diagramId: string,
   source: string,
+  themeKey: MermaidThemeKey,
 ): Promise<string> {
-  const mermaid = await ensureMermaidInitialized();
+  const mermaid = await ensureMermaidInitialized(themeKey);
   const { svg } = await mermaid.render(diagramId, source);
   return svg;
 }

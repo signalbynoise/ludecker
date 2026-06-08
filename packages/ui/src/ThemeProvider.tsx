@@ -1,6 +1,12 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useLayoutEffect,
+  useState,
+  type ReactNode,
+} from 'react';
 
 type Theme = 'light' | 'dark';
 
@@ -20,7 +26,7 @@ export interface ThemeProviderProps {
 export function ThemeProvider({ children, defaultTheme = 'dark' }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(defaultTheme);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const root = document.documentElement;
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
