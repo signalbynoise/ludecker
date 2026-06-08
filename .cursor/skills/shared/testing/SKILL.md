@@ -26,7 +26,7 @@ Phase `verify` (and `test_only` orchestrators). On **fix** paths, run fix verify
 
 ## Fix verify swarm (mandatory on fix verb / fix_mode)
 
-After unit tests, launch **3 parallel** `Task` subagents in **one message**:
+After unit tests, launch **3 parallel** `Task` subagents in **one message**. Each prompt **must** include [_task-prompt-policy.md](../_task-prompt-policy.md) and investigation artifact paths.
 
 | # | Agent spec | `subagent_type` | Role |
 |---|------------|-----------------|------|

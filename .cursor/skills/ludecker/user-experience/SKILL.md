@@ -16,7 +16,7 @@ description: Improve editorial readability, publish feedback, fallback behavior,
 
 ## Repo anchors
 
-- `docs/content-model.md` — body conventions (note: enum list may lag `packages/types`)
+- `docs/content-model.md` — body conventions and `article_type` taxonomy (SSOT: `packages/types/src/article-type.ts`)
 - `apps/website/lib/content/fallback.ts`
 - `apps/website/lib/content/revalidate-public.ts`
 - `packages/utils/src/content-links.ts`

@@ -9,7 +9,7 @@ All CMS content is stored in Supabase PostgreSQL.
 | Column | Type | Description |
 |--------|------|-------------|
 | `id` | UUID | Primary key |
-| `slug` | TEXT | URL slug (unique) |
+| `slug` | TEXT | URL slug (unique per `article_type`; section landings use `index`) |
 | `title` | TEXT | Display title |
 | `excerpt` | TEXT | Short summary |
 | `content` | TEXT | Body (markdown: `##` headings, paragraphs, links) |
@@ -18,7 +18,7 @@ All CMS content is stored in Supabase PostgreSQL.
 | `cover_image` | TEXT | Public URL from Supabase Storage |
 | `seo_title` | TEXT | Override for `<title>` |
 | `seo_description` | TEXT | Meta description |
-| `featured` | BOOLEAN | Home page hero (pages only) |
+| `featured` | BOOLEAN | Home intro fallback (`home` type); forced true for `home`/`home` row |
 | `created_at` | TIMESTAMPTZ | Created timestamp |
 | `updated_at` | TIMESTAMPTZ | Last update (trigger) |
 | `published_at` | TIMESTAMPTZ | Publish timestamp |
@@ -38,25 +38,34 @@ Many-to-many junction between `content` and `tags`.
 
 ## Content types (`article_type`)
 
-| Type | Route prefix | List prefix |
-|------|--------------|-------------|
-| `article` | `/articles`, `/article/[slug]` | A{n}: |
-| `essay` | `/essay/[slug]` | E{n}: |
-| `note` | `/note/[slug]` | N{n}: |
-| `tutorial` | `/tutorial/[slug]` | T{n}: |
-| `guide` | `/guides`, `/guide/[slug]` | G{n}: |
-| `project` | `/project/[slug]` | P{n}: |
-| `page` | `/page/[slug]` | Home hero uses `##` heading |
+**SSOT:** `packages/types/src/article-type.ts` (`ArticleType`, `ARTICLE_TYPES`, `NAV_ITEMS`) — mirrored in Postgres enum `public.article_type`.
+
+There are **8** canonical types. **7** are listable nav sections; `home` is the Introduction page at `/` (not in main nav).
+
+| Type | Public route | List prefix | Notes |
+|------|--------------|-------------|-------|
+| `home` | `/` (slug `home`) | — | Introduction page; not a listable section |
+| `articles` | `/articles`, `/articles/[slug]` | AR{n}: | Section landing: `slug: index` |
+| `guides` | `/guide`, `/guide/[slug]` | GU{n}: | Section landing: `slug: index`; nav href `/guide` (singular) |
+| `skills` | `/skills`, `/skills/[slug]` | SK{n}: | Section landing: `slug: index`; body stores full `SKILL.md` |
+| `tools` | `/tools`, `/tools/[slug]` | TO{n}: | Section landing: `slug: index` |
+| `commands` | `/commands`, `/commands/[slug]` | CO{n}: | Section landing: `slug: index` |
+| `subagents` | `/subagents`, `/subagents/[slug]` | SU{n}: | Section landing: `slug: index` |
+| `diagrams` | `/diagrams`, `/diagrams/[slug]` | DI{n}: | Section landing: `slug: index` |
+
+List prefixes come from `getArticlePrefix` in `packages/utils` (first two letters of the type name, uppercased). Section landings resolve to the nav href, not `/{type}/index`.
 
 ## CMS capabilities
 
 - Create, edit, delete content
 - Draft / publish / unpublish / archive
 - Tag management (create on the fly)
-- Article type selection
+- Article type selection (all 8 types from `ARTICLE_TYPES`)
+- Section landing pages (`slug: index` per listable type)
+- Home intro row (`article_type: home`, `slug: home` at `/`)
 - Cover image upload to `content-images` bucket
 - SEO metadata editing
-- Featured flag for home page hero
+- Featured flag for home intro fallback
 
 ## Content format
 

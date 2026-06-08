@@ -31,7 +31,7 @@ Every AAAC slash command (`/fix-module`, `/update-module`, `/write-article`, …
    node .cursor/aaac/scripts/run-engine/advance-phase.mjs <run_id> <phase>
    ```
 3. **Swarm minimums** (enforced by advance-phase):
-   - `discover`: 4 Task agents
+   - `discover`: 4 Task agents (check verbs: `check_swarm` 3)
    - `investigate_swarm`: 7 Task agents
    - `research_swarm`: 6 Task agents
 4. **Verify gate (create / update / fix):** before advancing past `verify`, run:
