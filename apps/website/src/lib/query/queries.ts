@@ -8,6 +8,7 @@ import {
 } from "@/lib/api/cms";
 import {
   fetchGettingStarted,
+  fetchNpmDownloads,
   fetchPublicContent,
   fetchPublicHome,
   fetchPublicHomeMarkdown,
@@ -19,7 +20,10 @@ import {
 import { FALLBACK_ARTICLES, FALLBACK_HOME } from "@/lib/content/fallback";
 import { buildPublicSearchIndex } from "@/lib/content/search-index";
 import { mapDocsNavEntries } from "@/lib/nav/map-docs-nav-entries";
+import { NPM_DOWNLOADS_CACHE_SECONDS } from "@/lib/constants";
 import { queryKeys } from "@/src/lib/query/keys";
+
+const npmDownloadsStaleMs = NPM_DOWNLOADS_CACHE_SECONDS * 1000;
 
 const emptyPageContext: PageContext = {
   hero: { title: "", description: "" },
@@ -36,6 +40,18 @@ export function publicSearchIndexQueryOptions() {
       } catch {
         return buildPublicSearchIndex([FALLBACK_HOME, ...FALLBACK_ARTICLES]);
       }
+    },
+  });
+}
+
+export function npmDownloadsQueryOptions() {
+  return queryOptions({
+    queryKey: queryKeys.public.npmDownloads,
+    staleTime: npmDownloadsStaleMs,
+    refetchInterval: npmDownloadsStaleMs,
+    queryFn: async () => {
+      const response = await fetchNpmDownloads();
+      return response.weeklyDownloads;
     },
   });
 }

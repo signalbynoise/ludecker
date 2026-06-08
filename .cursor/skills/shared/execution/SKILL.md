@@ -20,7 +20,8 @@ Orchestrator phase `execute` after approved plan.
 
 ## Actions
 
-- Edit files per plan and implementation skill
+- Edit **production/source** files per plan and implementation skill
+- **Do not** create or edit test files (`*.test.*`, `*.spec.*`, `__tests__/`) — deferred to `test_execute` / [test-authoring](../test-authoring/SKILL.md)
 - `apply_migration` for new/changed `supabase/migrations/` (project `anseivwusnyiwopihnqu` — see [supabase-mcp.mdc](../../../rules/supabase-mcp.mdc))
 - `track()` for user-facing mutations
 - Structured logging on server async paths
@@ -28,6 +29,8 @@ Orchestrator phase `execute` after approved plan.
 ## Must not
 
 - Invent plan during execution
+- Write or edit test files (hooks block in `execute`; use `test_execute`)
+- Self-review implementation (use [implementation-review](../implementation-review/SKILL.md) in `review_swarm`)
 - Race guards or useEffect-driven mutations (implementation ban)
 - Skip schema validation at boundaries
 

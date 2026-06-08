@@ -11,6 +11,7 @@ import "@ludecker/ui/docs-toc.css";
 import "@ludecker/ui/docs-sidebar-panel.css";
 import "@ludecker/ui/docs-content.css";
 import "@ludecker/ui/theme-toggle.css";
+import "@ludecker/ui/npm-downloads-banner.css";
 import "@ludecker/ui/article-list.css";
 import "@ludecker/ui/article-body.css";
 import "@ludecker/ui/article-page-toolbar.css";

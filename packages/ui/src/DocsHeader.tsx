@@ -9,6 +9,7 @@ export interface DocsHeaderProps {
   onMobileMenuClick: () => void;
   isMobileMenuOpen: boolean;
   themeToggle: ReactNode;
+  headerActions?: ReactNode;
   search?: ReactNode;
   brandHref?: string;
 }
@@ -17,6 +18,7 @@ export function DocsHeader({
   onMobileMenuClick,
   isMobileMenuOpen,
   themeToggle,
+  headerActions,
   search,
   brandHref = '/',
 }: DocsHeaderProps) {
@@ -28,6 +30,7 @@ export function DocsHeader({
         </div>
         {search ? <div className="docs-header__center">{search}</div> : null}
         <div className="docs-header__end">
+          {headerActions}
           {themeToggle}
           <Button
             type="button"

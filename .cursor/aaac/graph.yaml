@@ -24,14 +24,14 @@ invalid_pairs:
   - [release, domain]
 
 verb_work_phases:
-  create: [discover, investigate_lite, plan, execute, verify, report]
-  update: [discover, investigate_lite, plan, execute, verify, report]
-  fix: [discover, investigate_swarm, root_cause, plan, execute, verify, report]
+  create: [discover, investigate_lite, plan, execute, test_execute, verify, review_swarm, report]
+  update: [discover, investigate_lite, plan, execute, test_execute, verify, review_swarm, report]
+  fix: [discover, investigate_swarm, root_cause, plan, execute, test_execute, verify, review_swarm, report]
   review: [discover, plan, report]
   check: [discover, report]
   test: [discover, plan, verify, report]
   release: [execute, verify, report]
-  remove: [discover, investigate_lite, plan, execute, verify, report]
+  remove: [discover, investigate_lite, plan, execute, test_execute, verify, review_swarm, report]
 
 verb_gate_stack:
   create: pre_execute
@@ -50,20 +50,20 @@ governance_gate_stacks:
 
 # Composed runtime: work through plan + gate stack + execute onward (see lifecycle.json runtime_compose)
 verb_runtime:
-  create: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
-  update: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
-  fix: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
+  create: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
+  update: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
+  fix: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
   review: [discover, plan, report]
   check: [discover, validate, impact_analysis, dependency_graph, fitness_functions, report]
   test: [discover, plan, verify, report]
   release: [validate, execute, verify, report]
-  remove: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
+  remove: [discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
 
 # Exception commands — not verb×object; use for Run.pending when command matches
 command_workflows:
   write-article: [parse, research_swarm, write, review, persist, report]
-  fix-module: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
-  fix-bug: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, report]
+  fix-module: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
+  fix-bug: [discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, report]
 
 confidence:
   architecture: 0.9
@@ -535,21 +535,21 @@ orchestrators:
     path: domains/cms/update/orchestrator
     inventory: domains/cms/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   ui-update:
     domain: ui
     path: domains/ui/update/orchestrator
     inventory: domains/ui/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   database-update:
     domain: database
     path: domains/database/update/orchestrator
     inventory: domains/database/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   cms-design-update:
     domain: cms
@@ -578,7 +578,7 @@ orchestrators:
     inventory: domains/cms/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   ui-fix-bug:
     domain: ui
@@ -586,7 +586,7 @@ orchestrators:
     inventory: domains/ui/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   database-fix-bug:
     domain: database
@@ -594,7 +594,7 @@ orchestrators:
     inventory: domains/database/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   update-doc:
     path: skills/shared/documentation/orchestrator
@@ -646,7 +646,7 @@ orchestrators:
     path: domains/aaac/update/orchestrator
     inventory: domains/aaac/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   aaac-create-feature:
     domain: aaac
@@ -661,7 +661,7 @@ orchestrators:
     inventory: domains/aaac/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   aaac-test-module:
     domain: aaac
@@ -699,7 +699,7 @@ orchestrators:
   verb-fix:
     path: skills/shared/verbs/fix/orchestrator
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   verb-review:
     path: skills/shared/verbs/review/orchestrator
@@ -763,11 +763,17 @@ skills:
   execution:
     path: skills/shared/execution
     depends: [governance/implementation]
+  test-authoring:
+    path: skills/shared/test-authoring
+    agents: [test-author]
   testing:
     path: skills/shared/testing
     agents: [unit-test-run, fallow-check-changed, fix-repro-verify]
   verification:
     path: skills/shared/verification
+  implementation-review:
+    path: skills/shared/implementation-review
+    agents: [boundary-review, doc-conformance, implementation-review]
   reporting:
     path: skills/shared/reporting
   architecture:
@@ -885,6 +891,12 @@ agents:
     path: agents/fix-repro-verify.md
   fix-hypothesis-validate:
     path: agents/fix-hypothesis-validate.md
+  test-author:
+    path: agents/test-author.md
+  doc-conformance:
+    path: agents/doc-conformance.md
+  implementation-review:
+    path: agents/implementation-review.md
   release-git:
     path: agents/release-git.md
     wave: 1

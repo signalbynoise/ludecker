@@ -178,16 +178,18 @@ Commands define *what* to load; **work lifecycle** defines phases of work; **gat
 Policies → Ontology → Graph → Create Run
 → Work: Discovery → Investigation → Planning
 → Gates: Validation → Impact → Deps → Fitness → Rollback
-→ Work: Execute → Verify → Report
+→ Work: Execute → Test execute → Verify → Review swarm → Report
 ```
+
+**Agent separation (create / update / fix):** production code in `execute`; tests in `test_execute` (separate test-author agent); readonly review swarm before report. Hooks enforce path scopes via `enforcement.json` `phase_edit_scopes`.
 
 **Work lifecycles** (SSOT: [`.cursor/aaac/lifecycle/lifecycle.json`](../.cursor/aaac/lifecycle/lifecycle.json)):
 
 | Verb | Work | Gate stack |
 |------|------|------------|
-| create | discover → investigate_lite → plan → execute → verify → report | pre_execute |
+| create | discover → investigate_lite → plan → execute → test_execute → verify → review_swarm → report | pre_execute |
 | update | same | pre_execute |
-| fix | discover → investigate_swarm → root_cause → plan → execute → verify → report | pre_execute |
+| fix | discover → investigate_swarm → root_cause → plan → execute → test_execute → verify → review_swarm → report | pre_execute |
 | release | execute → verify → report | release |
 
 **Gate stacks** (SSOT: [`.cursor/aaac/governance/gates.json`](../.cursor/aaac/governance/gates.json)) — approval, not work.
@@ -224,9 +226,11 @@ Same rigor as `write-article` research — parallel Task subagents, one message 
 | discover | discovery-inventory, discovery-boundaries, discovery-ssot | 4–6 |
 | investigate_swarm | fix-repro, fix-code-path, fix-recent-changes, fix-test-failures, fix-regression-scope, fix-runtime-evidence, fix-inventory-confirm | **7** |
 | root_cause | parent + optional fix-hypothesis-validate | 0–1 |
-| verify (fix) | fix-repro-verify, unit-test-run, fallow-check-changed | **3** |
+| verify | fix-repro-verify, unit-test-run, fallow-check-changed | **3** (all mutating verbs) |
+| test_execute | test-author | **1** |
+| review_swarm | boundary-review, doc-conformance, implementation-review | **3** |
 
-Skills: [investigation/SKILL.md](../.cursor/skills/shared/investigation/SKILL.md), [testing/SKILL.md](../.cursor/skills/shared/testing/SKILL.md).  
+Skills: [investigation/SKILL.md](../.cursor/skills/shared/investigation/SKILL.md), [testing/SKILL.md](../.cursor/skills/shared/testing/SKILL.md), [test-authoring/SKILL.md](../.cursor/skills/shared/test-authoring/SKILL.md), [implementation-review/SKILL.md](../.cursor/skills/shared/implementation-review/SKILL.md).  
 Contracts: [fix-module.yaml](../.cursor/aaac/contracts/commands/fix-module.yaml), [fix-bug.yaml](../.cursor/aaac/contracts/commands/fix-bug.yaml).
 
 Resolver: `fix-domain-by-slug` (`fix-module`) and `fix-bug-by-slug` → `cms-fix-bug` | `ui-fix-bug` | `database-fix-bug` | `aaac-fix-bug`.

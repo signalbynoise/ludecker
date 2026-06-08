@@ -13,6 +13,7 @@ export const queryKeys = {
       ["public", "page-context", pathname] as const,
     gettingStarted: ["public", "getting-started"] as const,
     searchIndex: ["public", "search-index"] as const,
+    npmDownloads: ["public", "npm-downloads"] as const,
   },
   admin: {
     all: ["admin"] as const,

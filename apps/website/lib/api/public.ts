@@ -46,3 +46,11 @@ export function fetchGettingStarted(): Promise<ContentWithTags[]> {
 export function fetchPublicSearchIndex(): Promise<PublicSearchItem[]> {
   return apiFetch("/api/public/search-index");
 }
+
+export interface NpmDownloadsResponse {
+  weeklyDownloads: number;
+}
+
+export function fetchNpmDownloads(): Promise<NpmDownloadsResponse> {
+  return apiFetch("/api/public/npm-downloads");
+}

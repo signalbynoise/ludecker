@@ -25,6 +25,7 @@ export { DocsSidebarPanel, type DocsSidebarPanelProps } from './DocsSidebarPanel
 export { DocsContent, type DocsContentProps } from './DocsContent';
 export { ThemeProvider, useTheme, type ThemeProviderProps } from './ThemeProvider';
 export { ThemeToggle } from './ThemeToggle';
+export { NpmDownloadsBanner, type NpmDownloadsBannerProps } from './NpmDownloadsBanner';
 export { BrandLogo } from './BrandLogo';
 export { SiteNav, type SiteNavProps } from './SiteNav';
 export { ArticleList, type ArticleListItem, type ArticleListProps } from './ArticleList';

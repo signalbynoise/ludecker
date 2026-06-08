@@ -3,7 +3,7 @@
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
-  background: var(--color-bg);
+  background: var(--color-bg-card);
 }
 
 .docs-shell__body {
@@ -19,7 +19,7 @@
   z-index: 40;
   border: none;
   padding: 0;
-  background: color-mix(in srgb, var(--color-bg) 80%, transparent);
+  background: color-mix(in srgb, var(--color-bg-card) 80%, transparent);
   backdrop-filter: blur(4px);
   cursor: pointer;
 }

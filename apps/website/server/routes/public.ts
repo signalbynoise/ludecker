@@ -19,6 +19,9 @@ import {
   buildHomeMarkdownExport,
 } from "@/lib/content/article-markdown-export";
 import { FALLBACK_HOME } from "@/lib/content/fallback";
+import { NPM_DOWNLOADS_CACHE_SECONDS } from "@/lib/constants";
+import { isPublicStaticRouteSegment } from "@/lib/api/public-static-segments";
+import { fetchWeeklyDownloads } from "@/lib/npm/fetch-weekly-downloads";
 
 const publicRoutes = new Hono();
 
@@ -28,6 +31,16 @@ function jsonWithPublicCache<T>(c: Context, body: T) {
     headers: {
       "Content-Type": "application/json",
       ...getPublicApiResponseHeaders(),
+    },
+  });
+}
+
+function jsonWithDailyCache<T>(c: Context, body: T) {
+  return c.newResponse(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": `public, max-age=${NPM_DOWNLOADS_CACHE_SECONDS}, stale-while-revalidate=3600`,
     },
   });
 }
@@ -64,8 +77,26 @@ publicRoutes.get("/search-index", async (c) => {
   return jsonWithPublicCache(c, index);
 });
 
+publicRoutes.get("/npm-downloads", async (c) => {
+  try {
+    const weeklyDownloads = await fetchWeeklyDownloads();
+    return jsonWithDailyCache(c, { weeklyDownloads });
+  } catch {
+    return c.json({ error: "Failed to fetch npm downloads" }, 502);
+  }
+});
+
 publicRoutes.get("/:typeSegment", async (c) => {
   const typeSegment = c.req.param("typeSegment");
+  if (isPublicStaticRouteSegment(typeSegment)) {
+    return c.json(
+      {
+        error:
+          "Public API route unavailable — restart the API server on port 3000 (pnpm dev)",
+      },
+      503,
+    );
+  }
   if (!isListableArticleType(typeSegment)) {
     return c.json({ error: "Not found" }, 404);
   }

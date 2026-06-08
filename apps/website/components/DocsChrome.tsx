@@ -7,13 +7,18 @@ import {
   DocsSearch,
   DocsShell,
   DocsSidebarPanel,
+  NpmDownloadsBanner,
   ThemeToggle,
   type DocsNavLinkComponent,
   type DocsNavLinkProps,
 } from '@ludecker/ui';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate, useRouterState } from '@tanstack/react-router';
-import { publicSearchIndexQueryOptions } from '@/src/lib/query/queries';
+import {
+  npmDownloadsQueryOptions,
+  publicSearchIndexQueryOptions,
+} from '@/src/lib/query/queries';
+import { NPM_AAAC } from '@/lib/constants';
 import { RouterLink } from '@/components/RouterLink';
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { resolveDocsNavActiveState } from '@/lib/nav/resolve-docs-nav-active-state';
@@ -39,6 +44,11 @@ export function DocsChrome({
   const sidebarScrollRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const { data: searchItems = [] } = useQuery(publicSearchIndexQueryOptions());
+  const {
+    data: weeklyDownloads,
+    isLoading: isNpmDownloadsLoading,
+    isError: isNpmDownloadsError,
+  } = useQuery(npmDownloadsQueryOptions());
 
   useEffect(() => {
     const handleResize = () => {
@@ -97,6 +107,16 @@ export function DocsChrome({
         <DocsHeader
           isMobileMenuOpen={isMobileMenuOpen}
           onMobileMenuClick={() => setIsMobileMenuOpen((open) => !open)}
+          headerActions={
+            <NpmDownloadsBanner
+              href={NPM_AAAC.packageUrl}
+              packageLabel={NPM_AAAC.name}
+              weeklyDownloads={
+                isNpmDownloadsError ? null : (weeklyDownloads ?? null)
+              }
+              isLoading={isNpmDownloadsLoading}
+            />
+          }
           themeToggle={<ThemeToggle />}
           search={
             <DocsSearch

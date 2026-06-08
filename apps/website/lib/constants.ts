@@ -21,3 +21,11 @@ export const HOME_INTRO = {
 
 /** Reserved for future CDN tuning; public JSON API uses no-store / must-revalidate. */
 export const REVALIDATE_SECONDS = 3600;
+
+export const NPM_AAAC = {
+  name: "@ludecker/aaac",
+  packageUrl: "https://www.npmjs.com/package/@ludecker/aaac",
+} as const;
+
+/** Server + client refresh interval for npm weekly download stats. */
+export const NPM_DOWNLOADS_CACHE_SECONDS = 86_400;

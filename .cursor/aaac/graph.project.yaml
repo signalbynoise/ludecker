@@ -1,3 +1,6 @@
+# Lüdecker project overlay — domain resolvers and orchestrators for this repo only.
+# NOT shipped in @ludecker/aaac npm template (see packages/aaac/templates/cursor/aaac/graph.project.yaml).
+
 resolvers:
   update-module-by-slug:
     map:
@@ -61,21 +64,21 @@ orchestrators:
     path: domains/cms/update/orchestrator
     inventory: domains/cms/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   ui-update:
     domain: ui
     path: domains/ui/update/orchestrator
     inventory: domains/ui/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   database-update:
     domain: database
     path: domains/database/update/orchestrator
     inventory: domains/database/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   cms-design-update:
     domain: cms
@@ -104,7 +107,7 @@ orchestrators:
     inventory: domains/cms/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   ui-fix-bug:
     domain: ui
@@ -112,7 +115,7 @@ orchestrators:
     inventory: domains/ui/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   database-fix-bug:
     domain: database
@@ -120,7 +123,7 @@ orchestrators:
     inventory: domains/database/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   update-doc:
     path: skills/shared/documentation/orchestrator
@@ -172,7 +175,7 @@ orchestrators:
     path: domains/aaac/update/orchestrator
     inventory: domains/aaac/update/inventory
     requires: [discovery, investigation-lite, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
-    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_lite, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   aaac-create-feature:
     domain: aaac
@@ -187,7 +190,7 @@ orchestrators:
     inventory: domains/aaac/update/inventory
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting, integration]
     fix_mode: true
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   aaac-test-module:
     domain: aaac
@@ -225,7 +228,7 @@ orchestrators:
   verb-fix:
     path: skills/shared/verbs/fix/orchestrator
     requires: [discovery, investigation, root-cause, planning, validation, impact-analysis, dependency-graph, fitness-functions, rollback, execution, testing, verification, reporting]
-    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, verify, sync_inventory, report]
+    phases: [load_inventory, discover, investigate_swarm, root_cause, plan, validate, impact_analysis, dependency_graph, fitness_functions, rollback, execute, test_execute, verify, review_swarm, sync_inventory, report]
 
   verb-review:
     path: skills/shared/verbs/review/orchestrator
@@ -256,11 +259,17 @@ skills:
   execution:
     path: skills/shared/execution
     depends: [governance/implementation]
+  test-authoring:
+    path: skills/shared/test-authoring
+    agents: [test-author]
   testing:
     path: skills/shared/testing
     agents: [unit-test-run, fallow-check-changed, fix-repro-verify]
   verification:
     path: skills/shared/verification
+  implementation-review:
+    path: skills/shared/implementation-review
+    agents: [boundary-review, doc-conformance, implementation-review]
   reporting:
     path: skills/shared/reporting
   architecture:
@@ -378,6 +387,12 @@ agents:
     path: agents/fix-repro-verify.md
   fix-hypothesis-validate:
     path: agents/fix-hypothesis-validate.md
+  test-author:
+    path: agents/test-author.md
+  doc-conformance:
+    path: agents/doc-conformance.md
+  implementation-review:
+    path: agents/implementation-review.md
   release-git:
     path: agents/release-git.md
     wave: 1

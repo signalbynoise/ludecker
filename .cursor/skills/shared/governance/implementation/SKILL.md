@@ -101,7 +101,7 @@ Implementation Progress:
 - [ ] Errors explicit — logged with context, never swallowed
 - [ ] Structured logging on async paths (server)
 - [ ] PostHog track() if user-facing action (store action or handler)
-- [ ] Tests at appropriate level (unit / integration / e2e)
+- [ ] Tests planned in `tests_to_add[]` — authored in `test_execute`, not here
 - [ ] Realtime vs fetch-on-action chosen correctly
 - [ ] Fallow check_changed on touched files — no new budget violations
 ```
@@ -373,10 +373,10 @@ Match existing code in the target directory:
 
 ## After Implementation
 
-1. **Self-review** against the checklist above.
-2. **Run Fallow on changed files** — MCP `check_changed` or `npx fallow health --changed-since HEAD --file-scores`. Fix any new budget violations before finishing.
-3. **Read lints** on edited files; fix introduced issues.
-4. **Run relevant tests** if they exist for the touched area.
+1. **Do not self-review** — [implementation-review](../implementation-review/SKILL.md) runs in `review_swarm` with separate readonly agents.
+2. **Do not write tests here** — [test-authoring](../test-authoring/SKILL.md) runs in `test_execute` with a separate agent.
+3. **Run Fallow on changed files** — MCP `check_changed` or `npx fallow health --changed-since HEAD --file-scores`. Fix any new budget violations before finishing.
+4. **Read lints** on edited files; fix introduced issues.
 5. **Verify layer boundaries** — no fetch in UI, no business logic in routes beyond orchestration.
 6. **Verify design system** — grep edited files for hardcoded colors, `className` on base components, inline `style={{}}`.
 

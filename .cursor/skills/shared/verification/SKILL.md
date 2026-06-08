@@ -10,7 +10,9 @@ disable-model-invocation: true
 
 ## When
 
-After `testing`. Before `report`.
+After `testing`. Before `review_swarm` (mutating verbs) or `report`.
+
+**Agent separation:** Intent and contract checks here are orchestrator duties. Architecture/doc conformance review is **only** in [implementation-review](../implementation-review/SKILL.md) — not the execute agent.
 
 ## Checks
 

@@ -19,6 +19,7 @@
     "./docs-sidebar-panel.css": "./src/DocsSidebarPanel.css",
     "./docs-content.css": "./src/DocsContent.css",
     "./theme-toggle.css": "./src/ThemeToggle.css",
+    "./npm-downloads-banner.css": "./src/NpmDownloadsBanner.css",
     "./brand-logo.css": "./src/BrandLogo.css",
     "./site-nav.css": "./src/SiteNav.css",
     "./footer.css": "./src/Footer.css",
